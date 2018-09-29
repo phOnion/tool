@@ -22,15 +22,12 @@
         {
             "definition": "init",
             "handler": "\\App\\Initialize\\Command",
-            "summary": "Initialize onion project",
-            "description": "",
-            "parameters": []
+            "summary": "Initialize onion project"
         },
         {
             "definition": "add [type]",
             "handler": "\\App\\Add\\Command",
             "summary": "Add a component to the onion manifest",
-            "description": "",
             "parameters": {
                 "--dry": {
                     "type": "bool",
@@ -44,7 +41,6 @@
             "definition": "build",
             "handler": "\\App\\Build\\Command",
             "summary": "Build the current package",
-            "description": "",
             "parameters": {
                 "--filename": {
                     "type": "string",
