@@ -77,12 +77,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/console.git",
-                "reference": "2997dce69f635214cbb67f1abc3e1812948aa6f4"
+                "reference": "fbc74623da05e4a6a1d05155403dd17b5533997c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/console/zipball/2997dce69f635214cbb67f1abc3e1812948aa6f4",
-                "reference": "2997dce69f635214cbb67f1abc3e1812948aa6f4",
+                "url": "https://api.github.com/repos/phOnion/console/zipball/fbc74623da05e4a6a1d05155403dd17b5533997c",
+                "reference": "fbc74623da05e4a6a1d05155403dd17b5533997c",
                 "shasum": ""
             },
             "require": {
@@ -100,7 +100,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "description": "Set of helper classes for developing CLI applications",
-            "time": "2018-09-29T10:34:26+00:00"
+            "time": "2018-09-29T14:29:55+00:00"
         },
         {
             "name": "onion/framework",
