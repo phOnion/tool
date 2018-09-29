@@ -85,7 +85,7 @@ class Command implements Entity
         ];
 
         if ($this->getParameters() !== []) {
-            $command['parameters'] = $this->getParameters();
+            $command['parameters'] = array_values($this->getParameters());
         }
 
         if ($this->getDescription() !== '') {
