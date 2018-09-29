@@ -37,8 +37,8 @@ class CommandStrategy implements StrategyInterface
 
     public function prompt(ConsoleInterface $console): array
     {
-        $definition = $console->prompt('Definition');
-        $handler = $console->prompt('Handler');
+        $definition = $console->prompt('%text:green%Definition');
+        $handler = $console->prompt('%text:green%Handler');
         if (!class_exists($handler)) {
             if ($console->confirm("%text:yellow%Provided command handler '{$handler}' does not exist. Continue?", 'n') === 'n') {
                 $console->writeLine('%text:red%Terminating');
@@ -47,10 +47,10 @@ class CommandStrategy implements StrategyInterface
             }
         }
 
-        $summary = $console->prompt('Summary');
+        $summary = $console->prompt('%text:green%Summary');
         $parameters = [];
         $console->write("%text:cyan%Add parameters interactively, you can add them later manually.");
-        while ($console->confirm('Continue', 'y')) {
+        while ($console->confirm('%text:blue% Continue', 'y')) {
 
             $paramName = $console->prompt("%text:cyan%\tName");
             if (strlen($paramName) === 0) {
@@ -78,7 +78,7 @@ class CommandStrategy implements StrategyInterface
             $parameters[] = $parameter;
         }
 
-        $description = $console->prompt("Command description");
+        $description = $console->prompt('%text:green%Description');
 
         return [
             $definition,
