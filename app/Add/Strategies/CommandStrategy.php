@@ -67,7 +67,7 @@ class CommandStrategy implements StrategyInterface
                 'name' => $paramName,
                 'description' => $paramDescription,
                 'type' => $console->prompt("%text:cyan%\tType", 'mixed'),
-                'required' => $console->confirm("%text:cyan%\tRequired", 'n') === 'y',
+                'required' => $console->confirm("%text:cyan%\tRequired", 'n'),
             ];
 
             $paramDefault = $console->prompt("%text:cyan%\tDefault value", '');
