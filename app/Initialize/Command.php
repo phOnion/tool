@@ -28,12 +28,17 @@ class Command implements CommandInterface
         }
 
         $console->writeLine('%text:cyan%Initializing default configuration');
-        $manifest->setName($console->prompt('%text:green%Package name', $manifest->getName()));
-        if (!$console->hasArgument('version')) {
-            $manifest->setVersion(
-                $console->prompt('%text:green%Version', $manifest->getVersion())
-            );
-        }
+        $manifest = $manifest->setName(
+            $console->prompt('%text:green%Package name', $manifest->getName())
+        )->setVersion($console->getArgument(
+            'version',
+            $console->prompt('%text:green%Version', $manifest->getVersion())
+        ));
+
+        $composer = json_decode(file_get_contents(getcwd() . '/composer.json'), true);
+        $composer['extra']['onion']['manifest']['filename'] = 'onion.json';
+
+        $console->writeLine('%text:cyan%Generated manifest file `onion.json`');
 
         $this->loader->saveManifest(getcwd(), $manifest);
 
