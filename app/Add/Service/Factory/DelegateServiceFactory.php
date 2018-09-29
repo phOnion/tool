@@ -6,6 +6,7 @@ use Psr\Container\ContainerInterface;
 use App\Add\Service\DelegateService;
 use App\Add\Strategies\MaintainerStrategy;
 use App\Add\Strategies\LinkStrategy;
+use App\Add\Strategies\CommandStrategy;
 
 class DelegateServiceFactory implements FactoryInterface
 {
@@ -13,6 +14,7 @@ class DelegateServiceFactory implements FactoryInterface
     {
         $service = new DelegateService();
 
-        return $service->addStrategy(new LinkStrategy());
+        return $service->addStrategy(new LinkStrategy())
+            ->addStrategy(new CommandStrategy);
     }
 }
