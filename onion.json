@@ -1,0 +1,86 @@
+{
+    "name": "onion/tool",
+    "version": "0.0.0",
+    "links": [
+        {
+            "title": "Homepage",
+            "href": "https://example.com",
+            "lang": "en"
+        },
+        {
+            "title": "YouTube",
+            "href": "https://youtube.com/",
+            "lang": "en"
+        }
+    ],
+    "commands": [
+        {
+            "definition": "version",
+            "handler": "\\App\\Version\\Command",
+            "summary": "Display Current version",
+            
+        },
+        {
+            "definition": "init",
+            "handler": "\\App\\Initialize\\Command",
+            "summary": "Initialize onion project",
+            "description": "",
+            "parameters": []
+        },
+        {
+            "definition": "add [type]",
+            "handler": "\\App\\Add\\Command",
+            "summary": "Add a component to the onion manifest",
+            "description": "",
+            "parameters": {
+                "--dry": {
+                    "type": "bool",
+                    "name": "--dry",
+                    "description": "Whether or not to run the command in dry mode",
+                    "required": false
+                }
+            }
+        },
+        {
+            "definition": "build",
+            "handler": "\\App\\Build\\Command",
+            "summary": "Build the current package",
+            "description": "",
+            "parameters": {
+                "--filename": {
+                    "type": "string",
+                    "name": "--filename",
+                    "description": "The filename with with which to save the built package",
+                    "required": false,
+                    "default": "<current_directory>"
+                },
+                "--bump": {
+                    "type": "string",
+                    "name": "--bump",
+                    "description": "Define which part of the package version to bump: `major`, `minor` or `fix`",
+                    "required": false
+                },
+                "--compression": {
+                    "type": "string",
+                    "name": "--compression",
+                    "description": "Type of compression to use, either `gz`, `bz` or `none`",
+                    "required": false,
+                    "default": "none"
+                },
+                "--signature": {
+                    "type": "string",
+                    "name": "--signature",
+                    "description": "Signature algo to use for the generated file.",
+                    "required": false,
+                    "default": "sha512"
+                },
+                "--version": {
+                    "type": "string",
+                    "name": "--version",
+                    "description": "Set a custom version of the build package",
+                    "required": false
+                }
+            }
+        }
+    ]
+}
