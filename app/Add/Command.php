@@ -28,9 +28,10 @@ class Command implements CommandInterface
 
     public function trigger(ConsoleInterface $console): int
     {
-        // if (!$console->hasArgument('type')) {
+        if (!$console->hasArgument('type')) {
+            throw new \InvalidArgumentException('No explicit type provided.');
+        }
 
-        // }
         $type = $console->getArgument('type', 'null');
         try {
             $strategy = $this->getDelegatedStrategyByType($type);
