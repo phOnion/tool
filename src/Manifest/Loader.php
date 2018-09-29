@@ -32,7 +32,7 @@ class Loader
 
     private function loadManifest(): array
     {
-        if (!file_exists(getcwd() . "/{$this->manifestFileName}")) {
+        if (!$this->manifestExists()) {
             throw new \RuntimeException("Manifest file '{$this->manifestFileName}' not found in current director. Did you forget to init?");
         }
 
@@ -81,6 +81,11 @@ class Loader
         $manifest = $manifest->withCommands($this->getSection($raw, 'commands'));
 
         return $manifest;
+    }
+
+    public function manifestExists(): bool
+    {
+        return file_exists(getcwd() . "/{$this->manifestFileName}");
     }
 
     public function saveManifest(string $location, Manifest $manifest): bool
