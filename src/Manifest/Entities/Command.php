@@ -84,12 +84,12 @@ class Command implements Entity
             'summary' => $this->getSummary(),
         ];
 
-        if ($this->getParameters() !== []) {
-            $command['parameters'] = array_values($this->getParameters());
-        }
-
         if ($this->getDescription() !== '') {
             $command['description'] = $this->getDescription();
+        }
+
+        if ($this->getParameters() !== []) {
+            $command['parameters'] = array_values($this->getParameters());
         }
 
         return $command;

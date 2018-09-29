@@ -58,10 +58,10 @@ class Parameter implements Entity
     public function jsonSerialize()
     {
         $parameter = [
-            'type' => $this->getType(),
             'name' => $this->getName(),
-            'description' => $this->getDescription(),
+            'type' => $this->getType(),
             'required' => $this->isRequired(),
+            'description' => $this->getDescription(),
         ];
 
         if ($this->hasDefault()) {

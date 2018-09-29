@@ -28,54 +28,54 @@
             "definition": "add [type]",
             "handler": "\\App\\Add\\Command",
             "summary": "Add a component to the onion manifest",
-            "parameters": {
-                "--dry": {
-                    "type": "bool",
+            "parameters": [
+                {
                     "name": "--dry",
-                    "description": "Whether or not to run the command in dry mode",
-                    "required": false
+                    "type": "bool",
+                    "required": false,
+                    "description": "Whether or not to run the command in dry mode"
                 }
-            }
+            ]
         },
         {
             "definition": "build",
             "handler": "\\App\\Build\\Command",
             "summary": "Build the current package",
-            "parameters": {
-                "--filename": {
-                    "type": "string",
+            "parameters": [
+                {
                     "name": "--filename",
-                    "description": "The filename with with which to save the built package",
+                    "type": "string",
                     "required": false,
+                    "description": "The filename with with which to save the built package",
                     "default": "<current_directory>"
                 },
-                "--bump": {
-                    "type": "string",
+                {
                     "name": "--bump",
-                    "description": "Define which part of the package version to bump: `major`, `minor` or `fix`",
-                    "required": false
-                },
-                "--compression": {
                     "type": "string",
-                    "name": "--compression",
-                    "description": "Type of compression to use, either `gz`, `bz` or `none`",
                     "required": false,
+                    "description": "Define which part of the package version to bump: `major`, `minor` or `fix`"
+                },
+                {
+                    "name": "--compression",
+                    "type": "string",
+                    "required": false,
+                    "description": "Type of compression to use, either `gz`, `bz` or `none`",
                     "default": "none"
                 },
-                "--signature": {
-                    "type": "string",
+                {
                     "name": "--signature",
-                    "description": "Signature algo to use for the generated file.",
+                    "type": "string",
                     "required": false,
+                    "description": "Signature algo to use for the generated file.",
                     "default": "sha512"
                 },
-                "--version": {
-                    "type": "string",
+                {
                     "name": "--version",
-                    "description": "Set a custom version of the build package",
-                    "required": false
+                    "type": "string",
+                    "required": false,
+                    "description": "Set a custom version of the build package"
                 }
-            }
+            ]
         }
     ]
 }
