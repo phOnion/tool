@@ -35,13 +35,15 @@ class Command implements CommandInterface
         $type = $console->getArgument('type', 'null');
         try {
             $strategy = $this->getDelegatedStrategyByType($type);
-            return (int) !$this->getLoader()->saveManifest(
+            $this->getLoader()->saveManifest(
                 getcwd(),
                 $strategy->addValue(
                     $this->getLoader()->getManifest(),
                     $strategy->prompt($console)
                 )
             );
+
+            return 0;
         } catch (\UnexpectedValueException $ex) {
             $console->writeLine(
                 "%text:yellow%Unable to add new component. Unknown type '$type'"
