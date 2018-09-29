@@ -21,7 +21,7 @@ class Command implements CommandInterface
     {
         $manifest = new Manifest(basename(getcwd()), '0.0.0');
         if ($this->loader->manifestExists()) {
-            if ($console->choice('%text:yellow%Manifest already exists. Overwrite?', ['y', 'n'], 'n') === 'n') {
+            if ($console->confirm('%text:yellow%Manifest already exists. Overwrite?', 'n') === 'n') {
                 return 0;
             }
 
