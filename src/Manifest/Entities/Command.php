@@ -78,12 +78,20 @@ class Command implements Entity
 
     public function jsonSerialize()
     {
-        return [
+        $command = [
             'definition' => $this->getName(),
             'handler' => $this->getHandler(),
             'summary' => $this->getSummary(),
-            'description' => $this->getDescription(),
-            'parameters' => $this->getParameters(),
         ];
+
+        if ($this->getParameters() !== []) {
+            $command['parameters'] = $this->getParameters();
+        }
+
+        if ($this->getDescription() !== '') {
+            $command['description'] = $this->getDescription();
+        }
+
+        return $command;
     }
 }
