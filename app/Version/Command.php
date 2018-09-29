@@ -9,7 +9,7 @@ class Command implements CommandInterface
     public function trigger(ConsoleInterface $console): int
     {
         $version = file_get_contents(__DIR__ . '/../../VERSION');
-        $console->writeLine("Version {$version}");
+        $console->writeLine("%text:cyan%Version %text:green%{$version}");
 
         return 0;
     }
