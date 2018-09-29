@@ -17,8 +17,7 @@
         {
             "definition": "version",
             "handler": "\\App\\Version\\Command",
-            "summary": "Display Current version",
-            
+            "summary": "Display Current version"
         },
         {
             "definition": "init",
