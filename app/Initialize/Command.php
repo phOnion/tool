@@ -5,6 +5,7 @@ use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Onion\Cli\Manifest\Loader;
 use Onion\Cli\Manifest\Entities\Manifest;
+use Onion\Cli\SemVer\Version;
 
 class Command implements CommandInterface
 {
@@ -30,10 +31,10 @@ class Command implements CommandInterface
         $console->writeLine('%text:cyan%Initializing default configuration');
         $manifest = $manifest->setName(
             $console->prompt('%text:green%Package name', $manifest->getName())
-        )->setVersion($console->getArgument(
+        )->setVersion((string) new Version($console->getArgument(
             'version',
             $console->prompt('%text:green%Version', $manifest->getVersion())
-        ));
+        )));
 
         $composer = json_decode(file_get_contents(getcwd() . '/composer.json'), true);
         $composer['extra']['onion']['manifest']['filename'] = 'onion.json';
