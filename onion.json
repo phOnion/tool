@@ -43,11 +43,17 @@
             "summary": "Build the current package",
             "parameters": [
                 {
-                    "name": "--filename",
+                    "name": "--filename | -f",
                     "type": "string",
                     "required": false,
                     "description": "The filename with with which to save the built package",
-                    "default": "<current_directory>"
+                    "default": "<vendor_package>"
+                },
+                {
+                    "name": "--location | --dir",
+                    "type": "string",
+                    "required": false,
+                    "description": "Directory in which to put the build artifact"
                 },
                 {
                     "name": "--bump",
