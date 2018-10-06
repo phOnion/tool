@@ -1,6 +1,6 @@
 {
     "name": "onion/tool",
-    "version": "0.1.1-alpha+0013",
+    "version": "0.1.2-alpha+0011",
     "links": [
         {
             "title": "GitHub",
@@ -17,21 +17,7 @@
         {
             "definition": "update",
             "handler": "\\Onion\\Tool\\Update\\Command",
-            "summary": "Display Current version",
-            "parameters": [
-                {
-                    "name": "--rollback",
-                    "type": "bool",
-                    "required": false,
-                    "description": "Perform a rollback"
-                },
-                {
-                    "name": "--force",
-                    "type": "bool",
-                    "required": false,
-                    "description": "Force update to latest development version"
-                }
-            ]
+            "summary": "Display Current version"
         },
         {
             "definition": "init",
