@@ -66,14 +66,14 @@
                     "description": "Define which part of the package version to bump: `major`, `minor` or `fix`"
                 },
                 {
-                    "name": "--compression",
+                    "name": "--compression | -c",
                     "type": "string",
                     "required": false,
                     "description": "Type of compression to use, either `gz`, `bz` or `none`",
                     "default": "none"
                 },
                 {
-                    "name": "--signature",
+                    "name": "--signature | -s",
                     "type": "string",
                     "required": false,
                     "description": "Signature algo to use for the generated file.",
