@@ -41,9 +41,17 @@ class Command implements CommandInterface
 
         $filename = "{$location}/{$file}.phar";
         $phar = new \Phar($filename);
+        $cli = $manifest->getIndex('cli');
+        if (!$manifest->getIndex('cli')) {
+            $console->writeLine('%text:red%Missing CLI index file');
+            return 1;
+        }
+
+        $web = $manifest->getIndex('web');
+
         $phar->setDefaultStub(
-            $manifest->getIndex()->getIndex('cli'),
-            $manifest->getIndex()->getIndex('web', null)
+            $cli->getFile(),
+            $web ? $web->getFile() : null
         );
 
         $ignorePattern = $this->compileIgnorePattern(getcwd());

@@ -5,15 +5,30 @@ use Onion\Cli\Manifest\Entity;
 
 class Index implements Entity
 {
-    private $indexes;
+    private $type;
+    private $file;
 
-    public function __cosntruct(array $indexes)
+    public function __construct(string $type, string $file)
     {
-        $this->indexes = $indexes;
+        $this->type = $type;
+        $this->file = $file;
     }
 
-    public function getIndex(string $type, $default = null)
+    public function getType(): string
     {
-        return $this->indexes[$type] ?? $default;
+        return $this->type;
+    }
+
+    public function getFile(): string
+    {
+        return $this->file;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'type' => $this->type,
+            'file' => $this->file,
+        ];
     }
 }

@@ -19,8 +19,8 @@ class Manifest implements Entity
     protected $links = [];
     /** @var Command[] */
     protected $commands = [];
-
-    protected $index;
+    /** @var Index[] */
+    protected $index = [];
 
     public function __construct(
         string $name,
@@ -88,17 +88,19 @@ class Manifest implements Entity
         return $this->commands;
     }
 
-    public function withIndex(?Index $index)
+    public function withIndex(array $index): Manifest
     {
         $self = clone $this;
-        $self->index = $index;
+        foreach ($index as $item) {
+            $self->index[$item->getType()] = $item;
+        }
 
         return $self;
     }
 
-    public function getIndex(): ?Index
+    public function getIndex(string $type = null)
     {
-        return $this->index;
+        return $type === null ? $this->index : $this->index[$type];
     }
 
     public function jsonSerialize()
