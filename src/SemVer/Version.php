@@ -5,14 +5,14 @@ use Onion\Cli\SemVer\Version;
 
 class Version
 {
-    private $constraint;
+    protected $constraint;
 
-    private $major;
-    private $minor;
-    private $fix;
+    protected $major;
+    protected $minor;
+    protected $fix;
 
-    private $pre;
-    private $build;
+    protected $pre;
+    protected $build;
 
     public function __construct(string $constraint)
     {
