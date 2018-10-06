@@ -110,6 +110,7 @@ class Manifest implements Entity
             'version' => $this->getVersion(),
             'links' => $this->getLinks(),
             'commands' => $this->getCommands(),
+            'index' => array_values($this->getIndex()),
         ];
     }
 }
