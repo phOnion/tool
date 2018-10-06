@@ -42,8 +42,8 @@ class Command implements CommandInterface
         $filename = "{$location}/{$file}.phar";
         $phar = new \Phar($filename);
         $phar->setDefaultStub(
-            'bin/cli.php',
-            'public/index.php'
+            $manifest->getIndex()->getIndex('cli'),
+            $manifest->getIndex()->getIndex('web', null)
         );
 
         $ignorePattern = $this->compileIgnorePattern(getcwd());
