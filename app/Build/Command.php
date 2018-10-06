@@ -7,6 +7,7 @@ use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Phar;
 use Onion\Framework\Console\Progress;
+use Onion\Cli\SemVer\MutableVersion;
 
 class Command implements CommandInterface
 {
@@ -32,27 +33,30 @@ class Command implements CommandInterface
     public function trigger(ConsoleInterface $console): int
     {
         $manifest = $this->loader->getManifest();
+        $version = new MutableVersion($console->getArgument('version', $manifest->getVersion()));
+
+        $this->loader->saveManifest(getcwd(), $manifest->setVersion(
+            $this->buildVersionString($console, $version)
+        ));
+
         $console->writeLine('%text:cyan%Building package');
-
-        $version = new Version($manifest->getVersion());
-
         $location = realpath($console->getArgument('location', getcwd()));
         $file = $console->getArgument('filename', strtr($manifest->getName(), ['/' => '_']));
-
         $filename = "{$location}/{$file}.phar";
+
         $phar = new \Phar($filename);
         $cli = $manifest->getIndex('cli');
-        if (!$manifest->getIndex('cli')) {
+        if (!$cli) {
             $console->writeLine('%text:red%Missing CLI index file');
             return 1;
         }
 
         $web = $manifest->getIndex('web');
-
-        $phar->setDefaultStub(
-            $cli->getFile(),
-            $web ? $web->getFile() : null
-        );
+        // file_put_contents('stub.php', $phar->getStub());
+        $phar->setStub(strtr(file_get_contents('data/stub.php'), [
+            '__WEB_STUB__' => $web ? "'{$web->getFile()}'" : false,
+            '__CLI_STUB__' => "'{$cli->getFile()}'",
+        ]));
 
         $ignorePattern = $this->compileIgnorePattern(getcwd());
         $iterator = new \RegexIterator(new \RecursiveIteratorIterator(
@@ -111,7 +115,11 @@ class Command implements CommandInterface
         $console->writeLine(
             "%text:cyan%Signature algorithm set to {$signature} " . ($key !== null ? "({$keyLocation})" : '')
         );
+
         $phar->setSignatureAlgorithm($algo, $key);
+        $phar->setMetadata([
+            'version' => $version,
+        ]);
         $phar->stopBuffering();
 
         $size = number_format(filesize("{$filename}")/pow(1024, 2), 2, '.', ',');
@@ -131,5 +139,46 @@ class Command implements CommandInterface
         $ds = DIRECTORY_SEPARATOR;
         $list = implode('|', $ignored);
         return str_replace(['/', '\\', '.'], [$ds, '\\\\', '\.'], "#^{$baseDir}{$ds}(?!{$list}){$ds}?#iU");
+    }
+
+    private function buildVersionString(ConsoleInterface $console, MutableVersion $version): string
+    {
+        if ($version->hasBuild()) {
+            $version->setBuild(str_pad(
+                (string) ($version->getBuild()+1),
+                strlen($version->getBuild()),
+                '0',
+                STR_PAD_LEFT
+            ));
+        }
+
+        if ($console->hasArgument('bump')) {
+            switch (strtolower($console->getArgument('bump'))) {
+                case 'major':
+                    $version->setMajor($version->getMajor()+1);
+                    $version->setMinor(0);
+                    $version->setFix(0);
+                    break;
+                case 'minor':
+                    $version->setMinor($version->getMinor()+1);
+                    $version->setFix(0);
+                    break;
+                case 'fix':
+                    $version->setFix($version->getFix()+1);
+                    break;
+                default:
+                    $console->writeLine(
+                        "%text:red%Unknown `bump` type {$console->getArgument('bump')}"
+                    );
+                    return 1;
+                    break;
+            }
+        }
+
+        if ($console->hasArgument('pre')) {
+            $version->setPreRelease($console->getArgument('pre'));
+        }
+
+        return (string) $version;
     }
 }
