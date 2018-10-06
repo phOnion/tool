@@ -13,6 +13,10 @@
             "lang": "en"
         }
     ],
+    "index": {
+        "cli": "bin/cli.php",
+        "web": "public/index.php"
+    },
     "commands": [
         {
             "definition": "version",
