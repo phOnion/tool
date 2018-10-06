@@ -1,22 +1,7 @@
 {
     "name": "onion/tool",
-    "version": "0.0.0",
-    "links": [
-        {
-            "title": "Homepage",
-            "href": "https://example.com",
-            "lang": "en"
-        },
-        {
-            "title": "YouTube",
-            "href": "https://youtube.com/",
-            "lang": "en"
-        }
-    ],
-    "index": [
-        {"type":"cli", "file": "bin/cli.php"},
-        {"type":"web", "file": "public/index.php"}
-    ],
+    "version": "0.0.0-alpha+0002",
+    "links": [],
     "commands": [
         {
             "definition": "version",
@@ -80,12 +65,22 @@
                     "default": "sha512"
                 },
                 {
-                    "name": "--version",
+                    "name": "--pre",
                     "type": "string",
                     "required": false,
-                    "description": "Set a custom version of the build package"
+                    "description": "Indicate this build is pre-release"
                 }
             ]
+        }
+    ],
+    "index": [
+        {
+            "type": "cli",
+            "file": "bin/cli.php"
+        },
+        {
+            "type": "web",
+            "file": "public/index.php"
         }
     ]
 }
