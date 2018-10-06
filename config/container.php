@@ -72,7 +72,6 @@ $manifestContainer = new Container($common + [
     'console' => [
         'stream' => 'php://stdout'
     ],
-    // 'commands' => include __DIR__ . '/commands.php',
     'invokables' => [
         ArgumentParserInterface::class => ArgumentParser::class
     ],
