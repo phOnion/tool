@@ -1,6 +1,6 @@
 {
     "name": "onion/tool",
-    "version": "0.1.0-alpha+0010",
+    "version": "0.1.1-alpha+0010",
     "links": [
         {
             "title": "GitHub",
@@ -12,6 +12,11 @@
         {
             "definition": "version",
             "handler": "\\Onion\\Tool\\Version\\Command",
+            "summary": "Display Current version"
+        },
+        {
+            "definition": "update",
+            "handler": "\\Onion\\Tool\\Update\\Command",
             "summary": "Display Current version"
         },
         {
