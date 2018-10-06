@@ -1,6 +1,6 @@
 {
     "name": "onion/tool",
-    "version": "0.1.1-alpha+0010",
+    "version": "0.1.1-alpha+0013",
     "links": [
         {
             "title": "GitHub",
@@ -24,7 +24,8 @@
                     "type": "bool",
                     "required": false,
                     "description": "Perform a rollback"
-                }, {
+                },
+                {
                     "name": "--force",
                     "type": "bool",
                     "required": false,
