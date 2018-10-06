@@ -71,6 +71,7 @@ class Loader
         );
 
         $manifest = $manifest->withCommands($this->getSection($raw, 'commands'));
+        $manifest->withIndex($this->getSection($raw, 'index'));
 
         return $manifest;
     }

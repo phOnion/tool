@@ -20,6 +20,8 @@ class Manifest implements Entity
     /** @var Command[] */
     protected $commands = [];
 
+    protected $index;
+
     public function __construct(
         string $name,
         string $version,
@@ -84,6 +86,19 @@ class Manifest implements Entity
     public function getCommands(): array
     {
         return $this->commands;
+    }
+
+    public function withIndex(?Index $index)
+    {
+        $self = clone $this;
+        $self->index = $index;
+
+        return $self;
+    }
+
+    public function getIndex(): ?Index
+    {
+        return $this->index;
     }
 
     public function jsonSerialize()
