@@ -17,26 +17,18 @@ class Loader
      **/
     private $entityMaps;
 
-    /**
-     * @var string
-     */
-    private $manifestFileName;
-
     public function __construct(array $manifestMap)
     {
         $this->entityMaps = $manifestMap;
-        $composer = json_decode(file_get_contents(getcwd() . '/composer.json'), true);
-
-        $this->manifestFileName = $composer['extra']['onion']['manifest']['filename'] ?? 'onion.json';
     }
 
     private function loadManifest(): array
     {
         if (!$this->manifestExists()) {
-            throw new \RuntimeException("Manifest file '{$this->manifestFileName}' not found in current director. Did you forget to init?");
+            throw new \RuntimeException("Manifest file 'onion.json' not found in current director. Did you forget to init?");
         }
 
-        return json_decode(file_get_contents(getcwd() . "/{$this->manifestFileName}"), true);
+        return json_decode(file_get_contents('onion.json'), true);
     }
 
     private function getSection(array $raw, string $section): ?iterable
@@ -85,13 +77,13 @@ class Loader
 
     public function manifestExists(): bool
     {
-        return file_exists(getcwd() . "/{$this->manifestFileName}");
+        return file_exists("onion.json");
     }
 
     public function saveManifest(string $location, Manifest $manifest): bool
     {
         return 1 > file_put_contents(
-            $location . DIRECTORY_SEPARATOR . $this->manifestFileName,
+            "{$location}/onion.json",
             json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
         );
     }

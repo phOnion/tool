@@ -10,11 +10,6 @@ use Onion\Framework\Console\Progress;
 
 class Command implements CommandInterface
 {
-    private const IGNORE_FILES = [
-        '.gitignore',
-        '.onionignore',
-    ];
-
     private const COMPRESSION_MAP = [
         'gz' => \Phar::GZ,
         'bz2' => \Phar::BZ2,
@@ -46,38 +41,25 @@ class Command implements CommandInterface
 
         $filename = "{$location}/{$file}.phar";
         $phar = new \Phar($filename);
+        $phar->setDefaultStub(
+            'bin/cli.php',
+            'public/index.php'
+        );
 
         $ignorePattern = $this->compileIgnorePattern(getcwd());
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(getcwd())
+        $iterator = new \RegexIterator(new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                getcwd(),
+                \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
+            )
+        ), $ignorePattern, \RegexIterator::MATCH, \RegexIterator::USE_KEY);
+
+        $phar->startBuffering();
+        $phar->buildFromIterator(
+            $iterator,
+            getcwd()
         );
 
-        $iterator = new \RegexIterator($iterator, $ignorePattern, \RegexIterator::MATCH, \RegexIterator::USE_KEY);
-
-        $count = iterator_count($iterator);
-        $progressBar = new Progress(
-            ($count > 64 ? 64 : $count),
-            iterator_count($iterator),
-            ['=', '#']
-        );
-        $progressBar->setFormat(
-            '[%text:green%{buffer}%end%] (%text:yellow%{progress}%end%/%text:cyan%{steps}%end%)'
-        );
-        $console->writeLine('%text:cyan%Collecting package files');
-
-        $iterator->rewind();
-        foreach ($iterator as $item) {
-            $progressBar->increment(1);
-            if ($item->isDir()) {
-                continue;
-            }
-
-            $phar->addFile($item->getRealPath(), $item->getPathName());
-            $progressBar->display($console);
-        }
-        $console->writeLine('');
-
-        $extension = '';
         $compression = strtolower($console->getArgument('compression', 'none'));
         if ($compression !== 'none') {
             $console->writeLine(
@@ -93,12 +75,8 @@ class Command implements CommandInterface
             if (!$phar->canCompress(self::COMPRESSION_MAP[$compression])) {
                 throw new \RuntimeException("Can't compress package using '{$compression}'");
             }
-            $extension = ".{$compression}";
-            if (file_exists("{$filename}{$extension}")) {
-                unlink("{$filename}{$extension}");
-            }
 
-            $phar->compress(self::COMPRESSION_MAP[$compression]);
+            $phar->compressFiles(self::COMPRESSION_MAP[$compression]);
         }
 
         $signature = strtolower($console->getArgument('signature', 'sha512'));
@@ -126,12 +104,9 @@ class Command implements CommandInterface
             "%text:cyan%Signature algorithm set to {$signature} " . ($key !== null ? "({$keyLocation})" : '')
         );
         $phar->setSignatureAlgorithm($algo, $key);
-        unset($phar);
-        if ($extension !== '') {
-            unlink($filename);
-        }
+        $phar->stopBuffering();
 
-        $size = number_format(filesize("{$filename}{$extension}")/pow(1024, 2), 2, '.', ',');
+        $size = number_format(filesize("{$filename}")/pow(1024, 2), 2, '.', ',');
         $console->writeLine("%text:bold-green%Build completed, size {$size}MB");
         return 0;
     }
@@ -139,14 +114,10 @@ class Command implements CommandInterface
     private function compileIgnorePattern(string $baseDir): string
     {
         $ignored = [];
-        foreach (self::IGNORE_FILES as $file) {
-            if (!file_exists(getcwd() . "/{$file}")) {
-                continue;
-            }
-
+        if (file_exists(getcwd() . "/.onionignore")) {
             $ignored = array_merge($ignored, array_map(function ($line) {
-                return trim(preg_replace('#/$#', '', $line));
-            }, file(getcwd() . "/{$file}")));
+                return trim(preg_replace('#/$#', DIRECTORY_SEPARATOR, $line));
+            }, file(getcwd() . "/.onionignore")));
         }
 
         $ds = DIRECTORY_SEPARATOR;

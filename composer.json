@@ -16,12 +16,5 @@
     },
     "config": {
         "bin-dir": "bin/"
-    },
-    "extra": {
-        "onion": {
-            "manifest": {
-                "filename": "onion.json"
-            }
-        }
     }
 }
