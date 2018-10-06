@@ -17,7 +17,21 @@
         {
             "definition": "update",
             "handler": "\\Onion\\Tool\\Update\\Command",
-            "summary": "Display Current version"
+            "summary": "Display Current version",
+            "parameters": [
+                {
+                    "name": "--rollback",
+                    "type": "bool",
+                    "required": false,
+                    "description": "Perform a rollback"
+                },
+                {
+                    "name": "--force",
+                    "type": "bool",
+                    "required": false,
+                    "description": "Force update to latest dev version"
+                }
+            ]
         },
         {
             "definition": "init",
