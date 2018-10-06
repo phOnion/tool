@@ -42,7 +42,7 @@ class Command implements CommandInterface
         }
 
         if ($updater->update()) {
-            $console->writeLine("%text:cyan%Updating from %text:yellow%{$updater->getOldVersion()}&text:cyan% to %text:green%{$updater->getNewVersion()}");
+            $console->writeLine("%text:cyan%Updating from %text:yellow%{$updater->getOldVersion()}%text:cyan% to %text:green%{$updater->getNewVersion()}");
             return 0;
         }
 
