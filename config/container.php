@@ -1,7 +1,5 @@
 <?php
 
-use App\Add\Service\DelegateService;
-use App\Add\Service\Factory\DelegateServiceFactory;
 use Onion\Cli\Manifest\Entities\Command;
 use Onion\Cli\Manifest\Entities\Index;
 use Onion\Cli\Manifest\Entities\Link;
@@ -77,8 +75,7 @@ $manifestContainer = new Container($common + [
     ],
     'factories' => [
         ConsoleInterface::class => ConsoleFactory::class,
-        Router::class => RouterFactory::class,
-        DelegateService::class => DelegateServiceFactory::class
+        Router::class => RouterFactory::class
     ],
     'commands' => $commands
 ]);

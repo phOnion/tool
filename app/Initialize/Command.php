@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace App\Initialize;
+namespace Onion\Tool\Initialize;
 
 use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;

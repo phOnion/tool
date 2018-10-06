@@ -1,6 +1,6 @@
 {
     "name": "onion/tool",
-    "version": "0.0.0-alpha+0005",
+    "version": "0.0.0-alpha+0008",
     "links": [
         {
             "title": "GitHub",
@@ -11,17 +11,17 @@
     "commands": [
         {
             "definition": "version",
-            "handler": "\\App\\Version\\Command",
+            "handler": "\\Onion\\Tool\\Version\\Command",
             "summary": "Display Current version"
         },
         {
             "definition": "init",
-            "handler": "\\App\\Initialize\\Command",
+            "handler": "\\Onion\\Tool\\Initialize\\Command",
             "summary": "Initialize onion project"
         },
         {
             "definition": "build",
-            "handler": "\\App\\Build\\Command",
+            "handler": "\\Onion\\Tool\\Build\\Command",
             "summary": "Build the current package",
             "parameters": [
                 {
@@ -67,7 +67,7 @@
         },
         {
             "definition": "link",
-            "handler": "\\App\\Link\\Command",
+            "handler": "\\Onion\\Tool\\Link\\Command",
             "summary": "Perform actions on lists",
             "parameters": [
                 {
@@ -86,7 +86,7 @@
         },
         {
             "definition": "command",
-            "handler": "App\\Command\\Command",
+            "handler": "Onion\\Tool\\Command\\Command",
             "summary": "Manipulate commands",
             "parameters": [
                 {

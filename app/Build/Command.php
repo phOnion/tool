@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace App\Build;
+namespace Onion\Tool\Build;
 
 use Onion\Cli\Manifest\Loader;
 use Onion\Cli\SemVer\Version;

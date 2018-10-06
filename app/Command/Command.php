@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace App\Command;
+namespace Onion\Tool\Command;
 
 use Onion\Cli\Manifest\Entities\Command as Definition;
 use Onion\Cli\Manifest\Loader;
