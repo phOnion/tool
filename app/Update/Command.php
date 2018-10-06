@@ -21,8 +21,10 @@ class Command implements CommandInterface
         $updater = new Updater(null, false, Updater::STRATEGY_GITHUB);
         $updater->getStrategy()->setPackageName('onion/tool');
         $updater->getStrategy()->setPharName('onion.phar');
-
         $updater->getStrategy()->setCurrentLocalVersion($manifest->getVersion());
+        if ($console->hasArgument('force')) {
+            $updater->getStrategy()->setStability('any');
+        }
 
         if ($console->hasArgument('rollback')) {
             if ($updater->rollback()) {
