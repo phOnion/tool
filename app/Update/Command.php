@@ -19,7 +19,7 @@ class Command implements CommandInterface
     {
         $manifest = $this->loader->getManifest();
         $updater = new Updater(null, false, Updater::STRATEGY_GITHUB);
-        $updater->getStrategy()->setPackageName('onion/tool');
+        $updater->getStrategy()->setPackageName($manifest->getName());
         $updater->getStrategy()->setPharName('onion.phar');
         $updater->getStrategy()->setCurrentLocalVersion($manifest->getVersion());
         if ($console->hasArgument('force')) {
