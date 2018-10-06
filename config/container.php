@@ -14,6 +14,7 @@ use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Onion\Framework\Console\Interfaces\ArgumentParserInterface;
 use Onion\Framework\Dependency\DelegateContainer;
 use Onion\Cli\Manifest\Entities\Link;
+use Onion\Cli\Manifest\Entities\Index;
 
 if (getenv('ENVIRONMENT') === 'production') {
     $directoryIterator = new \RecursiveIteratorIterator(
@@ -31,6 +32,7 @@ $common = [
         'map' => [
             'commands' => Command::class,
             'links' => Link::class,
+            'index' => Index::class,
         ]
     ],
 ];
