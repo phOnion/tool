@@ -144,15 +144,6 @@ class Command implements CommandInterface
 
     private function buildVersionString(ConsoleInterface $console, MutableVersion $version): string
     {
-        if ($version->hasBuild()) {
-            $version->setBuild(str_pad(
-                (string) ($version->getBuild()+1),
-                strlen($version->getBuild()),
-                '0',
-                STR_PAD_LEFT
-            ));
-        }
-
         if ($console->hasArgument('bump')) {
             switch (strtolower($console->getArgument('bump'))) {
                 case 'major':
@@ -178,6 +169,15 @@ class Command implements CommandInterface
 
         if ($console->hasArgument('pre')) {
             $version->setPreRelease($console->getArgument('pre'));
+        }
+
+        if ($version->hasBuild()) {
+            $version->setBuild(str_pad(
+                (string) ($version->getBuild()+1),
+                strlen($version->getBuild()),
+                '0',
+                STR_PAD_LEFT
+            ));
         }
 
         return (string) $version;
