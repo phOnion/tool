@@ -20,7 +20,6 @@ class Command implements CommandInterface
         'sha512' => \Phar::SHA512,
         'sha256' => \Phar::SHA256,
         'sha1' => \Phar::SHA1,
-        'openssl' => \Phar::OPENSSL,
     ];
 
     /** @var Loader  */
@@ -92,7 +91,7 @@ class Command implements CommandInterface
             $phar->compressFiles(self::COMPRESSION_MAP[$compression]);
         }
 
-        $signature = strtolower($console->getArgument('signature', 'sha512'));
+        $signature = strtolower($console->getArgument('signature', 'sha256'));
         if (!isset(self::SIGNATURE_MAP[$signature])) {
             throw new \InvalidArgumentException(
                 "Supplied signature algorithm '{$signature}' is not supported"
@@ -100,21 +99,9 @@ class Command implements CommandInterface
         }
 
         $algo = self::SIGNATURE_MAP[$signature];
-        $key = null;
-        $keyLocation = null;
-        if ($signature === 'ssl') {
-            $keyLocation = realpath($console->prompt('Path to private SSL key'));
-
-            if (!$keyLocation) {
-                $console->writeLine('%text:red%Private key not found');
-                return 1;
-            }
-
-            $key = openssl_get_privatekey(file_get_contents($keyLocation));
-        }
 
         $console->writeLine(
-            "%text:cyan%Signature algorithm set to {$signature} " . ($key !== null ? "({$keyLocation})" : '')
+            "%text:cyan%Signature algorithm set to {$signature} "
         );
 
         $phar->setSignatureAlgorithm($algo, $key);
