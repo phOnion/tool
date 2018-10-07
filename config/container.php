@@ -13,6 +13,7 @@ use Onion\Framework\Console\Interfaces\ArgumentParserInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Onion\Framework\Dependency\Container;
 use Onion\Framework\Dependency\DelegateContainer;
+use Onion\Cli\Manifest\Entities\Manifest;
 
 if (getenv('ENVIRONMENT') === 'production') {
     $directoryIterator = new \RecursiveIteratorIterator(
@@ -25,22 +26,15 @@ if (getenv('ENVIRONMENT') === 'production') {
     }
 }
 
-$common = [
-    'manifest' => [
-        'map' => [
-            'commands' => Command::class,
-            'links' => Link::class,
-            'index' => Index::class,
-        ]
-    ],
-];
+$loader = new Loader([
+    'commands' => Command::class,
+    'links' => Link::class,
+    'index' => Index::class,
+]);
+$manifest = $loader->getManifest(__DIR__ . '/../');
 
-// Test
-$container = new Container($common);
-/** @var Loader $loader */
-$loader = $container->get(Loader::class);
 $commands = [];
-foreach ($loader->getManifest()->getCommands() as $command) {
+foreach ($manifest->getCommands() as $command) {
     /** @var Command $command */
     $parameters = [];
     foreach ($command->getParameters() as $name => $description) {
@@ -66,12 +60,13 @@ foreach ($loader->getManifest()->getCommands() as $command) {
 
     $commands[] = $cmd;
 }
-$manifestContainer = new Container($common + [
+$container = new Container($common + [
     'console' => [
         'stream' => 'php://stdout'
     ],
     'invokables' => [
-        ArgumentParserInterface::class => ArgumentParser::class
+        ArgumentParserInterface::class => ArgumentParser::class,
+        Manifest::class => $manifest
     ],
     'factories' => [
         ConsoleInterface::class => ConsoleFactory::class,
@@ -80,4 +75,4 @@ $manifestContainer = new Container($common + [
     'commands' => $commands
 ]);
 
-return $manifestContainer;
+return $container;
