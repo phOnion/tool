@@ -1,8 +1,6 @@
 <?php declare(strict_types=1);
 namespace Onion\Cli\Manifest;
 
-use function Sabre\Xml\Deserializer\keyValue;
-use function Sabre\Xml\Deserializer\valueObject;
 use Onion\Cli\Manifest\Entities\Command;
 use Onion\Cli\Manifest\Entities\Link;
 use Onion\Cli\Manifest\Entities\Maintainer;
@@ -22,13 +20,14 @@ class Loader
         $this->entityMaps = $manifestMap;
     }
 
-    private function loadManifest(): array
+    private function loadManifest(?string $directory = null): array
     {
-        if (!$this->manifestExists()) {
+        $directory = $directory ?? getcwd();
+        if (!file_exists("{$directory}/onion.json")) {
             throw new \RuntimeException("Manifest file 'onion.json' not found in current director. Did you forget to init?");
         }
 
-        return json_decode(file_get_contents('onion.json'), true);
+        return json_decode(file_get_contents("{$directory}/onion.json"), true);
     }
 
     private function getSection(array $raw, string $section): ?iterable
@@ -60,9 +59,9 @@ class Loader
         return $result;
     }
 
-    public function getManifest(): Manifest
+    public function getManifest(string $directory = null): Manifest
     {
-        $raw = $this->loadManifest();
+        $raw = $this->loadManifest($directory);
 
         $manifest = new Manifest(
             $raw['name'] ?? '',
@@ -76,9 +75,10 @@ class Loader
         return $manifest;
     }
 
-    public function manifestExists(): bool
+    public function manifestExists(string $directory = null): bool
     {
-        return file_exists("onion.json");
+        $directory = $directory ?? getcwd();
+        return file_exists("{$directory}/onion.json");
     }
 
     public function saveManifest(string $location, Manifest $manifest): bool
