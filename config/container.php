@@ -26,11 +26,13 @@ if (getenv('ENVIRONMENT') === 'production') {
     }
 }
 
-$loader = new Loader([
+$map = [
     'commands' => Command::class,
     'links' => Link::class,
     'index' => Index::class,
-]);
+];
+
+$loader = new Loader($map);
 $manifest = $loader->getManifest(__DIR__ . '/../');
 
 $commands = [];
@@ -60,9 +62,12 @@ foreach ($manifest->getCommands() as $command) {
 
     $commands[] = $cmd;
 }
-$container = new Container($common + [
+$container = new Container([
     'console' => [
         'stream' => 'php://stdout'
+    ],
+    'manifest' => [
+        'map' => $map,
     ],
     'invokables' => [
         ArgumentParserInterface::class => ArgumentParser::class,
