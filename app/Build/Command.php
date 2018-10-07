@@ -35,9 +35,10 @@ class Command implements CommandInterface
         $manifest = $this->loader->getManifest();
         $version = new MutableVersion($console->getArgument('version', $manifest->getVersion()));
 
-        $this->loader->saveManifest(getcwd(), $manifest->setVersion(
+        $manifest = $manifest->setVersion(
             $this->buildVersionString($console, $version)
-        ));
+        );
+        $this->loader->saveManifest(getcwd(), $manifest);
 
         $console->writeLine('%text:cyan%Building package');
         $location = realpath($console->getArgument('location', getcwd()));
