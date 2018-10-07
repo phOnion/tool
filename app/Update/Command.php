@@ -2,6 +2,7 @@
 namespace Onion\Tool\Update;
 
 use Humbug\SelfUpdate\Updater;
+use Onion\Cli\Manifest\Entities\Manifest;
 use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
 
