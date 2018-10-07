@@ -33,7 +33,11 @@ $map = [
 ];
 
 $loader = new Loader($map);
-$manifest = $loader->getManifest(__DIR__ . '/../');
+$location = Phar::running();
+if ($location === '') {
+    $location = __DIR__ . '/../';
+}
+$manifest = $loader->getManifest($location);
 
 $commands = [];
 foreach ($manifest->getCommands() as $command) {
