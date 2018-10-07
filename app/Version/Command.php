@@ -1,23 +1,22 @@
 <?php declare(strict_types=1);
 namespace Onion\Tool\Version;
 
+use Onion\Cli\Manifest\Entities\Manifest;
 use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
-use Onion\Cli\Manifest\Loader;
 
 class Command implements CommandInterface
 {
-    /** @var Loader $loader */
-    private $loader;
-    public function __construct(Loader $loader)
+    /** @var Manifest $manifest */
+    private $manifest;
+    public function __construct(Manifest $manifest)
     {
-        $this->loader = $loader;
+        $this->manifest = $manifest;
     }
 
     public function trigger(ConsoleInterface $console): int
     {
-        $manifest = $this->loader->getManifest();
-        $console->writeLine("%text:cyan%Version %text:green%{$manifest->getVersion()}");
+        $console->writeLine("%text:cyan%Version %text:green%{$this->manifest->getVersion()}");
 
         return 0;
     }

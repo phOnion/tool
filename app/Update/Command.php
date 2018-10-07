@@ -2,22 +2,21 @@
 namespace Onion\Tool\Update;
 
 use Humbug\SelfUpdate\Updater;
-use Onion\Cli\Manifest\Loader;
 use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
 
 class Command implements CommandInterface
 {
-    /** @var Loader $loader */
-    private $loader;
-    public function __construct(Loader $loader)
+    /** @var Manifest $manifest */
+    private $manifest;
+    public function __construct(Manifest $manifest)
     {
-        $this->loader = $loader;
+        $this->manifest = $manifest;
     }
 
     public function trigger(ConsoleInterface $console): int
     {
-        $manifest = $this->loader->getManifest();
+        $manifest = $this->manifest;
         $updater = new Updater(null, false, Updater::STRATEGY_GITHUB);
         $updater->getStrategy()->setPackageName($manifest->getName());
         $updater->getStrategy()->setPharName('onion.phar');
