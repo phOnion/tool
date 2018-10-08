@@ -22,6 +22,9 @@ class Manifest implements Entity
     /** @var Index[] */
     protected $index = [];
 
+    /** @var Repository[] */
+    protected $repos = [];
+
     public function __construct(
         string $name,
         string $version,
@@ -100,7 +103,20 @@ class Manifest implements Entity
 
     public function getIndex(string $type = null)
     {
-        return $type === null ? $this->index : $this->index[$type];
+        return $type === null ? $this->index : $this->index[$type] ?? null;
+    }
+
+    public function withRepositories(array $repos): Manifest
+    {
+        $self = clone $this;
+        $self->repos = $repos;
+
+        return $self;
+    }
+
+    public function getRepositories(): array
+    {
+        return $this->repos;
     }
 
     public function jsonSerialize()
@@ -111,6 +127,7 @@ class Manifest implements Entity
             'links' => $this->getLinks(),
             'commands' => $this->getCommands(),
             'index' => array_values($this->getIndex()),
+            'repositories' => $this->getRepositories(),
         ];
     }
 }

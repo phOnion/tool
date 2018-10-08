@@ -69,10 +69,9 @@ class Loader
             $this->getSection($raw, 'links')
         );
 
-        $manifest = $manifest->withCommands($this->getSection($raw, 'commands'));
-        $manifest = $manifest->withIndex($this->getSection($raw, 'index'));
-
-        return $manifest;
+        return $manifest->withCommands($this->getSection($raw, 'commands'))
+            ->withIndex($this->getSection($raw, 'index'))
+            ->withRepositories($this->getSection($raw, 'repositories'));
     }
 
     public function manifestExists(string $directory = null): bool
