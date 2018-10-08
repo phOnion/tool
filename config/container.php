@@ -1,89 +1,12 @@
 <?php
 
-use Onion\Cli\Manifest\Entities\Command;
-use Onion\Cli\Manifest\Entities\Index;
-use Onion\Cli\Manifest\Entities\Link;
-use Onion\Cli\Manifest\Loader;
-use Onion\Console\Application\Application;
-use Onion\Console\Router\ArgumentParser;
-use Onion\Console\Router\Factory\RouterFactory;
-use Onion\Console\Router\Router;
-use Onion\Framework\Console\Factory\ConsoleFactory;
-use Onion\Framework\Console\Interfaces\ArgumentParserInterface;
-use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Onion\Framework\Dependency\Container;
-use Onion\Framework\Dependency\DelegateContainer;
-use Onion\Cli\Manifest\Entities\Manifest;
-use Onion\Cli\Manifest\Entities\Repository;
+use function Onion\Framework\merge;
 
-if (getenv('ENVIRONMENT') === 'production') {
-    $directoryIterator = new \RecursiveIteratorIterator(
-        new \RecursiveDirectoryIterator(__DIR__)
-    );
+$config = include __DIR__ . '/config.global.php';
+$console = include __DIR__ . '/console.global.php';
+$container = include __DIR__ . '/container.global.php';
 
-    $dependencies = [];
-    foreach ($directoryIterator as $file) {
+$cfg = merge($config, merge($console, $container));
 
-    }
-}
-
-$map = [
-    'commands' => Command::class,
-    'links' => Link::class,
-    'index' => Index::class,
-    'repositories' => Repository::class,
-];
-
-$loader = new Loader($map);
-$location = Phar::running();
-if ($location === '') {
-    $location = __DIR__ . '/../';
-}
-$manifest = $loader->getManifest($location);
-
-$commands = [];
-foreach ($manifest->getCommands() as $command) {
-    /** @var Command $command */
-    $parameters = [];
-    foreach ($command->getParameters() as $name => $description) {
-        $parameters[$name] = $description;
-    }
-
-    $cmd = [
-        'name' => $command->getName(),
-        'handler' => $command->getHandler(),
-        'summary' => $command->getSummary(),
-        'description' => $command->getDescription(),
-    ];
-
-    foreach ($command->getParameters() as $parameter) {
-        $name = $parameter->getName();
-        $cmd['parameters'][$parameter->getName()] = [
-            'default' => $parameter->hasDefault() ? $parameter->getDefault() : null,
-            'description' => $parameter->getDescription(),
-            'type' => $parameter->getType(),
-            'required' => $parameter->isRequired(),
-        ];
-    }
-
-    $commands[] = $cmd;
-}
-$container = new Container([
-    'console' => [
-        'stream' => 'php://stdout'
-    ],
-    'manifest' => [
-        'map' => $map,
-    ],
-    'invokables' => [
-        ArgumentParserInterface::class => ArgumentParser::class,
-        Manifest::class => $manifest
-    ],
-    'factories' => [
-        ConsoleInterface::class => ConsoleFactory::class,
-        Router::class => RouterFactory::class
-    ],
-    'commands' => $commands
-]);
-
-return $container;
+return new Container($cfg);
