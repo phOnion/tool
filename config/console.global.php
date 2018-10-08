@@ -15,7 +15,6 @@ $container = new Container([
         'map' => [
             'commands' => Command::class,
             'links' => Link::class,
-            'index' => Index::class,
             'repositories' => Repository::class,
         ],
     ],

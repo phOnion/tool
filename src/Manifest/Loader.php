@@ -70,7 +70,6 @@ class Loader
         );
 
         return $manifest->withCommands($this->getSection($raw, 'commands'))
-            ->withIndex($this->getSection($raw, 'index'))
             ->withRepositories($this->getSection($raw, 'repositories'));
     }
 
