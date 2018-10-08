@@ -1,6 +1,6 @@
 {
     "name": "onion/tool",
-    "version": "0.1.8-alpha+0018",
+    "version": "0.1.8-alpha+0046",
     "links": [
         {
             "title": "GitHub",
@@ -74,13 +74,52 @@
                     "type": "string",
                     "required": false,
                     "description": "Signature algo to use for the generated file.",
-                    "default": "sha512"
+                    "default": "sha256"
                 },
                 {
                     "name": "--pre",
                     "type": "string",
                     "required": false,
                     "description": "Indicate this build is pre-release"
+                }
+            ]
+        },
+        {
+            "definition": "publish [artefact]",
+            "handler": "\\Onion\\Tool\\Publish\\Command",
+            "summary": "Build the current package",
+            "parameters": [
+                {
+                    "name": "--auth",
+                    "type": "string",
+                    "required": false,
+                    "description": "Authentication method to use",
+                    "default": "password"
+                },
+                {
+                    "name": "--secret",
+                    "type": "string",
+                    "required": false,
+                    "description": "The secret to use for authentication"
+                },
+                {
+                    "name": "--credential",
+                    "type": "string",
+                    "required": false,
+                    "description": "The user to use for authentication"
+                },
+                {
+                    "name": "--filename | -f",
+                    "type": "string",
+                    "required": true,
+                    "description": "The filename with with which to publish artefact"
+                },
+                {
+                    "name": "--draft | -d",
+                    "type": "bool",
+                    "required": false,
+                    "description": "Indicate this build is pre-release",
+                    "default": "true"
                 }
             ]
         },
@@ -133,10 +172,14 @@
         {
             "type": "cli",
             "file": "bin/cli.php"
-        },
+        }
+    ],
+    "repositories": [
         {
-            "type": "web",
-            "file": "public/index.php"
+            "name": "gh",
+            "vendor": "phOnion",
+            "project": "tool",
+            "branch": "master"
         }
     ]
 }
