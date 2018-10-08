@@ -54,7 +54,7 @@ class Command implements CommandInterface
         $web = $manifest->getIndex('web');
         // file_put_contents('stub.php', $phar->getStub());
         $phar->setStub(strtr(file_get_contents('data/stub.php'), [
-            '__WEB_STUB__' => $web ? "'{$web->getFile()}'" : false,
+            '__WEB_STUB__' => $web ? "'{$web->getFile()}'" : 'false',
             '__CLI_STUB__' => "'{$cli->getFile()}'",
         ]));
 
@@ -104,7 +104,7 @@ class Command implements CommandInterface
             "%text:cyan%Signature algorithm set to {$signature} "
         );
 
-        $phar->setSignatureAlgorithm($algo, $key);
+        $phar->setSignatureAlgorithm($algo);
         $phar->setMetadata([
             'version' => $version,
         ]);
