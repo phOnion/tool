@@ -14,6 +14,7 @@ use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Onion\Framework\Dependency\Container;
 use Onion\Framework\Dependency\DelegateContainer;
 use Onion\Cli\Manifest\Entities\Manifest;
+use Onion\Cli\Manifest\Entities\Repository;
 
 if (getenv('ENVIRONMENT') === 'production') {
     $directoryIterator = new \RecursiveIteratorIterator(
@@ -30,6 +31,7 @@ $map = [
     'commands' => Command::class,
     'links' => Link::class,
     'index' => Index::class,
+    'repositories' => Repository::class,
 ];
 
 $loader = new Loader($map);
