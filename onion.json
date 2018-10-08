@@ -1,6 +1,6 @@
 {
     "name": "onion/tool",
-    "version": "0.1.8-alpha+0047",
+    "version": "0.1.8-alpha+0073",
     "links": [
         {
             "title": "GitHub",
@@ -166,12 +166,25 @@
                     "description": "List all commands"
                 }
             ]
-        }
-    ],
-    "index": [
+        },
         {
-            "type": "cli",
-            "file": "bin/cli.php"
+            "definition": "compile",
+            "handler": "\\Onion\\Tool\\Compile\\Command",
+            "summary": "Compile project configurations",
+            "parameters": [
+                {
+                    "name": "--warmup | -w",
+                    "type": "bool",
+                    "required": false,
+                    "description": "Perform project-wide opcache warm up"
+                },
+                {
+                    "name": "--environment | --env | -e",
+                    "type": "string",
+                    "required": false,
+                    "description": "Environment configs to load"
+                }
+            ]
         }
     ],
     "repositories": [
