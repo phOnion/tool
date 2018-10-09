@@ -19,8 +19,6 @@ class Manifest implements Entity
     protected $links = [];
     /** @var Command[] */
     protected $commands = [];
-    /** @var Index[] */
-    protected $index = [];
 
     /** @var Repository[] */
     protected $repos = [];
@@ -89,21 +87,6 @@ class Manifest implements Entity
     public function getCommands(): array
     {
         return $this->commands;
-    }
-
-    public function withIndex(array $index): Manifest
-    {
-        $self = clone $this;
-        foreach ($index as $item) {
-            $self->index[$item->getType()] = $item;
-        }
-
-        return $self;
-    }
-
-    public function getIndex(string $type = null)
-    {
-        return $type === null ? $this->index : $this->index[$type] ?? null;
     }
 
     public function withRepositories(array $repos): Manifest
