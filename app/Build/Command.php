@@ -45,18 +45,12 @@ class Command implements CommandInterface
         $filename = "{$location}/{$file}.phar";
 
         $phar = new \Phar($filename);
-        $cli = $manifest->getIndex('cli');
-        if (!$cli) {
-            $console->writeLine('%text:red%Missing CLI index file');
-            return 1;
-        }
-
-        $web = $manifest->getIndex('web');
-        // file_put_contents('stub.php', $phar->getStub());
-        $phar->setStub(strtr(file_get_contents('data/stub.php'), [
-            '__WEB_STUB__' => $web ? "'{$web->getFile()}'" : 'false',
-            '__CLI_STUB__' => "'{$cli->getFile()}'",
-        ]));
+        $stub = file_exists(getcwd() . '/data/stub.php') ?
+            file_get_contents(getcwd() . '/data/stub.php') : (
+                \Phar::running() !== '' ?
+                    (new \Phar(\Phar::running()))->getStub() : '<?php echo "No stub"; __HALT_COMPILER();'
+                );
+        $phar->setStub($stub);
 
         $ignorePattern = $this->compileIgnorePattern(getcwd());
         $iterator = new \RegexIterator(new \RecursiveIteratorIterator(
