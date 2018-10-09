@@ -1,5 +1,6 @@
 {
     "name": "onion/tool",
+    "license": "MIT",
     "authors": [
         {"name": "Dimitar Dimitrv", "email": "daghostman.dd@gmail.com", "role": "dev"}
     ],
