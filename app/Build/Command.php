@@ -111,16 +111,18 @@ class Command implements CommandInterface
 
     private function compileIgnorePattern(string $baseDir): string
     {
-        $ignored = [];
+        $list = '';
+        $ds = DIRECTORY_SEPARATOR;
+
         if (file_exists(getcwd() . "/.onionignore")) {
             $ignored = array_merge($ignored, array_map(function ($line) {
                 return trim(preg_replace('#/$#', DIRECTORY_SEPARATOR, $line));
             }, file(getcwd() . "/.onionignore")));
+
+            $list = '(?!' . implode('|', $ignored) . "){$ds}?";
         }
 
-        $ds = DIRECTORY_SEPARATOR;
-        $list = implode('|', $ignored);
-        return str_replace(['/', '\\', '.'], [$ds, '\\\\', '\.'], "#^{$baseDir}{$ds}(?!{$list}){$ds}?#iU");
+        return str_replace(['/', '\\', '.'], [$ds, '\\\\', '\.'], "#^{$baseDir}{$ds}{$list}#iU");
     }
 
     private function buildVersionString(ConsoleInterface $console, MutableVersion $version): string
