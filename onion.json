@@ -1,6 +1,6 @@
 {
     "name": "onion/tool",
-    "version": "0.1.8-alpha+0073",
+    "version": "0.2.0-alpha+0080",
     "links": [
         {
             "title": "GitHub",
@@ -187,6 +187,7 @@
             ]
         }
     ],
+    "index": [],
     "repositories": [
         {
             "name": "gh",
