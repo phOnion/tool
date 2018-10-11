@@ -80,17 +80,25 @@ class Version
         if ($compare === 0) {
             $compare = $version->getMinor() <=> $this->getMinor();
             if ($compare === 0) {
+                if ($version->getConstraint() === '~') {
+                    return $compare;
+                }
                 $compare = $version->getFix() <=> $this->getFix();
-                if ($compare === 0 && ($this->isPreRelease() || $version->isPreRelease())) {
-                    if (!$this->isPreRelease() && $version->isPreRelease()) {
-                        $compare = -1;
-                    } elseif ($this->isPreRelease() && !$version->isPreRelease()) {
-                        $compare = 1;
-                    } else {
-                        $compare = $version->getPreRelease() <=> $this->getPreRelease();
+                if ($compare === 0) {
+                    if ($version->getConstraint() === '^') {
+                        return $compare;
+                    }
+                    if ($this->isPreRelease() || $version->isPreRelease()) {
+                        if (!$this->isPreRelease() && $version->isPreRelease()) {
+                            $compare = -1;
+                        } elseif ($this->isPreRelease() && !$version->isPreRelease()) {
+                            $compare = 1;
+                        } else {
+                            $compare = $version->getPreRelease() <=> $this->getPreRelease();
 
-                        if ($compare === 0) {
-                            $compare = $version->getBuild() <=> $this->getBuild();
+                            if ($compare === 0) {
+                                $compare = $version->getBuild() <=> $this->getBuild();
+                            }
                         }
                     }
                 }
@@ -104,7 +112,7 @@ class Version
     {
         $version = new Version($constraint);
 
-        return $this->compare($version) !== -1;
+        return $this->compare($version) === 0;
     }
 
     public function __toString(): string
