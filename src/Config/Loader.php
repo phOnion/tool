@@ -36,7 +36,8 @@ class Loader
                 return in_array($item->getExtension(), $registeredExtensions) &&
                     (
                         stripos($item->getFilename(), ".{$environment}.") !== false ||
-                        stripos($item->getFilename(), '.global.') !== false
+                        stripos($item->getFilename(), '.global.') !== false ||
+                        stripos($item->getFilename(), '.local.') !== false
                     );
             });
 
