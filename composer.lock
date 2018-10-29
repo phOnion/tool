@@ -457,16 +457,16 @@
         },
         {
             "name": "onion/interfaces",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/interfaces.git",
-                "reference": "8ddd4fe2f6201a9a37259846ee49d137e93082a6"
+                "reference": "c0f7f2d6cb1b48a1d2bed16c4dde80ae477e9680"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/interfaces/zipball/8ddd4fe2f6201a9a37259846ee49d137e93082a6",
-                "reference": "8ddd4fe2f6201a9a37259846ee49d137e93082a6",
+                "url": "https://api.github.com/repos/phOnion/interfaces/zipball/c0f7f2d6cb1b48a1d2bed16c4dde80ae477e9680",
+                "reference": "c0f7f2d6cb1b48a1d2bed16c4dde80ae477e9680",
                 "shasum": ""
             },
             "require": {
@@ -498,7 +498,7 @@
                 }
             ],
             "description": "Package containing only the interfaces of 'onion' libraries, allowing to use code without installing the whole framework and using code written for the framework outside it",
-            "time": "2018-04-29T16:40:09+00:00"
+            "time": "2018-10-09T12:32:39+00:00"
         },
         {
             "name": "padraic/humbug_get_contents",
@@ -1543,7 +1543,7 @@
                 "laravel/socialite": ">=1,<1.0.99|>=2,<2.0.10",
                 "magento/magento1ce": "<1.9.3.9",
                 "magento/magento1ee": ">=1.9,<1.14.3.2",
-                "magento/product-community-edition": ">=2,<2.2.5",
+                "magento/product-community-edition": ">=2,<2.2.6",
                 "monolog/monolog": ">=1.8,<1.12",
                 "namshi/jose": "<2.2",
                 "onelogin/php-saml": "<2.10.4",
@@ -1658,7 +1658,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2018-10-05T18:14:02+00:00"
+            "time": "2018-10-12T22:19:58+00:00"
         },
         {
             "name": "symfony/options-resolver",
