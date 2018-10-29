@@ -8,6 +8,7 @@ use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Phar;
 use Onion\Framework\Console\Progress;
 use Onion\Cli\SemVer\MutableVersion;
+use Onion\Tool\Compile\Command as Compile;
 
 class Command implements CommandInterface
 {
@@ -24,9 +25,12 @@ class Command implements CommandInterface
 
     /** @var Loader  */
     private $loader;
-    public function __construct(Loader $loader)
+    /** @var Compile */
+    private $compileCommand;
+    public function __construct(Loader $loader, Compile $command)
     {
         $this->loader = $loader;
+        $this->compileCommand = $command;
     }
 
     public function trigger(ConsoleInterface $console): int
@@ -39,32 +43,24 @@ class Command implements CommandInterface
         );
         $this->loader->saveManifest(getcwd(), $manifest);
 
-        $console->writeLine('%text:cyan%Building package');
+        if (!$console->hasArgument('no-compile')) {
+            $this->compileCommand->trigger($console);
+        }
+
+
         $location = realpath($console->getArgument('location', getcwd()));
         $file = $console->getArgument('filename', strtr($manifest->getName(), ['/' => '_']));
         $filename = "{$location}/{$file}.phar";
+        if (file_exists($filename)) {
+            $console->writeLine('%text:yellow%Removing existing artefact');
+            unlink($filename);
+        }
 
+        $console->writeLine('%text:cyan%Building package');
         $phar = new \Phar($filename);
-        $stub = file_exists(getcwd() . '/data/stub.php') ?
-            file_get_contents(getcwd() . '/data/stub.php') : (
-                \Phar::running() !== '' ?
-                    (new \Phar(\Phar::running()))->getStub() : '<?php echo "No stub"; __HALT_COMPILER();'
-                );
-        $phar->setStub($stub);
-
-        $ignorePattern = $this->compileIgnorePattern(getcwd());
-        $iterator = new \RegexIterator(new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(
-                getcwd(),
-                \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
-            )
-        ), $ignorePattern, \RegexIterator::MATCH, \RegexIterator::USE_KEY);
-
+        $phar->setStub($this->getStub());
         $phar->startBuffering();
-        $phar->buildFromIterator(
-            $iterator,
-            getcwd()
-        );
+        $phar->buildFromIterator($this->getDirectoryIterator(getcwd()), getcwd());
 
         $compression = strtolower($console->getArgument('compression', 'none'));
         if ($compression !== 'none') {
@@ -87,9 +83,7 @@ class Command implements CommandInterface
 
         $signature = strtolower($console->getArgument('signature', 'sha256'));
         if (!isset(self::SIGNATURE_MAP[$signature])) {
-            throw new \InvalidArgumentException(
-                "Supplied signature algorithm '{$signature}' is not supported"
-            );
+            throw new \InvalidArgumentException("Unknown signature algorithm '{$signature}'");
         }
 
         $algo = self::SIGNATURE_MAP[$signature];
@@ -115,14 +109,14 @@ class Command implements CommandInterface
         $ds = DIRECTORY_SEPARATOR;
 
         if (file_exists(getcwd() . "/.onionignore")) {
-            $ignored = array_merge($ignored, array_map(function ($line) {
+            $ignored = array_map(function ($line) {
                 return trim(preg_replace('#/$#', DIRECTORY_SEPARATOR, $line));
-            }, file(getcwd() . "/.onionignore")));
+            }, file(getcwd() . "/.onionignore"));
 
             $list = '(?!' . implode('|', $ignored) . "){$ds}?";
         }
 
-        return str_replace(['/', '\\', '.'], [$ds, '\\\\', '\.'], "#^{$baseDir}{$ds}{$list}#iU");
+        return str_replace(['/', '\\', '.', '*'], [$ds, '\\\\', '\.', '.*'], "#^{$baseDir}{$ds}{$list}#iU");
     }
 
     private function buildVersionString(ConsoleInterface $console, MutableVersion $version): string
@@ -164,5 +158,25 @@ class Command implements CommandInterface
         }
 
         return (string) $version;
+    }
+
+    private function getStub(): string
+    {
+        if (file_exists(getcwd() . '/data/stub.php')) {
+            return file_get_contents(getcwd() . '/data/stub.php');
+        }
+
+        return \Phar::running() !== '' ?
+            (new \Phar(\Phar::running()))->getStub() : '<?php echo "No stub"; __HALT_COMPILER();';
+    }
+
+    private function getDirectoryIterator($dir): \Traversable
+    {
+        return new \RegexIterator(new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                $dir,
+                \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
+            )
+        ), $this->compileIgnorePattern($dir), \RegexIterator::MATCH, \RegexIterator::USE_KEY);
     }
 }
