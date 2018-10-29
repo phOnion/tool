@@ -16,7 +16,7 @@ return [
             'extensions' => ['php', 'inc'],
             'reader' => PhpReader::class,
         ], [
-            'extensions' => ['ini'],
+            'extensions' => ['ini', 'env'],
             'reader' => IniReader::class,
         ]],
     ]

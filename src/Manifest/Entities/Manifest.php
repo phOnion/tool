@@ -23,6 +23,9 @@ class Manifest implements Entity
     /** @var Repository[] */
     protected $repos = [];
 
+    /** @var Dependency[] */
+    protected $dependencies = [];
+
     public function __construct(
         string $name,
         string $version,
@@ -102,6 +105,19 @@ class Manifest implements Entity
         return $this->repos;
     }
 
+    public function withDependencies(array $dependencies): Manifest
+    {
+        $self = clone $this;
+        $self->dependencies = $dependencies;
+
+        return $self;
+    }
+
+    public function getDependencies(): array
+    {
+        return $this->dependencies;
+    }
+
     public function jsonSerialize()
     {
         return [
@@ -109,8 +125,8 @@ class Manifest implements Entity
             'version' => $this->getVersion(),
             'links' => $this->getLinks(),
             'commands' => $this->getCommands(),
-            'index' => array_values($this->getIndex()),
             'repositories' => $this->getRepositories(),
+            'dependencies' => $this->getDependencies(),
         ];
     }
 }

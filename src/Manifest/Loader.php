@@ -24,7 +24,11 @@ class Loader
     {
         $directory = $directory ?? getcwd();
         if (!file_exists("{$directory}/onion.json")) {
+            try {
             throw new \RuntimeException("Manifest file 'onion.json' not found in current director. Did you forget to init?");
+            } catch (\Throwable $ex) {
+                echo $ex->getTraceAsString();
+            }
         }
 
         return json_decode(file_get_contents("{$directory}/onion.json"), true);
@@ -70,7 +74,8 @@ class Loader
         );
 
         return $manifest->withCommands($this->getSection($raw, 'commands'))
-            ->withRepositories($this->getSection($raw, 'repositories'));
+            ->withRepositories($this->getSection($raw, 'repositories'))
+            ->withDependencies($this->getSection($raw, 'dependencies'));
     }
 
     public function manifestExists(string $directory = null): bool

@@ -9,6 +9,7 @@ use Onion\Cli\Manifest\Factory\LocalManifestFactory;
 use Onion\Cli\Manifest\Loader;
 use Onion\Console\Application\Application;
 use Onion\Framework\Dependency\Container;
+use Onion\Cli\Manifest\Entities\Dependency;
 
 $container = new Container([
     'manifest' => [
@@ -16,6 +17,7 @@ $container = new Container([
             'commands' => Command::class,
             'links' => Link::class,
             'repositories' => Repository::class,
+            'dependencies' => Dependency::class,
         ],
     ],
     'factories' => [

@@ -1,6 +1,6 @@
 {
     "name": "onion/tool",
-    "version": "0.2.0-alpha+0080",
+    "version": "0.2.0-alpha+0136",
     "links": [
         {
             "title": "GitHub",
@@ -81,6 +81,12 @@
                     "type": "string",
                     "required": false,
                     "description": "Indicate this build is pre-release"
+                },
+                {
+                    "name": "--no-compile",
+                    "type": "bool",
+                    "required": false,
+                    "description": "Disable configuration compilation"
                 }
             ]
         },
@@ -173,27 +179,46 @@
             "summary": "Compile project configurations",
             "parameters": [
                 {
-                    "name": "--warmup | -w",
-                    "type": "bool",
-                    "required": false,
-                    "description": "Perform project-wide opcache warm up"
-                },
-                {
                     "name": "--environment | --env | -e",
                     "type": "string",
                     "required": false,
                     "description": "Environment configs to load"
                 }
             ]
+        },
+        {
+            "definition": "module [action] [module]",
+            "handler": "\\Onion\\Tool\\Module\\Command",
+            "summary": "Manage app modules",
+            "parameters": [
+                {
+                    "name": "--constraint | -c",
+                    "type": "string",
+                    "required": false,
+                    "description": "Constraint to install"
+                },
+                {
+                    "name": "--alias | --as | -a",
+                    "type": "string",
+                    "required": false,
+                    "description": "Alias to use when loading module from the code"
+                }
+            ]
         }
     ],
-    "index": [],
     "repositories": [
         {
             "name": "gh",
             "vendor": "phOnion",
             "project": "tool",
             "branch": "master"
+        }
+    ],
+    "dependencies": [
+        {
+            "name": "phonion/tool",
+            "version": "0.2.0-alpha+0080",
+            "alias": "test"
         }
     ]
 }
