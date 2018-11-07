@@ -8,11 +8,11 @@ if (!in_array('phar', stream_get_wrappers()) && class_exists('Phar')) {
 Phar::interceptFileFuncs();
 // https://www.php-fig.org/psr/psr-4/examples/
 spl_autoload_register(function ($class) {
-    $composer = json_decode(file_get_contents(__DIR__ . '/composer.json'), true);
+    $composer = json_decode(file_get_contents('phar://' . __FILE__ . '/composer.json'), true);
     $autoload = $composer['autoload']['psr-4'] ?? [];
 
     foreach ($autoload as $prefix => $path) {
-        $base_dir = __DIR__ . "/{$path}/";
+        $base_dir = 'phar://' . __FILE__ . "/{$path}/";
         $len = strlen($prefix);
         if (strncmp($prefix, $class, $len) !== 0) {
             return;
