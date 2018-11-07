@@ -90,7 +90,7 @@ class Command implements CommandInterface
                 }
                 $this->loader->saveManifest(getcwd(), $this->manifest->withDependencies($deps));
             case 'unload':
-                if (!isset($modules['modules']["module:$module"])) {
+                if (!isset($modules['modules']["module:$project"])) {
                     $console->writeLine(
                         "%text:yellow%Unable to unload module '{$module}'. Not found"
                     );
