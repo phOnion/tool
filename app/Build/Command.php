@@ -166,6 +166,10 @@ class Command implements CommandInterface
             return file_get_contents(getcwd() . "/data/{$file}.php");
         }
 
+        if (file_exists(Phar::running(true) . "/data/{$file}.php")) {
+            return file_get_contents(Phar::running(true) . "/data/{$file}.php");
+        }
+
         return \Phar::running() !== '' ?
             (new \Phar(\Phar::running()))->getStub() : '<?php echo "No stub"; __HALT_COMPILER();';
     }
