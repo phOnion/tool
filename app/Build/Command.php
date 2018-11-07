@@ -42,10 +42,7 @@ class Command implements CommandInterface
             $this->buildVersionString($console, $version)
         );
         $this->loader->saveManifest(getcwd(), $manifest);
-
-        if (!$console->hasArgument('no-compile')) {
-            $this->compileCommand->trigger($console);
-        }
+        $this->compileCommand->trigger($console);
 
 
         $location = realpath($console->getArgument('location', getcwd()));
@@ -58,7 +55,9 @@ class Command implements CommandInterface
 
         $console->writeLine('%text:cyan%Building package');
         $phar = new \Phar($filename);
-        $phar->setStub($this->getStub());
+        $phar->setStub($this->getStub(
+            $console->getArgument('standalone', false)
+        ));
         $phar->startBuffering();
         $phar->buildFromIterator($this->getDirectoryIterator(getcwd()), getcwd());
 
@@ -160,10 +159,11 @@ class Command implements CommandInterface
         return (string) $version;
     }
 
-    private function getStub(): string
+    private function getStub(bool $standalone = true): string
     {
-        if (file_exists(getcwd() . '/data/stub.php')) {
-            return file_get_contents(getcwd() . '/data/stub.php');
+        $file = $standalone ? 'standalone' : 'module';
+        if (file_exists(getcwd() . "/data/{$file}.php")) {
+            return file_get_contents(getcwd() . "/data/{$file}.php");
         }
 
         return \Phar::running() !== '' ?

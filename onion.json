@@ -83,10 +83,10 @@
                     "description": "Indicate this build is pre-release"
                 },
                 {
-                    "name": "--no-compile",
+                    "name": "--standalone",
                     "type": "bool",
                     "required": false,
-                    "description": "Disable configuration compilation"
+                    "description": "Setup the package to be included in other packages or as standalone application"
                 }
             ]
         },
