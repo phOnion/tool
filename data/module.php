@@ -15,7 +15,7 @@ spl_autoload_register(function ($class) {
         $base_dir = 'phar://' . __FILE__ . "/{$path}/";
         $len = strlen($prefix);
         if (strncmp($prefix, $class, $len) !== 0) {
-            return;
+            continue;
         }
 
         $relative_class = substr($class, $len);
