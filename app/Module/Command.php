@@ -9,7 +9,6 @@ use Github\Client;
 use Onion\Cli\SemVer\Version;
 use Onion\Cli\Manifest\Entities\Dependency;
 use Onion\Framework\Console\Progress;
-use Onion\Framework\Application\Factory\ApplicationModuleFactory;
 
 class Command implements CommandInterface
 {
@@ -222,7 +221,6 @@ class Command implements CommandInterface
         }
 
         $modules['modules']["module:{$alias}"] = "modules/{$vendor}/{$project}.phar";
-        $modules['factories']["module:{$alias}"] = ApplicationModuleFactory::class;
 
         return $modules;
     }
