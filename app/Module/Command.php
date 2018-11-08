@@ -30,14 +30,24 @@ class Command implements CommandInterface
 
     public function trigger(ConsoleInterface $console): int
     {
-        $this->manifest = $this->loader->getManifest(getcwd());
-
         // onion module install onion/framework
         $module = $console->getArgument('module');
+        $application = $console->getArgument('file', false);
         list($vendor, $project)=array_map('strtolower', explode('/', $module));
         $action = $console->getArgument('action');
 
         $env = $console->getArgument('env', 'global');
+        $manifestLocation = getcwd();
+        if ($application) {
+            $manifestLocation = "phar://{$manifestLocation}/{$file}";
+            if (!file_exists($manifestLocation)) {
+                $console->writeLine("%text:red%Application file '{$manifestLocation}' does not exist");
+                return 1;
+            }
+        }
+
+        $this->manifest = $this->loader->getManifest($manifestLocation);
+
         $deps = $this->manifest->getDependencies();
 
         $modulesFile = getcwd() . "/config/modules.{$env}.php";
@@ -48,7 +58,7 @@ class Command implements CommandInterface
         $alias = $console->getArgument('alias');
         switch ($action) {
             case 'install':
-                if ($module) {
+                if ($module && !$application) {
                     $constraint = $console->getArgument('constraint');
                     $this->installModule($console, $module, $constraint, $alias);
                     $modules = $this->loadModule($modules, $module, $alias);
