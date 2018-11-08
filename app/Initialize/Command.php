@@ -59,8 +59,9 @@ class Command implements CommandInterface
         $console->writeLine('%text:cyan%Generated manifest file `onion.json`');
         $this->loader->saveManifest(getcwd(), $manifest);
 
-        $console->writeLine('%text:cyan%Creating default .onionignore');
+        $console->writeLine('%text:cyan%Creating default .ignore files');
         file_put_contents(getcwd() . '/.onionignore', implode("\n", self::IGNORES));
+        file_put_contents(getcwd() . '/.gitignore', '*.generated.php', FILE_APPEND);
 
         return 0;
     }
