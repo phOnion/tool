@@ -161,6 +161,21 @@ class Command implements CommandInterface
                         curl_exec($ch);
                         curl_close($ch);
                         fclose($fp);
+
+                        // @ToDo: build dependency graph and circular reference resolution
+                        $dependencyManifest = $this->loader->getManifest("phar://{$installFile}");
+                        foreach ($dependencyManifest->getDependencies() as $dependency) {
+                            /** @var Dependency $dependency*/
+                            $fail = $this->trigger(
+                                $console->withArgument('action', 'install')
+                                    ->withArgument('module', $dependency->getName())
+                                    ->withArgument('alias', $dependency->getAlias())
+                                    ->withArgument('constraint', $dependency->getVersion())
+                            );
+                            if ($fail) {
+                                exit($fail);
+                            }
+                        }
                         break;
                     }
                 }
