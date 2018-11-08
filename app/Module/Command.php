@@ -37,7 +37,7 @@ class Command implements CommandInterface
 
         $env = $console->getArgument('env', 'global');
         $manifestLocation = getcwd();
-        if (file_exists(getcwd() . "/{$module}") && in_array($action, ['install', 'load'])) {
+        if (is_file(getcwd() . "/{$module}") && in_array($action, ['install', 'load'])) {
             $manifestLocation = "phar://{$manifestLocation}/{$module}";
             if (!file_exists($manifestLocation)) {
                 $console->writeLine("%text:red%Application file '{$manifestLocation}' does not exist");
@@ -45,7 +45,7 @@ class Command implements CommandInterface
             }
             $module = false;
         } else {
-            list($vendor, $project)=array_map('strtolower', explode('/', $module));
+            list($vendor, $project)=array_map('strtolower', explode('/', $module ?? '//'));
         }
 
 
