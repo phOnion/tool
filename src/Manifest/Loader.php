@@ -24,11 +24,7 @@ class Loader
     {
         $directory = $directory ?? getcwd();
         if (!file_exists("{$directory}/onion.json")) {
-            try {
-            throw new \RuntimeException("Manifest file 'onion.json' not found in current director. Did you forget to init?");
-            } catch (\Throwable $ex) {
-                echo $ex->getTraceAsString();
-            }
+            throw new \RuntimeException("Manifest file '{$directory}/onion.json' not found in current director. Did you forget to init?");
         }
 
         return json_decode(file_get_contents("{$directory}/onion.json"), true);
