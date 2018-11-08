@@ -10,6 +10,15 @@ use function GuzzleHttp\json_encode;
 
 class Command implements CommandInterface
 {
+    private const IGNORES = [
+        '.git/',
+        'build/',
+        'tests/',
+        'config/',
+        'modules',
+        'vendor/',
+        'bin/',
+    ];
     /** @var Loader $loader */
     private $loader;
 
@@ -21,8 +30,10 @@ class Command implements CommandInterface
     public function trigger(ConsoleInterface $console): int
     {
         $manifest = new Manifest(basename(getcwd()), '0.0.0');
+        $overwrite = true;
         if ($this->loader->manifestExists()) {
-            if ($console->confirm('%text:yellow%Manifest already exists. Overwrite?', 'n')) {
+            $overwrite = $console->confirm('%text:yellow%Manifest already exists. Overwrite?', 'n');
+            if ($overwrite) {
                 return 0;
             }
 
@@ -46,8 +57,10 @@ class Command implements CommandInterface
         ));
 
         $console->writeLine('%text:cyan%Generated manifest file `onion.json`');
-
         $this->loader->saveManifest(getcwd(), $manifest);
+
+        $console->writeLine('%text:cyan%Creating default .onionignore');
+        file_put_contents(getcwd() . '/.onionignore', implode("\n", self::IGNORES));
 
         return 0;
     }
