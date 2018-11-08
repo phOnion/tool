@@ -6,6 +6,7 @@ use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Onion\Cli\Manifest\Loader;
 use Onion\Cli\Manifest\Entities\Manifest;
 use Onion\Cli\SemVer\Version;
+use function GuzzleHttp\json_encode;
 
 class Command implements CommandInterface
 {
@@ -21,7 +22,7 @@ class Command implements CommandInterface
     {
         $manifest = new Manifest(basename(getcwd()), '0.0.0');
         if ($this->loader->manifestExists()) {
-            if ($console->confirm('%text:yellow%Manifest already exists. Overwrite?', 'n') === 'n') {
+            if ($console->confirm('%text:yellow%Manifest already exists. Overwrite?', 'n')) {
                 return 0;
             }
 
@@ -37,7 +38,12 @@ class Command implements CommandInterface
         )));
 
         $composer = json_decode(file_get_contents(getcwd() . '/composer.json'), true);
-        $composer['extra']['onion']['manifest']['filename'] = 'onion.json';
+        $composer['extra']['merge-plugin']['include'][] =
+            'modules/*/*.phar.composer.json';
+        $composer['require']['wikimedia/composer-merge-plugin'] = '^1.4';
+        file_put_contents(getcwd() . '/composer.json', json_encode(
+            $composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+        ));
 
         $console->writeLine('%text:cyan%Generated manifest file `onion.json`');
 
