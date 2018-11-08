@@ -43,7 +43,7 @@ class Loader
             return $param->getName();
         } ,$constructor->getParameters());
 
-        foreach ($raw[$section] as $definition) {
+        foreach ($raw[$section] ?? [] as $definition) {
             $args = [];
             foreach ($arguments as $position => $name) {
                 if (!isset($definition[$name])) {
