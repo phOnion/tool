@@ -8,15 +8,37 @@ if (!in_array('phar', stream_get_wrappers()) && class_exists('Phar')) {
 }
 
 if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
-    Phar::mount('vendor/composer.php', __DIR__ . '/../../vendor/autoload.php');
+    require __DIR__ . '/../../vendor/autoload.php';
 } else if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    Phar::mount('vendor/composer.php', __DIR__ . '/../vendor/autoload.php');
-} else {
-    Phar::mount('vendor/composer.php', 'phar://' . __FILE__ . '/vendor/autoload.php');
+    require __DIR__ . '/../vendor/autoload.php';
+} else if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require __DIR__ . '/vendor/autoload.php';
 }
 Phar::interceptFileFuncs();
-require_once 'phar://' . __FILE__ . '/vendor/composer.php';
+// https://www.php-fig.org/psr/psr-4/examples/
+spl_autoload_register(function ($class) {
+    $composer = json_decode(file_get_contents('phar://' . __FILE__ . '/composer.json'), true);
+    $autoload = $composer['autoload']['psr-4'] ?? [];
 
+    foreach ($autoload as $prefix => $path) {
+        $base_dir = 'phar://' . __FILE__ . "/{$path}";
+        $len = strlen($prefix);
+        $relative_class = substr($class, $len);
+        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+
+        if (strncmp($prefix, $class, $len) !== 0) {
+            continue;
+        }
+
+        $relative_class = substr($class, $len);
+        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+
+
+        if (file_exists($file)) {
+            require $file;
+        }
+    }
+});
 set_include_path('phar://' . __FILE__ . PATH_SEPARATOR . get_include_path());
 $container = include 'phar://' . __FILE__ . '/container.generated.php';
 if (is_dir(__DIR__ . '/modules/')) {
@@ -27,9 +49,9 @@ if (is_dir(__DIR__ . '/modules/')) {
         )
     ), '~\.phar$~', \RegexIterator::MATCH, \RegexIterator::USE_KEY);
 
+    $containers = [$container];
     foreach ($iterator as $item) {
-        /** @var \SplFileInfo $item */
-        $containers[] = include $item->getRealPath();
+        $containers[] = include $item;
     }
 
     $container = new DelegateContainer($containers);
