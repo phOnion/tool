@@ -32,23 +32,30 @@ class Command implements CommandInterface
     {
         // onion module install onion/framework
         $module = $console->getArgument('module');
-        $application = $console->getArgument('file', false);
-        list($vendor, $project)=array_map('strtolower', explode('/', $module));
+
         $action = $console->getArgument('action');
 
         $env = $console->getArgument('env', 'global');
         $manifestLocation = getcwd();
-        if ($application) {
-            $manifestLocation = "phar://{$manifestLocation}/{$file}";
+        if (file_exists(getcwd() . "/{$module}") && in_array($action, ['install', 'load'])) {
+            $manifestLocation = "phar://{$manifestLocation}/{$module}";
             if (!file_exists($manifestLocation)) {
                 $console->writeLine("%text:red%Application file '{$manifestLocation}' does not exist");
                 return 1;
             }
+            $module = false;
+        } else {
+            list($vendor, $project)=array_map('strtolower', explode('/', $module));
         }
+
 
         $this->manifest = $this->loader->getManifest($manifestLocation);
 
         $deps = $this->manifest->getDependencies();
+
+        if (!is_dir(getcwd() . '/config/')) {
+            mkdir(getcwd() . '/config/', 0644);
+        }
 
         $modulesFile = getcwd() . "/config/modules.{$env}.php";
         $modules = [];
@@ -58,7 +65,7 @@ class Command implements CommandInterface
         $alias = $console->getArgument('alias');
         switch ($action) {
             case 'install':
-                if ($module && !$application) {
+                if ($module) {
                     $constraint = $console->getArgument('constraint');
                     $this->installModule($console, $module, $constraint, $alias);
                     $modules = $this->loadModule($modules, $module, $alias);
@@ -129,6 +136,10 @@ class Command implements CommandInterface
         $installDir = getcwd() . "/modules/{$vendor}";
         $installFile = "{$installDir}/{$project}.phar";
 
+        if (file_exists($installFile)) {
+            return;
+        }
+
         $releases = $this->client->api('repo')->releases()->all($vendor, $project);
         foreach ($releases as $release) {
             $ver = ltrim($release['tag_name'], 'v');
@@ -171,6 +182,7 @@ class Command implements CommandInterface
                         curl_exec($ch);
                         curl_close($ch);
                         fclose($fp);
+                        $console->writeLine('');
 
                         // @ToDo: build dependency graph and circular reference resolution
                         $dependencyManifest = $this->loader->getManifest("phar://{$installFile}");
@@ -186,6 +198,7 @@ class Command implements CommandInterface
                                 exit($fail);
                             }
                         }
+
                         break;
                     }
                 }
