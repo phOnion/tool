@@ -213,12 +213,5 @@
             "project": "tool",
             "branch": "master"
         }
-    ],
-    "dependencies": [
-        {
-            "name": "phonion/tool",
-            "version": "0.2.0-alpha+0080",
-            "alias": "test"
-        }
     ]
 }
