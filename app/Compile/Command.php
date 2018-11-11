@@ -20,7 +20,8 @@ class Command implements CommandInterface
     {
         $console->writeLine("%text:cyan%Compiling files");
         $configs = $this->configLoader->getConfigurations(
-            $console->getArgument('environment', 'dev')
+            $console->getArgument('environment', 'dev'),
+            $console->getArgument('config-dir')
         );
 
         $template = '<?php return new \Onion\Framework\Dependency\Container(' . var_export($configs, true) . ');';
