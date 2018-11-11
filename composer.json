@@ -4,7 +4,7 @@
     "authors": [
         {"name": "Dimitar Dimitrv", "email": "daghostman.dd@gmail.com", "role": "dev"}
     ],
-    "bin": "bin/cli.php",
+    "bin": "bin/onion.php",
     "require": {
         "roave/security-advisories": "dev-master",
         "onion/console": "^1.0",
