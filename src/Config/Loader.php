@@ -22,11 +22,11 @@ class Loader
         }
     }
 
-    public function getConfigurations(string $environment): array
+    public function getConfigurations(string $environment, ?string $directory = null): array
     {
         $iteratorOptions = \RecursiveDirectoryIterator::FOLLOW_SYMLINKS | \RecursiveDirectoryIterator::SKIP_DOTS;
         $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($this->directory, $iteratorOptions)
+            new \RecursiveDirectoryIterator($directory ?? $this->directory, $iteratorOptions)
         );
 
         $registeredExtensions = array_keys($this->readers);
