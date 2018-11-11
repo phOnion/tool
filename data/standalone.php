@@ -41,21 +41,22 @@ spl_autoload_register(function ($class) {
 });
 set_include_path('phar://' . __FILE__ . PATH_SEPARATOR . get_include_path());
 $container = include 'phar://' . __FILE__ . '/container.generated.php';
-if (is_dir(__DIR__ . '/modules/')) {
-    $iterator = new \RegexIterator(new \RecursiveIteratorIterator(
-        new \RecursiveDirectoryIterator(
-            __DIR__ . '/modules/',
-            \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
-        )
-    ), '~\.phar$~', \RegexIterator::MATCH, \RegexIterator::USE_KEY);
+$containers = [$container];
+foreach ([getcwd(), __DIR__] as $dir) {
+    if (is_dir("{$dir}/modules/")) {
+        $iterator = new \RegexIterator(new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                "{$dir}/modules/",
+                \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
+            )
+        ), '~\.phar$~', \RegexIterator::MATCH, \RegexIterator::USE_KEY);
 
-    $containers = [$container];
-    foreach ($iterator as $item) {
-        $containers[] = include $item;
+        foreach ($iterator as $item) {
+            $containers[] = include $item;
+        }
     }
-
-    $container = new DelegateContainer($containers);
 }
+$container = new DelegateContainer($containers);
 $interface = php_sapi_name() === 'cli' ? 'cli' : 'web';
 
 $instance = null;
