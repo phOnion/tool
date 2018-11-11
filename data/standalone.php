@@ -38,7 +38,7 @@ spl_autoload_register(function ($class) {
             require $file;
         }
     }
-});
+}, false, true);
 set_include_path('phar://' . __FILE__ . PATH_SEPARATOR . get_include_path());
 $container = include 'phar://' . __FILE__ . '/container.generated.php';
 $containers = [$container];
