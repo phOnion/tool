@@ -1,6 +1,6 @@
 {
     "name": "onion/tool",
-    "version": "0.2.0-alpha+0220",
+    "version": "0.3.0-alpha+0224",
     "links": [
         {
             "title": "GitHub",
@@ -183,7 +183,8 @@
                     "type": "string",
                     "required": false,
                     "description": "Environment configs to load"
-                }, {
+                },
+                {
                     "name": "--config-dir | --config | -c",
                     "type": "string",
                     "required": false,
