@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 namespace Onion\Cli\SemVer;
 
+use Composer\Semver\Comparator;
+use Composer\Semver\Semver;
 use Onion\Cli\SemVer\Version;
 
 class Version
@@ -75,44 +77,22 @@ class Version
 
     public function compare(Version $version): int
     {
-        $compare = $version->getMajor() <=> $this->getMajor();
-
-        if ($compare === 0) {
-            $compare = $version->getMinor() <=> $this->getMinor();
-            if ($compare === 0) {
-                if ($version->getConstraint() === '~') {
-                    return $compare;
-                }
-                $compare = $version->getFix() <=> $this->getFix();
-                if ($compare === 0) {
-                    if ($version->getConstraint() === '^') {
-                        return $compare;
-                    }
-                    if ($this->isPreRelease() || $version->isPreRelease()) {
-                        if (!$this->isPreRelease() && $version->isPreRelease()) {
-                            $compare = -1;
-                        } elseif ($this->isPreRelease() && !$version->isPreRelease()) {
-                            $compare = 1;
-                        } else {
-                            $compare = $version->getPreRelease() <=> $this->getPreRelease();
-
-                            if ($compare === 0) {
-                                $compare = $version->getBuild() <=> $this->getBuild();
-                            }
-                        }
-                    }
-                }
-            }
+        $version1 = (string) $this;
+        $version2 = (string) $version;
+        if (Comparator::greaterThan($version1, $version2)) {
+            return 1;
         }
 
-        return $compare;
+        if (Comparator::lessThan($version1, $version2)) {
+            return -1;
+        }
+
+        return 0;
     }
 
     public function satisfies(string $constraint)
     {
-        $version = new Version($constraint);
-
-        return $this->compare($version) === 0;
+        return \Composer\Semver\Semver::satisfies((string) $this, $constraint);
     }
 
     public function __toString(): string
