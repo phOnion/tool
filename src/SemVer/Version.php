@@ -67,18 +67,27 @@ class Version
 
     public function isPreRelease(): bool
     {
-        return $this->pre !== null;
+        return $this->pre !== null && $this->pre !== '';
     }
 
     public function hasBuild(): bool
     {
-        return $this->build !== null;
+        return $this->build !== null && $this->build !== '';
+    }
+
+    public function getBaseVersion(): string
+    {
+        return "{$this->getMajor()}." .
+            "{$this->getMinor()}." .
+            "{$this->getFix()}" .
+            ($this->isPreRelease() ? "-{$this->getPreRelease()}" : '') .
+            ($this->hasBuild() ? "+{$this->getBuild()}" : '');
     }
 
     public function compare(Version $version): int
     {
-        $version1 = (string) $this;
-        $version2 = (string) $version;
+        $version1 = $this->getBaseVersion();
+        $version2 = $version->getBaseVersion();
         if (Comparator::greaterThan($version1, $version2)) {
             return 1;
         }
@@ -92,17 +101,12 @@ class Version
 
     public function satisfies(string $constraint)
     {
-        return \Composer\Semver\Semver::satisfies((string) $this, $constraint);
+        return \Composer\Semver\Semver::satisfies($this->getBaseVersion(), $constraint);
     }
 
     public function __toString(): string
     {
-        return
-            ($this->hasConstraint() ? $this->getConstraint() : '') .
-            "{$this->getMajor()}." .
-            "{$this->getMinor()}." .
-            "{$this->getFix()}" .
-            ($this->isPreRelease() ? "-{$this->getPreRelease()}" : '') .
-            ($this->hasBuild() ? "+{$this->getBuild()}" : '');
+        return ($this->hasConstraint() ? $this->getConstraint() : '') .
+            $this->getBaseVersion();
     }
 }
