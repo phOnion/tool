@@ -4,4 +4,3 @@ tests/
 config/
 modules/
 bin/
-vendor/
