@@ -12,12 +12,11 @@ class Command implements CommandInterface
 {
     private const IGNORES = [
         '.git/',
-        'build/',
         'tests/',
         'config/',
-        'modules',
-        'vendor/',
+        'modules/',
         'bin/',
+        '*.phar',
     ];
     /** @var Loader $loader */
     private $loader;
@@ -50,7 +49,7 @@ class Command implements CommandInterface
 
         $composer = json_decode(file_get_contents(getcwd() . '/composer.json'), true);
         $composer['extra']['merge-plugin']['include'][] =
-            'modules/*/*.phar.composer.json';
+            'modules/*/*.json';
         $composer['require']['wikimedia/composer-merge-plugin'] = '^1.4';
         file_put_contents(getcwd() . '/composer.json', json_encode(
             $composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
