@@ -1,6 +1,6 @@
 {
     "name": "onion/tool",
-    "version": "0.4.0-alpha+0247",
+    "version": "0.4.0-alpha+0423",
     "links": [
         {
             "title": "GitHub",
@@ -54,6 +54,7 @@
                     "name": "--location | --dir",
                     "type": "string",
                     "required": false,
+                    "default": "./build/",
                     "description": "Directory in which to put the build artifact"
                 },
                 {
@@ -87,6 +88,12 @@
                     "type": "bool",
                     "required": false,
                     "description": "Setup the package to be included in other packages or as standalone application"
+                },
+                {
+                    "name": "--debug",
+                    "type": "bool",
+                    "required": false,
+                    "description": "Mark the package as `debug` build"
                 }
             ]
         },
