@@ -1,6 +1,6 @@
 {
     "name": "onion/tool",
-    "version": "0.4.0-alpha+0423",
+    "version": "0.4.0-alpha+0424",
     "links": [
         {
             "title": "GitHub",
@@ -54,8 +54,8 @@
                     "name": "--location | --dir",
                     "type": "string",
                     "required": false,
-                    "default": "./build/",
-                    "description": "Directory in which to put the build artifact"
+                    "description": "Directory in which to put the build artifact",
+                    "default": "./build/"
                 },
                 {
                     "name": "--bump",
