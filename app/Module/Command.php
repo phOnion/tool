@@ -94,7 +94,7 @@ class Command implements CommandInterface
                 }
 
                 unlink(getcwd() . "/modules/{$vendor}/{$project}.phar");
-                unlink(getcwd() . "/modules/{$vendor}/{$project}.phar.composer.json");
+                unlink(getcwd() . "/modules/{$vendor}/{$project}.json");
                 if (count(scandir(getcwd() . "/modules/{$vendor}")) === 2) {
                     @rmdir(getcwd() . "/modules/{$vendor}");
                 }
@@ -204,10 +204,18 @@ class Command implements CommandInterface
 
                 $deps[] = new Dependency($module, (string) $version, $alias);
                 $this->loader->saveManifest(getcwd(), $this->manifest->withDependencies($deps));
-                stream_copy_to_stream(
-                    fopen("phar://{$installFile}/composer.json",'rb'),
-                    fopen("{$installFile}.composer.json", 'w+b')
-                );
+                $installed = new \Phar($installFile);
+                $meta = $installed->getMetadata();
+                if (($meta['standalone'] ?? false)) {
+                    $console->writeLine('%text:red%Not a module, uninstalling');
+                    unlink($installFile);
+                    return 1;
+                }
+
+                $composer = json_decode(file_get_contents("phar://{$installFile}/composer.json"), true);
+                file_put_contents("{$installDir}/{$project}.json", json_encode([
+                    'require' => $composer['require'],
+                ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
                 break;
             }
         }
