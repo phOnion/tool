@@ -6,39 +6,57 @@ if (!in_array('phar', stream_get_wrappers()) && class_exists('Phar')) {
     fwrite(fopen('php://stderr', 'wb'), 'Phar Extension not available');
     exit(1);
 }
-
-if (file_exists(__DIR__ . '/../../vendor/autoload.php')) {
-    require __DIR__ . '/../../vendor/autoload.php';
-} else if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    require __DIR__ . '/../vendor/autoload.php';
-} else if (file_exists(__DIR__ . '/vendor/autoload.php')) {
-    require __DIR__ . '/vendor/autoload.php';
-}
 Phar::interceptFileFuncs();
-// https://www.php-fig.org/psr/psr-4/examples/
-spl_autoload_register(function ($class) {
-    $composer = json_decode(file_get_contents('phar://' . __FILE__ . '/composer.json'), true);
-    $autoload = $composer['autoload']['psr-4'] ?? [];
 
-    foreach ($autoload as $prefix => $path) {
-        $base_dir = 'phar://' . __FILE__ . "/{$path}";
-        $len = strlen($prefix);
-        $relative_class = substr($class, $len);
-        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+$autoload = [];
+if (file_exists('phar://' . __FILE__ . '/autoload.php')) {
+    $autoload = include 'phar://' . __FILE__ . '/autoload.php';
 
-        if (strncmp($prefix, $class, $len) !== 0) {
-            continue;
+    if (isset($autoload['files'])) {
+        foreach ($autoload['files'] as $file) {
+            $file = 'phar://' . __FILE__ . "/{$file}";
+            if (!file_exists($file)) {
+                continue;
+            }
+
+            include $file;
         }
 
-        $relative_class = substr($class, $len);
-        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+        unset($autoload['files']);
+    }
+}
 
+// https://www.php-fig.org/psr/psr-4/examples/
+spl_autoload_register(function ($class) use ($autoload) {
+    $base = 'phar://' . __FILE__;
+    $parts = explode('\\', $class);
 
-        if (file_exists($file)) {
-            require $file;
+    $segment = '';
+    foreach ($parts as $part) {
+        $segment .= "{$part}\\";
+        foreach ($autoload as $type => $definitions) {
+            if (isset($definitions[$segment])) {
+                foreach ($definitions as $paths) {
+                    foreach ($paths as $path) {
+                        $relative_class = $class;
+
+                        if ($type === 'psr-4') {
+                            $len = strlen($segment);
+                            $relative_class = substr($class, $len);
+                        }
+
+                        $file = "{$base}{$path}/" . str_replace('\\', '/', $relative_class) . '.php';
+                        if (strncmp($segment, $class, $len) !== 0 || !file_exists($file)) {
+                            continue;
+                        }
+
+                        include $file;
+                    }
+                }
+            }
         }
     }
-}, false, true);
+}, false);
 set_include_path('phar://' . __FILE__ . PATH_SEPARATOR . get_include_path());
 $container = include 'phar://' . __FILE__ . '/container.generated.php';
 $containers = [$container];

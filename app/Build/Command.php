@@ -2,13 +2,14 @@
 namespace Onion\Tool\Build;
 
 use Onion\Cli\Manifest\Loader;
+use Onion\Cli\SemVer\MutableVersion;
 use Onion\Cli\SemVer\Version;
 use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
-use Phar;
 use Onion\Framework\Console\Progress;
-use Onion\Cli\SemVer\MutableVersion;
 use Onion\Tool\Compile\Command as Compile;
+use Phar;
+use Onion\Cli\Autoload\ComposerCollector;
 
 class Command implements CommandInterface
 {
@@ -55,17 +56,24 @@ class Command implements CommandInterface
 
         $console->writeLine('%text:cyan%Building package');
         $phar = new \Phar($filename);
-        $phar->setStub($this->getStub(
-            $console->getArgument('standalone', false)
-        ));
+        $standalone = $console->getArgument('standalone', false);
+        $phar->setStub($this->getStub($standalone));
+
+        if ($standalone) {
+            $temp = tempnam(sys_get_temp_dir(), '-autoload');
+            $files = $this->getVendorClassMap($console->getArgument('debug', false));
+            $result = var_export($files, true);
+            file_put_contents($temp, "<?php return {$result};");
+
+            $phar->addFile($temp, 'autoload.php');
+        }
+
         $phar->startBuffering();
         $phar->buildFromIterator($this->getDirectoryIterator(getcwd()), getcwd());
 
         $compression = strtolower($console->getArgument('compression', 'none'));
         if ($compression !== 'none') {
-            $console->writeLine(
-                "%text:cyan%Compressing using {$compression}"
-            );
+            $console->writeLine("%text:cyan%Compressing using {$compression}");
 
             if (!isset(self::COMPRESSION_MAP[$compression])) {
                 throw new \InvalidArgumentException(
@@ -102,20 +110,14 @@ class Command implements CommandInterface
         return 0;
     }
 
-    private function compileIgnorePattern(string $baseDir): string
+    private function compileIgnorePattern(): iterable
     {
-        $list = '';
-        $ds = DIRECTORY_SEPARATOR;
-
-        if (file_exists(getcwd() . "/.onionignore")) {
-            $ignored = array_map(function ($line) {
-                return trim(preg_replace('#/$#', DIRECTORY_SEPARATOR, $line));
-            }, file(getcwd() . "/.onionignore"));
-
-            $list = '(?!' . implode('|', $ignored) . "){$ds}?";
-        }
-
-        return str_replace(['/', '\\', '.', '*'], [$ds, '\\\\', '\.', '.*'], "#^{$baseDir}{$ds}{$list}#iU");
+        return array_map(function ($line) {
+            return trim(strtr($line, [
+                '/' => DIRECTORY_SEPARATOR,
+                '*' => '',
+            ]));
+        }, file(getcwd() . "/.onionignore"));
     }
 
     private function buildVersionString(ConsoleInterface $console, MutableVersion $version): string
@@ -176,11 +178,26 @@ class Command implements CommandInterface
 
     private function getDirectoryIterator($dir): \Traversable
     {
-        return new \RegexIterator(new \RecursiveIteratorIterator(
+        $patterns = $this->compileIgnorePattern();
+        return new \CallbackFilterIterator(new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(
                 $dir,
                 \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
             )
-        ), $this->compileIgnorePattern($dir), \RegexIterator::MATCH, \RegexIterator::USE_KEY);
+        ), function ($item, $key) use ($patterns) {
+            foreach ($patterns as $pattern) {
+                if (strpos($key, "{$pattern}") !== false) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+    }
+
+    private function getVendorClassMap($file, bool $includeDev = false): iterable
+    {
+        return (new ComposerCollector(getcwd()))
+            ->resolve($includeDev);
     }
 }
