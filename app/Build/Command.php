@@ -107,6 +107,7 @@ class Command implements CommandInterface
         $phar->setMetadata([
             'version' => $version,
             'standalone' => $standalone,
+            'debug' => $console->getArgument('debug', false),
         ]);
         $phar->stopBuffering();
 

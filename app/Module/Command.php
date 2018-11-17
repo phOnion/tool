@@ -213,9 +213,19 @@ class Command implements CommandInterface
                 }
 
                 $composer = json_decode(file_get_contents("phar://{$installFile}/composer.json"), true);
-                file_put_contents("{$installDir}/{$project}.json", json_encode([
-                    'require' => $composer['require'],
-                ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+                $composerResult = [];
+                if (isset($composer['require'])) {
+                    $composerResult['require'] = $composer['require'];
+                }
+
+                if (($meta['debug'] ?? false) && isset($composer['require-dev'])) {
+                    $composerResult['require-dev'] = $composer['require-dev'];
+                }
+
+                file_put_contents(
+                    "{$installDir}/{$project}.json",
+                    json_encode($composerResult, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT)
+                );
                 break;
             }
         }
