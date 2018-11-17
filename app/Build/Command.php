@@ -69,7 +69,7 @@ class Command implements CommandInterface
         }
 
         $phar->startBuffering();
-        $phar->buildFromIterator($this->getDirectoryIterator(getcwd()), getcwd());
+        $phar->buildFromIterator($this->getDirectoryIterator(getcwd(), $standalone), getcwd());
 
         $compression = strtolower($console->getArgument('compression', 'none'));
         if ($compression !== 'none') {
@@ -102,10 +102,11 @@ class Command implements CommandInterface
         $phar->setSignatureAlgorithm($algo);
         $phar->setMetadata([
             'version' => $version,
+            'standalone' => $standalone,
         ]);
         $phar->stopBuffering();
 
-        $size = number_format(filesize("{$filename}")/pow(1024, 2), 2, '.', ',');
+        $size = number_format(filesize("{$filename}")/pow(1024, 2), 3, '.', ',');
         $console->writeLine("%text:bold-green%Build completed, size {$size}MB");
         return 0;
     }
@@ -176,9 +177,16 @@ class Command implements CommandInterface
             (new \Phar(\Phar::running()))->getStub() : '<?php echo "No stub"; __HALT_COMPILER();';
     }
 
-    private function getDirectoryIterator($dir): \Traversable
+    private function getDirectoryIterator($dir, bool $standalone = false): \Traversable
     {
         $patterns = $this->compileIgnorePattern();
+        if ($standalone) {
+            $patterns[] = 'composer.*';
+        }
+
+        if (!$standalone) {
+            $patterns[] = 'vendor/';
+        }
         return new \CallbackFilterIterator(new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(
                 $dir,
