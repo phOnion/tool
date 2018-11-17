@@ -4,3 +4,6 @@ tests/
 config/
 modules/
 bin/
+composer.*
+*.phar
+.vscode/
