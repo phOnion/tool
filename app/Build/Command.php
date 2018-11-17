@@ -46,7 +46,10 @@ class Command implements CommandInterface
         $this->compileCommand->trigger($console);
 
 
-        $location = realpath($console->getArgument('location', getcwd()));
+        $location = realpath($console->getArgument('location', getcwd() . '/build'));
+        if (!is_dir($location)) {
+            mkdir($location, 0777, true);
+        }
         $file = $console->getArgument('filename', strtr($manifest->getName(), ['/' => '_']));
         $filename = "{$location}/{$file}.phar";
         if (file_exists($filename)) {
@@ -66,6 +69,7 @@ class Command implements CommandInterface
             file_put_contents($temp, "<?php return {$result};");
 
             $phar->addFile($temp, 'autoload.php');
+            unlink($temp);
         }
 
         $phar->startBuffering();
