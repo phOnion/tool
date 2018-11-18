@@ -70,7 +70,7 @@ foreach ([getcwd(), __DIR__] as $dir) {
         ), '~\.phar$~', \RegexIterator::MATCH, \RegexIterator::USE_KEY);
 
         foreach ($iterator as $item) {
-            $containers[] = include $item;
+            $containers[] = include "phar://{$item}/entrypoint.php";
         }
     }
 }

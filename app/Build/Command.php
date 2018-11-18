@@ -60,13 +60,20 @@ class Command implements CommandInterface
         $console->writeLine('%text:cyan%Building package');
         $phar = new \Phar($filename);
         $standalone = $console->getArgument('standalone', false);
-        $phar->setStub($this->getStub($standalone));
 
-        $temp = tempnam(sys_get_temp_dir(), 'autoload');
-        $files = $this->getVendorClassMap($console->getArgument('debug', false));
-        $result = var_export($files, true);
-        file_put_contents($temp, "<?php return {$result};");
-        $phar->addFile($temp, 'autoload.php');
+        if ($standalone) {
+            $phar->setStub($this->getStub($standalone));
+
+            $temp = tempnam(sys_get_temp_dir(), 'autoload');
+            $files = $this->getVendorClassMap($console->getArgument('debug', false));
+            $result = var_export($files, true);
+            file_put_contents($temp, "<?php return {$result};");
+            $phar->addFile($temp, 'autoload.php');
+        }
+
+        if (!$standalone) {
+            $phar->addFile($this->getModuleEntrypoint(), 'entrypoint.php');
+        }
 
         $iterator = $this->getDirectoryIterator(getcwd(), $standalone);
 
@@ -178,6 +185,23 @@ class Command implements CommandInterface
 
         return \Phar::running() !== '' ?
             (new \Phar(\Phar::running()))->getStub() : '<?php echo "No stub"; __HALT_COMPILER();';
+    }
+
+    private function getModuleEntrypoint(): string
+    {
+        $file = "/data/module.php";
+        if (file_exists(getcwd() . $file)) {
+            return getcwd() . $file;
+        }
+
+        if (file_exists(Phar::running(true) . $file)) {
+            return Phar::running(true) . $file;
+        }
+
+        $temp = tempnam(sys_get_temp_dir(), 'module');
+        file_put_contents($temp, '<?php echo "No module file found";');
+
+        return $temp;
     }
 
     private function getDirectoryIterator($dir, bool $standalone = false): \Traversable
