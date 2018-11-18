@@ -63,18 +63,18 @@ class Command implements CommandInterface
 
         if ($standalone) {
             $phar->setStub($this->getStub($standalone));
-
-            $temp = tempnam(sys_get_temp_dir(), 'autoload');
-            $files = $this->getVendorClassMap($console->getArgument('debug', false));
-            $result = var_export($files, true);
-            file_put_contents($temp, "<?php return {$result};");
-            $phar->addFile($temp, 'autoload.php');
         }
 
         if (!$standalone) {
             $phar->addFile($this->getModuleEntrypoint(), 'entrypoint.php');
+            $phar->setStub('<?php echo "Can\'t be used directly"; __HALT_COMPILER();"');
         }
 
+        $temp = tempnam(sys_get_temp_dir(), 'autoload');
+        $files = $this->getVendorClassMap($console->getArgument('debug', false));
+        $result = var_export($files, true);
+        file_put_contents($temp, "<?php return {$result};");
+        $phar->addFile($temp, 'autoload.php');
         $iterator = $this->getDirectoryIterator(getcwd(), $standalone);
 
         $phar->startBuffering();
@@ -219,6 +219,7 @@ class Command implements CommandInterface
         ), function ($item, $key) use ($patterns, $dir) {
             $key = strtr($key, [
                 $dir => '',
+                '\\' => '/',
             ]);
             foreach ($patterns as $pattern) {
                 if (strpos($key, "{$pattern}") !== false) {
