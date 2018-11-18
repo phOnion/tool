@@ -62,18 +62,16 @@ class Command implements CommandInterface
         $standalone = $console->getArgument('standalone', false);
         $phar->setStub($this->getStub($standalone));
 
-        if ($standalone) {
-            $temp = tempnam(sys_get_temp_dir(), '-autoload');
-            $files = $this->getVendorClassMap($console->getArgument('debug', false));
-            $result = var_export($files, true);
-            file_put_contents($temp, "<?php return {$result};");
+        $temp = tempnam(sys_get_temp_dir(), 'autoload');
+        $files = $this->getVendorClassMap($console->getArgument('debug', false));
+        $result = var_export($files, true);
+        file_put_contents($temp, "<?php return {$result};");
+        $phar->addFile($temp, 'autoload.php');
 
-            $phar->addFile($temp, 'autoload.php');
-            unlink($temp);
-        }
+        $iterator = $this->getDirectoryIterator(getcwd(), $standalone);
 
         $phar->startBuffering();
-        $phar->buildFromIterator($this->getDirectoryIterator(getcwd(), $standalone), getcwd());
+        $phar->buildFromIterator($iterator, getcwd());
 
         $compression = strtolower($console->getArgument('compression', 'none'));
         if ($compression !== 'none') {
@@ -105,7 +103,7 @@ class Command implements CommandInterface
 
         $phar->setSignatureAlgorithm($algo);
         $phar->setMetadata([
-            'version' => $version,
+            'version' => $version->getBaseVersion(),
             'standalone' => $standalone,
             'debug' => $console->getArgument('debug', false),
         ]);
@@ -167,15 +165,15 @@ class Command implements CommandInterface
         return (string) $version;
     }
 
-    private function getStub(bool $standalone = true): string
+    private function getStub(): string
     {
-        $file = $standalone ? 'standalone' : 'module';
-        if (file_exists(getcwd() . "/data/{$file}.php")) {
-            return file_get_contents(getcwd() . "/data/{$file}.php");
+        $file = "/data/stub.php";
+        if (file_exists(getcwd() . $file)) {
+            return file_get_contents(getcwd() . $file);
         }
 
-        if (file_exists(Phar::running(true) . "/data/{$file}.php")) {
-            return file_get_contents(Phar::running(true) . "/data/{$file}.php");
+        if (file_exists(Phar::running(true) . $file)) {
+            return file_get_contents(Phar::running(true) . $file);
         }
 
         return \Phar::running() !== '' ?
@@ -189,15 +187,15 @@ class Command implements CommandInterface
             $patterns[] = 'composer.*';
         }
 
-        if (!$standalone) {
-            $patterns[] = 'vendor/';
-        }
         return new \CallbackFilterIterator(new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(
-                $dir,
+                "$dir/",
                 \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
             )
-        ), function ($item, $key) use ($patterns) {
+        ), function ($item, $key) use ($patterns, $dir) {
+            $key = strtr($key, [
+                $dir => '',
+            ]);
             foreach ($patterns as $pattern) {
                 if (strpos($key, "{$pattern}") !== false) {
                     return false;
