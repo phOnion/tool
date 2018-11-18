@@ -26,7 +26,6 @@ if (file_exists('phar://' . __FILE__ . '/autoload.php')) {
     }
 }
 
-// https://www.php-fig.org/psr/psr-4/examples/
 spl_autoload_register(function ($class) use ($autoload) {
     $base = 'phar://' . __FILE__;
     $parts = explode('\\', $class);
