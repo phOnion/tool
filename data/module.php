@@ -1,26 +1,53 @@
 <?php
 use Psr\Http\Message\ServerRequestInterface;
 
-// https://www.php-fig.org/psr/psr-4/examples/
-spl_autoload_register(function ($class) {
-    $composer = json_decode(file_get_contents('phar://' . __FILE__ . '/composer.json'), true);
-    $autoload = $composer['autoload']['psr-4'] ?? [];
+$autoload = [];
+$base = __DIR__;
+if (file_exists("{$base}/autoload.php")) {
+    $autoload = include "{$base}/autoload.php";
 
-    foreach ($autoload as $prefix => $path) {
-        $base_dir = 'phar://' . __FILE__ . "/{$path}/";
-        $len = strlen($prefix);
-        if (strncmp($prefix, $class, $len) !== 0) {
-            continue;
+    if (isset($autoload['files'])) {
+        foreach ($autoload['files'] as $file) {
+            $file = "{$base}/autoload.php";
+            if (!file_exists($file)) {
+                continue;
+            }
+
+            include $file;
         }
 
-        $relative_class = substr($class, $len);
-        $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
+        unset($autoload['files']);
+    }
+}
 
-        if (file_exists($file)) {
-            require $file;
+spl_autoload_register(function ($class) use ($autoload, $base) {
+    $parts = explode('\\', $class);
+    $segment = '';
+    foreach ($parts as $part) {
+        $segment .= "{$part}\\";
+        foreach ($autoload as $type => $definitions) {
+            if (isset($definitions[$segment])) {
+                foreach ($definitions as $paths) {
+                    foreach ($paths as $path) {
+                        $relative_class = $class;
+
+                        if ($type === 'psr-4') {
+                            $len = strlen($segment);
+                            $relative_class = substr($class, $len);
+                        }
+
+                        $file = "{$base}{$path}/" . str_replace('\\', '/', $relative_class) . '.php';
+                        if (strncmp($segment, $class, $len) !== 0 || !file_exists($file)) {
+                            continue;
+                        }
+
+                        include $file;
+                    }
+                }
+            }
         }
     }
 }, false, true);
 
-return include 'phar://' . __FILE__ . '/container.generated.php';
+return include __DIR__ . '/container.generated.php';
 
