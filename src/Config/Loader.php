@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace Onion\Cli\Config;
 
-use Onion\Framework\Collection\CallbackCollection;
 use function Onion\Framework\merge;
 use Onion\Cli\Config\Reader\ReaderInterface;
 

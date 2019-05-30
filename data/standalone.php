@@ -48,7 +48,7 @@ spl_autoload_register(function ($class) use ($autoload) {
                             $relative_class = substr($class, $len);
                         }
 
-                        $file = "{$base}{$path}/" . str_replace('\\', '/', $relative_class) . '.php';
+                        $file = "{$base}/{$path}/" . str_replace('\\', '/', $relative_class) . '.php';
                         if (strncmp($segment, $class, $len) !== 0 || !file_exists($file)) {
                             continue;
                         }

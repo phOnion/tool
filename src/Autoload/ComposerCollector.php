@@ -44,7 +44,7 @@ class ComposerCollector
 
 
             foreach ($composer['require'] ?? [] as $package => $version) {
-                $dir = "{$this->baseDir}/{$vendorDir}/{$package}";
+                $dir = "{$vendorDir}/{$package}";
                 $result = merge(
                     $result ?? [],
                     $this->collectDir($dir, $includeDev, $vendorDir)
@@ -60,7 +60,7 @@ class ComposerCollector
 
 
                 foreach ($composer['require-dev'] ?? [] as $package => $version) {
-                    $dir = "{$this->baseDir}/{$vendorDir}/{$package}";
+                    $dir = "{$vendorDir}/{$package}";
 
                     $result[$dir] = merge(
                         $result[$dir] ?? [],
@@ -110,9 +110,9 @@ class ComposerCollector
                 }
 
                 foreach ($namespaces as $namespace => $location) {
-                    $realPath = strtr(trim($folder, "/\\") . '/' . trim($location, "/\\"), [
+                    $realPath = trim(strtr($folder,[
                         $this->baseDir => '',
-                    ]);
+                    ]) , "/\\") . '/' . trim($location, "/\\");
 
                     $classes[$type][$namespace][] = $realPath;
                 }
