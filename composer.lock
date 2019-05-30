@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "clue/stream-filter",
-            "version": "v1.4.0",
+            "version": "v1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/clue/php-stream-filter.git",
-                "reference": "d80fdee9b3a7e0d16fc330a22f41f3ad0eeb09d0"
+                "reference": "5a58cc30a8bd6a4eb8f856adf61dd3e013f53f71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clue/php-stream-filter/zipball/d80fdee9b3a7e0d16fc330a22f41f3ad0eeb09d0",
-                "reference": "d80fdee9b3a7e0d16fc330a22f41f3ad0eeb09d0",
+                "url": "https://api.github.com/repos/clue/php-stream-filter/zipball/5a58cc30a8bd6a4eb8f856adf61dd3e013f53f71",
+                "reference": "5a58cc30a8bd6a4eb8f856adf61dd3e013f53f71",
                 "shasum": ""
             },
             "require": {
@@ -32,7 +32,7 @@
                     "Clue\\StreamFilter\\": "src/"
                 },
                 "files": [
-                    "src/functions.php"
+                    "src/functions_include.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -56,7 +56,7 @@
                 "stream_filter_append",
                 "stream_filter_register"
             ],
-            "time": "2017-08-18T09:54:01+00:00"
+            "time": "2019-04-09T12:31:48+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -359,16 +359,16 @@
         },
         {
             "name": "knplabs/github-api",
-            "version": "2.10.1",
+            "version": "2.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/php-github-api.git",
-                "reference": "493423ae7ad1fa9075924cdfb98537828b9e80b5"
+                "reference": "7e67b4ccf9ef62fbd6321a314c61d3202c07b855"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/493423ae7ad1fa9075924cdfb98537828b9e80b5",
-                "reference": "493423ae7ad1fa9075924cdfb98537828b9e80b5",
+                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/7e67b4ccf9ef62fbd6321a314c61d3202c07b855",
+                "reference": "7e67b4ccf9ef62fbd6321a314c61d3202c07b855",
                 "shasum": ""
             },
             "require": {
@@ -391,7 +391,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.10.x-dev"
+                    "dev-master": "2.11.x-dev"
                 }
             },
             "autoload": {
@@ -422,7 +422,7 @@
                 "gist",
                 "github"
             ],
-            "time": "2018-09-05T19:12:14+00:00"
+            "time": "2019-01-28T19:31:35+00:00"
         },
         {
             "name": "onion/console",
@@ -685,21 +685,21 @@
         },
         {
             "name": "php-http/cache-plugin",
-            "version": "v1.5.0",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/cache-plugin.git",
-                "reference": "c573ac6ea9b4e33fad567f875b844229d18000b9"
+                "reference": "8e2505d2090316fac7cce637b39b6bbb5249c5a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/cache-plugin/zipball/c573ac6ea9b4e33fad567f875b844229d18000b9",
-                "reference": "c573ac6ea9b4e33fad567f875b844229d18000b9",
+                "url": "https://api.github.com/repos/php-http/cache-plugin/zipball/8e2505d2090316fac7cce637b39b6bbb5249c5a8",
+                "reference": "8e2505d2090316fac7cce637b39b6bbb5249c5a8",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.4 || ^7.0",
-                "php-http/client-common": "^1.1",
+                "php-http/client-common": "^1.9 || ^2.0",
                 "php-http/message-factory": "^1.0",
                 "psr/cache": "^1.0",
                 "symfony/options-resolver": "^2.6 || ^3.0 || ^4.0"
@@ -711,7 +711,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.5-dev"
+                    "dev-master": "1.6-dev"
                 }
             },
             "autoload": {
@@ -737,20 +737,20 @@
                 "httplug",
                 "plugin"
             ],
-            "time": "2017-11-29T20:45:41+00:00"
+            "time": "2019-01-23T16:51:58+00:00"
         },
         {
             "name": "php-http/client-common",
-            "version": "1.8.1",
+            "version": "1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/client-common.git",
-                "reference": "0b9ce659aa46aee106f8c66597ea0c070fcd9dff"
+                "reference": "0e156a12cc3e46f590c73bf57592a2252fc3dc48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/client-common/zipball/0b9ce659aa46aee106f8c66597ea0c070fcd9dff",
-                "reference": "0b9ce659aa46aee106f8c66597ea0c070fcd9dff",
+                "url": "https://api.github.com/repos/php-http/client-common/zipball/0e156a12cc3e46f590c73bf57592a2252fc3dc48",
+                "reference": "0e156a12cc3e46f590c73bf57592a2252fc3dc48",
                 "shasum": ""
             },
             "require": {
@@ -772,7 +772,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.8-dev"
+                    "dev-master": "1.9.x-dev"
                 }
             },
             "autoload": {
@@ -798,28 +798,30 @@
                 "http",
                 "httplug"
             ],
-            "time": "2018-10-09T06:46:29+00:00"
+            "time": "2019-02-02T07:03:15+00:00"
         },
         {
             "name": "php-http/discovery",
-            "version": "1.4.0",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/discovery.git",
-                "reference": "9a6cb24de552bfe1aa9d7d1569e2d49c5b169a33"
+                "reference": "684855f2c2e9d0a61868b8f8d6bd0295c8a4b651"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/9a6cb24de552bfe1aa9d7d1569e2d49c5b169a33",
-                "reference": "9a6cb24de552bfe1aa9d7d1569e2d49c5b169a33",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/684855f2c2e9d0a61868b8f8d6bd0295c8a4b651",
+                "reference": "684855f2c2e9d0a61868b8f8d6bd0295c8a4b651",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.5 || ^7.0"
             },
+            "conflict": {
+                "nyholm/psr7": "<1.0"
+            },
             "require-dev": {
-                "henrikbjorn/phpspec-code-coverage": "^2.0.2",
-                "php-http/httplug": "^1.0",
+                "php-http/httplug": "^1.0 || ^2.0",
                 "php-http/message-factory": "^1.0",
                 "phpspec/phpspec": "^2.4",
                 "puli/composer-plugin": "1.0.0-beta10"
@@ -831,7 +833,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.3-dev"
+                    "dev-master": "1.5-dev"
                 }
             },
             "autoload": {
@@ -860,7 +862,7 @@
                 "message",
                 "psr7"
             ],
-            "time": "2018-02-06T10:55:24+00:00"
+            "time": "2019-02-23T07:42:53+00:00"
         },
         {
             "name": "php-http/guzzle6-adapter",
@@ -1758,16 +1760,16 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v4.1.7",
+            "version": "v4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "40f0e40d37c1c8a762334618dea597d64bbb75ff"
+                "reference": "914e0edcb7cd0c9f494bc023b1d47534f4542332"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/40f0e40d37c1c8a762334618dea597d64bbb75ff",
-                "reference": "40f0e40d37c1c8a762334618dea597d64bbb75ff",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/914e0edcb7cd0c9f494bc023b1d47534f4542332",
+                "reference": "914e0edcb7cd0c9f494bc023b1d47534f4542332",
                 "shasum": ""
             },
             "require": {
@@ -1776,7 +1778,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.1-dev"
+                    "dev-master": "4.3-dev"
                 }
             },
             "autoload": {
@@ -1808,7 +1810,7 @@
                 "configuration",
                 "options"
             ],
-            "time": "2018-09-18T12:45:12+00:00"
+            "time": "2019-05-10T05:38:46+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
