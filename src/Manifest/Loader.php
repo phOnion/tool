@@ -1,12 +1,7 @@
 <?php declare(strict_types=1);
 namespace Onion\Cli\Manifest;
 
-use Onion\Cli\Manifest\Entities\Command;
-use Onion\Cli\Manifest\Entities\Link;
-use Onion\Cli\Manifest\Entities\Maintainer;
 use Onion\Cli\Manifest\Entities\Manifest;
-use Onion\Cli\Manifest\Entities\Package;
-use Onion\Cli\Manifest\Entities\Parameter;
 
 class Loader
 {
@@ -66,12 +61,13 @@ class Loader
         $manifest = new Manifest(
             $raw['name'] ?? '',
             $raw['version'] ?? '0.0.0',
+            $raw['license'] ?? 'MIT',
             $this->getSection($raw, 'links')
         );
 
         return $manifest->withCommands($this->getSection($raw, 'commands'))
-            ->withRepositories($this->getSection($raw, 'repositories'))
-            ->withDependencies($this->getSection($raw, 'dependencies'));
+            ->withDependencies($this->getSection($raw, 'dependencies'))
+            ->withRepositories($this->getSection($raw, 'repositories'));
     }
 
     public function manifestExists(string $directory = null): bool

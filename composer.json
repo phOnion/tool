@@ -7,13 +7,13 @@
     "bin": "bin/onion.php",
     "require": {
         "roave/security-advisories": "dev-master",
-        "onion/console": "^1.0",
+        "onion/console": "dev-master",
         "padraic/phar-updater": "^1.0",
-        "knplabs/github-api": "^2.10",
-        "php-http/guzzle6-adapter": "^1.1",
         "symfony/yaml": "^4.1",
-        "wikimedia/composer-merge-plugin": "^1.4",
-        "composer/semver": "^1.4"
+        "composer/semver": "^1.4",
+        "composer/ca-bundle": "^1.1",
+        "composer/spdx-licenses": "^1.5",
+        "php-http/curl-client": "^1.7"
     },
     "autoload": {
         "psr-4": {

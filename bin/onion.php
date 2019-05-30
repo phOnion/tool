@@ -20,7 +20,12 @@ foreach ([getcwd(), __DIR__] as $dir) {
         ), '~\.phar$~', \RegexIterator::MATCH, \RegexIterator::USE_KEY);
 
         foreach ($iterator as $item) {
-            $containers[] = include $item;
+            if (file_exists("phar://{$item}/entrypoint.php")) {
+                $containers[] = include "phar://{$item}/entrypoint.php";
+                continue;
+            }
+
+            trigger_error("Module file '{$item}' is not a valid module", E_USER_NOTICE);
         }
     }
 }

@@ -1,19 +1,17 @@
 <?php declare(strict_types=1);
 namespace Onion\Cli\Manifest\Entities;
 
-use Onion\Cli\Manifest\Entity;
-use Onion\Cli\Manifest\Entities\Package;
-use Onion\Cli\Manifest\Entities\Maintainer;
 use Onion\Cli\Manifest\Entities\Link;
-use Onion\Cli\Manifest\Entities\Manifest;
-use Onion\Cli\SemVer\Version;
+use Onion\Cli\Manifest\Entity;
 
 class Manifest implements Entity
 {
-    /** @var string */
+    /** @var string $name */
     private $name;
-    /** @var string */
+    /** @var string $version */
     private $version;
+    /** @var string $license */
+    private $license = 'MIT';
 
     /** @var Link[] */
     protected $links = [];
@@ -29,15 +27,15 @@ class Manifest implements Entity
     public function __construct(
         string $name,
         string $version,
-        iterable $links = [],
-        iterable $commands = []
+        string $license = 'none',
+        iterable $links = []
     ) {
 
         $this->name = $name;
         $this->version = $version;
+        $this->license = $license;
 
         $this->links = $links;
-        $this->commands = $commands;
     }
 
     public function getName(): string
@@ -64,6 +62,11 @@ class Manifest implements Entity
         $self->version = $version;
 
         return $self;
+    }
+
+    public function getLicense(): string
+    {
+        return $this->license;
     }
 
     public function getLinks(): iterable
@@ -105,10 +108,28 @@ class Manifest implements Entity
         return $this->repos;
     }
 
+    public function getRepositoryByName(string $name): ?Repository
+    {
+        foreach ($this->repos as $repo) {
+            if ($repo->getName() === $name) {
+                return $repo;
+            }
+        }
+    }
+
+
     public function withDependencies(array $dependencies): Manifest
     {
         $self = clone $this;
         $self->dependencies = $dependencies;
+
+        return $self;
+    }
+
+    public function withAddedDependency(Dependency $dependency): Manifest
+    {
+        $self = clone $this;
+        $self->dependencies[] = $dependency;
 
         return $self;
     }
@@ -120,13 +141,24 @@ class Manifest implements Entity
 
     public function jsonSerialize()
     {
-        return [
+        $result = [
             'name' => $this->getName(),
             'version' => $this->getVersion(),
-            'links' => $this->getLinks(),
-            'commands' => $this->getCommands(),
-            'repositories' => $this->getRepositories(),
-            'dependencies' => $this->getDependencies(),
+            'license' => $this->getLicense()
         ];
+
+        if ($this->getCommands() !== []) {
+            $result['commands'] = $this->getCommands();
+        }
+
+        if ($this->getLinks() !== []) {
+            $result['links'] = $this->getLinks();
+        }
+
+        if ($this->getDependencies() !== []) {
+            $result['dependencies'] = $this->getDependencies();
+        }
+
+        return $result;
     }
 }

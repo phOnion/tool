@@ -98,9 +98,7 @@ class Command implements CommandInterface
             }
 
             unset($commands[$id]);
-            $manifest = $manifest->withCommands(
-                array_values($commands)
-            );
+            $manifest = $manifest->withCommands(array_values($commands));
 
         }
 

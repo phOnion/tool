@@ -1,13 +1,7 @@
 {
     "name": "onion/tool",
-    "version": "0.5.0-beta+0462",
-    "links": [
-        {
-            "title": "GitHub",
-            "href": "https://github.com/phOnion/tool",
-            "lang": ""
-        }
-    ],
+    "version": "0.5.0-beta+0490",
+    "license": "MIT",
     "commands": [
         {
             "definition": "version",
@@ -122,12 +116,6 @@
                     "description": "The user to use for authentication"
                 },
                 {
-                    "name": "--filename | -f",
-                    "type": "string",
-                    "required": true,
-                    "description": "The filename with with which to publish artefact"
-                },
-                {
                     "name": "--draft | -d",
                     "type": "bool",
                     "required": false,
@@ -215,17 +203,20 @@
                     "type": "string",
                     "required": false,
                     "description": "Alias to use when loading module from the code"
+                {
+                    "name": "--repository | --repo | -r",
+                    "type": "string",
+                    "required": false,
+                    "description": "The repository from which to fetch the module"
                 }
             ]
         }
     ],
-    "repositories": [
+    "links": [
         {
-            "name": "gh",
-            "vendor": "phOnion",
-            "project": "tool",
-            "branch": "master"
+            "title": "GitHub",
+            "href": "https://github.com/phOnion/tool",
+            "lang": ""
         }
-    ],
-    "dependencies": []
+    ]
 }

@@ -14,7 +14,7 @@ $container = new Container($cfg);
 if (file_exists(__DIR__ . '/modules.global.php')) {
     $modules = include __DIR__ . '/modules.global.php';
     $containers = [$container];
-    foreach ($modules['modules'] as $file) {
+    foreach ($modules['modules'] ?? [] as $file) {
         $containers[] = include __DIR__ . '/../' . $file;
     }
 

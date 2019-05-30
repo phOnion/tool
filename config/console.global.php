@@ -1,15 +1,22 @@
 <?php
 
 use Onion\Cli\Manifest\Entities\Command;
-use Onion\Cli\Manifest\Entities\Index;
+use Onion\Cli\Manifest\Entities\Dependency;
 use Onion\Cli\Manifest\Entities\Link;
 use Onion\Cli\Manifest\Entities\Manifest;
 use Onion\Cli\Manifest\Entities\Repository;
 use Onion\Cli\Manifest\Factory\LocalManifestFactory;
-use Onion\Cli\Manifest\Loader;
 use Onion\Console\Application\Application;
 use Onion\Framework\Dependency\Container;
-use Onion\Cli\Manifest\Entities\Dependency;
+use Onion\Tool\Module\Actions\InstallAction;
+use Onion\Tool\Module\Actions\ListAction;
+use Onion\Tool\Module\Actions\LoadAction;
+use Onion\Tool\Module\Actions\ShowAction;
+use Onion\Tool\Module\Actions\UninstallAction;
+use Onion\Tool\Module\Actions\UnloadAction;
+use Onion\Tool\Module\Service\ActionStrategy;
+use Onion\Tool\Module\Service\Factory\ActionStrategyFactory;
+use Onion\Tool\Module\Actions\UpdateAction;
 
 $container = new Container([
     'manifest' => [
@@ -61,8 +68,20 @@ return [
     'manifest' => [
         'map' => $container->get('manifest.map'),
     ],
+    'tool' => [
+        'actions' => [
+            'load' => LoadAction::class,
+            'unload' => UnloadAction::class,
+            'uninstall' => UninstallAction::class,
+            'install' => InstallAction::class,
+            'show' => ShowAction::class,
+            'list' => ListAction::class,
+            'update' => UpdateAction::class,
+        ],
+    ],
     'commands' => $commands,
     'factories' => [
         Manifest::class => LocalManifestFactory::class,
+        ActionStrategy::class => ActionStrategyFactory::class,
     ]
 ];

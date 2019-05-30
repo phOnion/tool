@@ -7,13 +7,13 @@ class Dependency implements Entity
 {
     private $name;
     private $version;
-    private $alias;
+    private $repository;
 
-    public function __construct(string $name, string $version, ?string $alias = null)
+    public function __construct(string $name, string $version, ?string $repository = null)
     {
         $this->name = $name;
         $this->version = $version;
-        $this->alias = $alias;
+        $this->repository = $repository;
     }
 
     public function getName(): string
@@ -26,9 +26,9 @@ class Dependency implements Entity
         return $this->version;
     }
 
-    public function getAlias(): ?string
+    public function getRepository(): ?string
     {
-        return $this->alias;
+        return $this->repository;
     }
 
     public function jsonSerialize()
@@ -36,7 +36,7 @@ class Dependency implements Entity
         return array_filter([
             'name' => $this->getName(),
             'version' => $this->getVersion(),
-            'alias' => $this->getAlias(),
+            'repository' => $this->getRepository(),
         ]);
     }
 }

@@ -10,6 +10,8 @@ use Onion\Framework\Console\Factory\ConsoleFactory;
 use Onion\Framework\Console\Interfaces\ApplicationInterface;
 use Onion\Framework\Console\Interfaces\ArgumentParserInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
+use Http\Client\Curl\Client;
+use Onion\Cli\Factory\HttpClientFactory;
 
 return [
     'invokables' => [
@@ -20,5 +22,6 @@ return [
         ConsoleInterface::class => ConsoleFactory::class,
         Router::class => RouterFactory::class,
         Loader::class => LoaderFactory::class,
+        Client::class => HttpClientFactory::class,
     ],
 ];

@@ -6,16 +6,12 @@ use Onion\Cli\Manifest\Entity;
 class Repository implements Entity
 {
     private $name;
-    private $vendor;
-    private $project;
-    private $branch;
+    private $url;
 
-    public function __construct(string $name, string $vendor, string $project, string $branch = 'master')
+    public function __construct(string $name, string $url)
     {
         $this->name = $name;
-        $this->vendor = $vendor;
-        $this->project = $project;
-        $this->branch = $branch;
+        $this->url = $url;
     }
 
     public function getName(): string
@@ -23,28 +19,16 @@ class Repository implements Entity
         return $this->name;
     }
 
-    public function getVendor(): string
+    public function getUrl(): string
     {
-        return $this->vendor;
-    }
-
-    public function getProject(): string
-    {
-        return $this->project;
-    }
-
-    public function getBranch(): string
-    {
-        return $this->branch;
+        return $this->url;
     }
 
     public function jsonSerialize()
     {
         return [
             'name' => $this->getName(),
-            'vendor' => $this->getVendor(),
-            'project' => $this->getProject(),
-            'branch' => $this->getBranch(),
+            'url' => $this->getUrl(),
         ];
     }
 }

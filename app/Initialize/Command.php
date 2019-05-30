@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 namespace Onion\Tool\Initialize;
 
+use Onion\Cli\Manifest\Entities\Manifest;
+use Onion\Cli\Manifest\Loader;
+use Onion\Cli\SemVer\Version;
 use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
-use Onion\Cli\Manifest\Loader;
-use Onion\Cli\Manifest\Entities\Manifest;
-use Onion\Cli\SemVer\Version;
-use function GuzzleHttp\json_encode;
 
 class Command implements CommandInterface
 {

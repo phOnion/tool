@@ -5,26 +5,21 @@ use Humbug\SelfUpdate\Updater;
 use Onion\Cli\Manifest\Entities\Manifest;
 use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
+use Onion\Cli\UpdateStrategy;
 
 class Command implements CommandInterface
 {
-    /** @var Manifest $manifest */
-    private $manifest;
-    public function __construct(Manifest $manifest)
+    /** @var UpdateStrategy $strategy */
+    private $strategy;
+    public function __construct(UpdateStrategy $strategy)
     {
-        $this->manifest = $manifest;
+        $this->strategy = $strategy;
     }
 
     public function trigger(ConsoleInterface $console): int
     {
-        $manifest = $this->manifest;
-        $updater = new Updater(null, false, Updater::STRATEGY_GITHUB);
-        $updater->getStrategy()->setPackageName($manifest->getName());
-        $updater->getStrategy()->setPharName('onion.phar');
-        $updater->getStrategy()->setCurrentLocalVersion($manifest->getVersion());
-        if ($console->hasArgument('force')) {
-            $updater->getStrategy()->setStability('any');
-        }
+        $updater = new Updater(null, false);
+        $updater->setStrategyObject($this->strategy);
 
         if ($console->hasArgument('rollback')) {
             if ($updater->rollback()) {
