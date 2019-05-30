@@ -47,7 +47,10 @@ class Command implements CommandInterface
             $console->prompt('%text:green%Version', $manifest->getVersion())
         )));
 
-        $composer = json_decode(file_get_contents(getcwd() . '/composer.json'), true);
+        $composer = [];
+        if (file_exists(getcwd() . '/composer.json')) {
+            $composer = json_decode(file_get_contents(getcwd() . '/composer.json'), true);
+        }
         $composer['extra']['merge-plugin']['include'][] =
             'modules/*/*.json';
         $composer['require']['wikimedia/composer-merge-plugin'] = '^1.4';
