@@ -10,8 +10,11 @@ class Loader
      **/
     private $entityMaps;
 
-    public function __construct(array $manifestMap)
+    public function __construct($manifestMap)
     {
+        if (gettype($manifestMap) === 'object') {
+            throw new \InvalidArgumentException('Invalid manifest data');
+        }
         $this->entityMaps = $manifestMap;
     }
 
@@ -65,8 +68,7 @@ class Loader
             $this->getSection($raw, 'links')
         );
 
-        return $manifest->withCommands($this->getSection($raw, 'commands'))
-            ->withDependencies($this->getSection($raw, 'dependencies'))
+        return $manifest->withDependencies($this->getSection($raw, 'dependencies'))
             ->withRepositories($this->getSection($raw, 'repositories'));
     }
 

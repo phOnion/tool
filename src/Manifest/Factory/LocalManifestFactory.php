@@ -8,13 +8,9 @@ class LocalManifestFactory implements FactoryInterface
 {
     public function build(\Psr\Container\ContainerInterface $container)
     {
-        $loader = new Loader(
-            $container->get('manifest.map')
-        );
-
         $location = \Phar::running(true) === '' ?
             getcwd() : \Phar::running(true);
 
-        return $loader->getManifest($location);
+        return $container->get(Loader::class)->getManifest($location);
     }
 }

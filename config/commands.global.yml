@@ -1,0 +1,124 @@
+commands:
+  - definition: version
+    handler: \Onion\Tool\Version\Command
+    summary: Display current version
+
+  - definition: update
+    handler: \Onion\Tool\Update\Command
+    summary: Update tool to latest version
+    parameters:
+      - name: --rollback
+        type: bool
+        description: Rollback to previous version
+
+      - name: --force
+        type: bool
+        description: Force update to latest version
+
+  - definition: init
+    handler: \Onion\Tool\Initialize\Command
+    summary: Initialize an empty onion project
+
+  - definition: build
+    handler: \Onion\Tool\Build\Command
+    summary: Build the current project
+    parameters:
+      - name: --filename | -f
+        type: string
+        description: The filename of the build artefact (excluding extension)
+        default: <vendor_package>
+
+      - name: --location | --dir | -l
+        type: string
+        description: The directory in which to put the artefact
+        default: ./build/
+
+      - name: --bump
+        type: string
+        description: What part of package version to bump.
+          Allowed one of 'major', 'minor' or 'fix'
+
+      - name: --compression | -c
+        type: string
+        description: The compression to use.
+          Allowed one of 'gz', 'bz' or 'none'
+        default: none
+
+      - name: --signature | -s
+        type: The signature algorithm to use
+          Allowed one of 'sha1', 'sha256' or 'sha512'
+
+      - name: --pre | --draft
+        type: bool
+        description: Mark build as pre-release
+
+      - name: --standalone
+        type: bool
+        description: Mark build as standalone
+
+      - name: --debug
+        type: bool
+        description: Mark build as debug
+
+  - definition: publish
+    handler: \Onion\Tool\Publish\Command
+    summary: Publish current package
+    parameters:
+      - name: --auth
+        type: string
+        description: Authentication method to use
+        default: password
+
+      - name: --secret
+        type: string
+        description: The secret/token to use for authentication
+
+      - name: --credential
+        type: string
+        description: The credential (if any) used for authentication
+
+      - name: --draft | -d
+        type: bool
+        description: mark release as pre-release
+        default: false
+
+  - definition: link
+    handler: \Onion\Tool\Link\Command
+    summary: Manipulate manifest links
+    parameters:
+      - name: --add | -a
+        type: bool
+        description: Add new link entry
+
+      - name: --list | -l
+        type: bool
+        description: List all defined links
+
+  - definition: compile
+    handler: \Onion\Tool\Compile\Command
+    summary: Compile project configurations
+    parameters:
+      - name: --environment | --env | -e
+        type: string
+        description: Environment configs to load
+
+      - name: --config-dir | --dir | -c
+        type: string
+        description: Directory in which to look for configuration files
+
+  - definition: module [action] module
+    handler: \Onion\Tool\Module\Command
+    summary: Manage modules
+    parameters:
+      - name: --constraint | -c
+        type: string
+        description: Constraint to use when installing/updating a module
+
+      - name: --alias | --as | -a
+        type: string
+        description: Alias for when loading a module
+
+      - name: --repository | --repo | -r
+        type: string
+        description: The repository name to use when installing/updating a module
+

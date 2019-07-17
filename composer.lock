@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "954a5ea1883d52638e3432cb75c1c9ae",
+    "content-hash": "646519d6af1c9549d870c84e63e82efc",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -238,33 +238,37 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.5.2",
+            "version": "1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "9f83dded91781a01c63574e387eaa769be769115"
+                "reference": "239400de7a173fe9901b9ac7c06497751f00727a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/9f83dded91781a01c63574e387eaa769be769115",
-                "reference": "9f83dded91781a01c63574e387eaa769be769115",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/239400de7a173fe9901b9ac7c06497751f00727a",
+                "reference": "239400de7a173fe9901b9ac7c06497751f00727a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
                 "psr/http-message": "~1.0",
-                "ralouphie/getallheaders": "^2.0.5"
+                "ralouphie/getallheaders": "^2.0.5 || ^3.0.0"
             },
             "provide": {
                 "psr/http-message-implementation": "1.0"
             },
             "require-dev": {
+                "ext-zlib": "*",
                 "phpunit/phpunit": "~4.8.36 || ^5.7.27 || ^6.5.8"
+            },
+            "suggest": {
+                "zendframework/zend-httphandlerrunner": "Emit PSR-7 responses"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.5-dev"
+                    "dev-master": "1.6-dev"
                 }
             },
             "autoload": {
@@ -301,7 +305,93 @@
                 "uri",
                 "url"
             ],
-            "time": "2018-12-04T20:46:45+00:00"
+            "time": "2019-07-01T23:21:34+00:00"
+        },
+        {
+            "name": "guzzlehttp/streams",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/streams.git",
+                "reference": "47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/streams/zipball/47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5",
+                "reference": "47aaa48e27dae43d39fc1cea0ccf0d84ac1a2ba5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Stream\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Provides a simple abstraction over streams of data",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "Guzzle",
+                "stream"
+            ],
+            "time": "2014-10-12T19:18:40+00:00"
+        },
+        {
+            "name": "onion/common",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phOnion/common.git",
+                "reference": "d51f2cda50b7f300c24cbeda663bbbc3b9f64ff8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phOnion/common/zipball/d51f2cda50b7f300c24cbeda663bbbc3b9f64ff8",
+                "reference": "d51f2cda50b7f300c24cbeda663bbbc3b9f64ff8",
+                "shasum": ""
+            },
+            "require": {
+                "onion/interfaces": "dev-master"
+            },
+            "require-dev": {
+                "roave/security-advisories": "dev-master"
+            },
+            "suggest": {
+                "symfony/yaml": "To be able to parse YAML configuration files"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Onion\\Framework\\Common\\": "src/"
+                },
+                "files": [
+                    "src/functions.php",
+                    "src/interop.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2019-07-17T18:14:20+00:00"
         },
         {
             "name": "onion/console",
@@ -309,17 +399,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/console.git",
-                "reference": "d516be7e03f38b52d3a4eba47968e1d2efc3d05b"
+                "reference": "a227e4e0ba53cae0ca15596dca3af3c08a9aceab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/console/zipball/d516be7e03f38b52d3a4eba47968e1d2efc3d05b",
-                "reference": "d516be7e03f38b52d3a4eba47968e1d2efc3d05b",
+                "url": "https://api.github.com/repos/phOnion/console/zipball/a227e4e0ba53cae0ca15596dca3af3c08a9aceab",
+                "reference": "a227e4e0ba53cae0ca15596dca3af3c08a9aceab",
                 "shasum": ""
             },
             "require": {
-                "onion/framework": "^2.0",
                 "roave/security-advisories": "dev-master",
+                "seld/cli-prompt": "^1.0",
                 "seld/signal-handler": "^1.1"
             },
             "type": "library",
@@ -333,36 +423,73 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "description": "Set of helper classes for developing CLI applications",
-            "time": "2019-02-09T14:19:36+00:00"
+            "time": "2019-07-17T18:29:38+00:00"
         },
         {
-            "name": "onion/framework",
-            "version": "2.2.1",
+            "name": "onion/event-loop",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/phOnion/framework.git",
-                "reference": "9ae042ce62cd7531eafad34239b55873ad8a13f0"
+                "url": "https://github.com/phOnion/event-loop.git",
+                "reference": "bb3538b871ea1c96eda9e5594b38e7fdf32e7531"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/framework/zipball/9ae042ce62cd7531eafad34239b55873ad8a13f0",
-                "reference": "9ae042ce62cd7531eafad34239b55873ad8a13f0",
+                "url": "https://api.github.com/repos/phOnion/event-loop/zipball/bb3538b871ea1c96eda9e5594b38e7fdf32e7531",
+                "reference": "bb3538b871ea1c96eda9e5594b38e7fdf32e7531",
+                "shasum": ""
+            },
+            "require": {
+                "onion/promise": "dev-master",
+                "psr/event-dispatcher": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Onion\\Framework\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2019-07-12T11:36:52+00:00"
+        },
+        {
+            "name": "onion/framework",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phOnion/framework.git",
+                "reference": "4d21117b55cbaec236912fa356a52b6adaf92afc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phOnion/framework/zipball/4d21117b55cbaec236912fa356a52b6adaf92afc",
+                "reference": "4d21117b55cbaec236912fa356a52b6adaf92afc",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/psr7": "^1.4",
-                "onion/interfaces": "^2.1",
+                "guzzlehttp/streams": "^3.0",
+                "onion/common": "dev-master",
+                "onion/interfaces": "dev-master",
                 "php": "^7.2",
                 "psr/http-message": "^1.0",
                 "psr/log": "^1.0",
-                "psr/simple-cache": "^1.0",
-                "roave/security-advisories": "dev-master"
+                "psr/simple-cache": "^1.0"
             },
             "require-dev": {
                 "codacy/coverage": "^1.4",
+                "infection/infection": "^0.13 || dev-master as 0.13",
                 "phpspec/prophecy": "^1.6",
-                "phpunit/phpunit": "^5.5",
-                "squizlabs/php_codesniffer": "^2.7"
+                "phpunit/phpunit": "^8.2",
+                "roave/security-advisories": "dev-master",
+                "squizlabs/php_codesniffer": "^3.4",
+                "vimeo/psalm": "^3.0"
             },
             "suggest": {
                 "onion/rest": "A small library to return REST-compliant responses",
@@ -371,11 +498,8 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Onion\\": "src/"
-                },
-                "files": [
-                    "src/Framework/functions.php"
-                ]
+                    "Onion\\Framework\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -395,20 +519,52 @@
                 "psr-15",
                 "psr-7"
             ],
-            "time": "2018-11-18T16:40:34+00:00"
+            "time": "2019-07-16T01:31:21+00:00"
         },
         {
-            "name": "onion/interfaces",
-            "version": "2.1.0",
+            "name": "onion/http",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/phOnion/interfaces.git",
-                "reference": "c0f7f2d6cb1b48a1d2bed16c4dde80ae477e9680"
+                "url": "https://github.com/phOnion/http.git",
+                "reference": "70f0361edd5d74466cf72dcaf95e864023578814"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/interfaces/zipball/c0f7f2d6cb1b48a1d2bed16c4dde80ae477e9680",
-                "reference": "c0f7f2d6cb1b48a1d2bed16c4dde80ae477e9680",
+                "url": "https://api.github.com/repos/phOnion/http/zipball/70f0361edd5d74466cf72dcaf95e864023578814",
+                "reference": "70f0361edd5d74466cf72dcaf95e864023578814",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/psr7": "^1.6",
+                "onion/event-loop": "dev-master",
+                "onion/promise": "dev-master",
+                "onion/server": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Onion\\Framework\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2019-07-08T01:23:40+00:00"
+        },
+        {
+            "name": "onion/interfaces",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phOnion/interfaces.git",
+                "reference": "4ff33728fcc1f1b8c8a4ca973bb0b40eeec18fff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phOnion/interfaces/zipball/4ff33728fcc1f1b8c8a4ca973bb0b40eeec18fff",
+                "reference": "4ff33728fcc1f1b8c8a4ca973bb0b40eeec18fff",
                 "shasum": ""
             },
             "require": {
@@ -416,7 +572,9 @@
                 "psr/container": "^1.0",
                 "psr/http-server-handler": "^1.0",
                 "psr/http-server-middleware": "^1.0",
-                "psr/link": "^1.0",
+                "psr/link": "^1.0"
+            },
+            "require-dev": {
                 "roave/security-advisories": "dev-master"
             },
             "suggest": {
@@ -440,7 +598,76 @@
                 }
             ],
             "description": "Package containing only the interfaces of 'onion' libraries, allowing to use code without installing the whole framework and using code written for the framework outside it",
-            "time": "2018-10-09T12:32:39+00:00"
+            "time": "2019-06-03T11:58:34+00:00"
+        },
+        {
+            "name": "onion/promise",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phOnion/promise.git",
+                "reference": "82054aea25d86fc11aad2f5905b6591fdc130599"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phOnion/promise/zipball/82054aea25d86fc11aad2f5905b6591fdc130599",
+                "reference": "82054aea25d86fc11aad2f5905b6591fdc130599",
+                "shasum": ""
+            },
+            "require-dev": {
+                "infection/infection": "^0.13.4",
+                "phpunit/phpunit": "^7.5",
+                "roave/security-advisories": "dev-master",
+                "squizlabs/php_codesniffer": "^3.4",
+                "vimeo/psalm": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Onion\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2019-07-06T14:33:20+00:00"
+        },
+        {
+            "name": "onion/server",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phOnion/server.git",
+                "reference": "0a1e24dfd2293120624a013af25f46df3bf5c15d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phOnion/server/zipball/0a1e24dfd2293120624a013af25f46df3bf5c15d",
+                "reference": "0a1e24dfd2293120624a013af25f46df3bf5c15d",
+                "shasum": ""
+            },
+            "require": {
+                "onion/event-loop": "dev-master",
+                "onion/promise": "dev-master"
+            },
+            "require-dev": {
+                "roave/security-advisories": "dev-master"
+            },
+            "suggest": {
+                "onion/websocket": "websocket server & client implementations"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Onion\\Framework\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2019-07-10T13:00:23+00:00"
         },
         {
             "name": "padraic/humbug_get_contents",
@@ -621,28 +848,29 @@
         },
         {
             "name": "php-http/discovery",
-            "version": "1.6.1",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/discovery.git",
-                "reference": "684855f2c2e9d0a61868b8f8d6bd0295c8a4b651"
+                "reference": "e822f86a6983790aa17ab13aa7e69631e86806b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/684855f2c2e9d0a61868b8f8d6bd0295c8a4b651",
-                "reference": "684855f2c2e9d0a61868b8f8d6bd0295c8a4b651",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/e822f86a6983790aa17ab13aa7e69631e86806b6",
+                "reference": "e822f86a6983790aa17ab13aa7e69631e86806b6",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.5 || ^7.0"
+                "php": "^7.1"
             },
             "conflict": {
                 "nyholm/psr7": "<1.0"
             },
             "require-dev": {
+                "akeneo/phpspec-skip-example-extension": "^4.0",
                 "php-http/httplug": "^1.0 || ^2.0",
                 "php-http/message-factory": "^1.0",
-                "phpspec/phpspec": "^2.4",
+                "phpspec/phpspec": "^5.1",
                 "puli/composer-plugin": "1.0.0-beta10"
             },
             "suggest": {
@@ -652,7 +880,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.5-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
@@ -681,7 +909,7 @@
                 "message",
                 "psr7"
             ],
-            "time": "2019-02-23T07:42:53+00:00"
+            "time": "2019-06-30T09:04:27+00:00"
         },
         {
             "name": "php-http/httplug",
@@ -959,6 +1187,52 @@
                 "psr"
             ],
             "time": "2017-02-14T16:28:37+00:00"
+        },
+        {
+            "name": "psr/event-dispatcher",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/event-dispatcher.git",
+                "reference": "dbefd12671e8a14ec7f180cab83036ed26714bb0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/event-dispatcher/zipball/dbefd12671e8a14ec7f180cab83036ed26714bb0",
+                "reference": "dbefd12671e8a14ec7f180cab83036ed26714bb0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\EventDispatcher\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Standard interfaces for event handling.",
+            "keywords": [
+                "events",
+                "psr",
+                "psr-14"
+            ],
+            "time": "2019-01-08T18:20:26+00:00"
         },
         {
             "name": "psr/http-message",
@@ -1262,24 +1536,24 @@
         },
         {
             "name": "ralouphie/getallheaders",
-            "version": "2.0.5",
+            "version": "3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ralouphie/getallheaders.git",
-                "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa"
+                "reference": "120b605dfeb996808c31b6477290a714d356e822"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ralouphie/getallheaders/zipball/5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
-                "reference": "5601c8a83fbba7ef674a7369456d12f1e0d0eafa",
+                "url": "https://api.github.com/repos/ralouphie/getallheaders/zipball/120b605dfeb996808c31b6477290a714d356e822",
+                "reference": "120b605dfeb996808c31b6477290a714d356e822",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3"
+                "php": ">=5.6"
             },
             "require-dev": {
-                "phpunit/phpunit": "~3.7.0",
-                "satooshi/php-coveralls": ">=1.0"
+                "php-coveralls/php-coveralls": "^2.1",
+                "phpunit/phpunit": "^5 || ^6.5"
             },
             "type": "library",
             "autoload": {
@@ -1298,7 +1572,7 @@
                 }
             ],
             "description": "A polyfill for getallheaders.",
-            "time": "2016-02-11T07:05:27+00:00"
+            "time": "2019-03-08T08:55:37+00:00"
         },
         {
             "name": "roave/security-advisories",
@@ -1306,12 +1580,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "4c0ba8a35f1f12dd9236452e9fae4346b0bf2a56"
+                "reference": "2e50fc5a89e1e77b68c7e3c3aa6d87da0b8d4c6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/4c0ba8a35f1f12dd9236452e9fae4346b0bf2a56",
-                "reference": "4c0ba8a35f1f12dd9236452e9fae4346b0bf2a56",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/2e50fc5a89e1e77b68c7e3c3aa6d87da0b8d4c6d",
+                "reference": "2e50fc5a89e1e77b68c7e3c3aa6d87da0b8d4c6d",
                 "shasum": ""
             },
             "conflict": {
@@ -1349,6 +1623,7 @@
                 "drupal/core": ">=7,<7.67|>=8,<8.6.16|>=8.7,<8.7.1",
                 "drupal/drupal": ">=7,<7.67|>=8,<8.6.16|>=8.7,<8.7.1",
                 "erusev/parsedown": "<1.7.2",
+                "ezsystems/ezplatform-admin-ui": ">=1.3,<1.3.5|>=1.4,<1.4.4",
                 "ezsystems/ezpublish-kernel": ">=5.3,<5.3.12.1|>=5.4,<5.4.13.1|>=6,<6.7.9.1|>=6.8,<6.13.5.1|>=7,<7.2.4.1|>=7.3,<7.3.2.1",
                 "ezsystems/ezpublish-legacy": ">=5.3,<5.3.12.6|>=5.4,<5.4.12.3|>=2011,<2017.12.4.3|>=2018.6,<2018.6.1.4|>=2018.9,<2018.9.1.3",
                 "ezsystems/repository-forms": ">=2.3,<2.3.2.1",
@@ -1406,11 +1681,14 @@
                 "shopware/shopware": "<5.3.7",
                 "silverstripe/cms": ">=3,<=3.0.11|>=3.1,<3.1.11",
                 "silverstripe/forum": "<=0.6.1|>=0.7,<=0.7.3",
-                "silverstripe/framework": ">=3,<3.6.7|>=3.7,<3.7.3|>=4,<4.0.7|>=4.1,<4.1.5|>=4.2,<4.2.4|>=4.3,<4.3.1",
+                "silverstripe/framework": ">=3,<3.6.7|>=3.7,<3.7.3|>=4,<4.4",
+                "silverstripe/graphql": ">=2,<2.0.5|>=3,<3.1.2",
+                "silverstripe/registry": ">=2.1,<2.1.2|>=2.2,<2.2.1",
+                "silverstripe/restfulserver": ">=1,<1.0.9|>=2,<2.0.4",
                 "silverstripe/userforms": "<3",
                 "simple-updates/phpwhois": "<=1",
                 "simplesamlphp/saml2": "<1.10.6|>=2,<2.3.8|>=3,<3.1.4",
-                "simplesamlphp/simplesamlphp": "<1.15.2|>=1.16,<1.16.3",
+                "simplesamlphp/simplesamlphp": "<1.17.3",
                 "simplesamlphp/simplesamlphp-module-infocard": "<1.0.1",
                 "slim/slim": "<2.6",
                 "smarty/smarty": "<3.1.33",
@@ -1423,7 +1701,7 @@
                 "sylius/grid": ">=1,<1.1.19|>=1.2,<1.2.18|>=1.3,<1.3.13|>=1.4,<1.4.5|>=1.5,<1.5.1",
                 "sylius/grid-bundle": ">=1,<1.1.19|>=1.2,<1.2.18|>=1.3,<1.3.13|>=1.4,<1.4.5|>=1.5,<1.5.1",
                 "sylius/sylius": ">=1,<1.1.18|>=1.2,<1.2.17|>=1.3,<1.3.12|>=1.4,<1.4.4",
-                "symfony/cache": ">=3.2,<3.4.26|>=4,<4.1.12|>=4.2,<4.2.7",
+                "symfony/cache": ">=3.1,<3.4.26|>=4,<4.1.12|>=4.2,<4.2.7",
                 "symfony/dependency-injection": ">=2,<2.0.17|>=2.7,<2.7.51|>=2.8,<2.8.50|>=3,<3.4.26|>=4,<4.1.12|>=4.2,<4.2.7",
                 "symfony/form": ">=2.3,<2.3.35|>=2.4,<2.6.12|>=2.7,<2.7.50|>=2.8,<2.8.49|>=3,<3.4.20|>=4,<4.0.15|>=4.1,<4.1.9|>=4.2,<4.2.1",
                 "symfony/framework-bundle": ">=2,<2.3.18|>=2.4,<2.4.8|>=2.5,<2.5.2|>=2.7,<2.7.51|>=2.8,<2.8.50|>=3,<3.4.26|>=4,<4.1.12|>=4.2,<4.2.7",
@@ -1454,8 +1732,8 @@
                 "titon/framework": ">=0,<9.9.99",
                 "truckersmp/phpwhois": "<=4.3.1",
                 "twig/twig": "<1.38|>=2,<2.7",
-                "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.32|>=8,<8.7.25|>=9,<9.5.6",
-                "typo3/cms-core": ">=8,<8.7.25|>=9,<9.5.6",
+                "typo3/cms": ">=6.2,<6.2.30|>=7,<7.6.32|>=8,<8.7.27|>=9,<9.5.8",
+                "typo3/cms-core": ">=8,<8.7.27|>=9,<9.5.8",
                 "typo3/flow": ">=1,<1.0.4|>=1.1,<1.1.1|>=2,<2.0.1|>=2.3,<2.3.16|>=3,<3.0.10|>=3.1,<3.1.7|>=3.2,<3.2.7|>=3.3,<3.3.5",
                 "typo3/neos": ">=1.1,<1.1.3|>=1.2,<1.2.13|>=2,<2.0.4",
                 "typo3/phar-stream-wrapper": ">=1,<2.1.1|>=3,<3.1.1",
@@ -1509,7 +1787,55 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2019-05-23T20:42:12+00:00"
+            "time": "2019-07-14T14:21:52+00:00"
+        },
+        {
+            "name": "seld/cli-prompt",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/cli-prompt.git",
+                "reference": "a19a7376a4689d4d94cab66ab4f3c816019ba8dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/cli-prompt/zipball/a19a7376a4689d4d94cab66ab4f3c816019ba8dd",
+                "reference": "a19a7376a4689d4d94cab66ab4f3c816019ba8dd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Seld\\CliPrompt\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be"
+                }
+            ],
+            "description": "Allows you to prompt for user input on the command line, and optionally hide the characters they type",
+            "keywords": [
+                "cli",
+                "console",
+                "hidden",
+                "input",
+                "prompt"
+            ],
+            "time": "2017-03-18T11:32:45+00:00"
         },
         {
             "name": "seld/signal-handler",
@@ -1619,7 +1945,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v4.3.0",
+            "version": "v4.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
@@ -1682,7 +2008,14 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "roave/security-advisories": 20,
-        "onion/console": 20
+        "onion/console": 20,
+        "onion/event-loop": 20,
+        "onion/promise": 20,
+        "onion/http": 20,
+        "onion/server": 20,
+        "onion/framework": 20,
+        "onion/interfaces": 20,
+        "onion/common": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

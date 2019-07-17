@@ -1,15 +1,13 @@
 <?php require_once __DIR__ . '/../vendor/autoload.php';
 
-use Onion\Framework\Console\Console;
 use Psr\Container\ContainerInterface;
-use Onion\Console\Application\Application;
-use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Onion\Framework\Dependency\DelegateContainer;
 use Psr\Http\Message\ServerRequestInterface;
 
 /** @var ContainerInterface $container */
 $container = include __DIR__ . '/../config/container.php';
 $containers = [$container];
+
 foreach ([getcwd(), __DIR__] as $dir) {
     if (is_dir("{$dir}/modules/")) {
         $iterator = new \RegexIterator(new \RecursiveIteratorIterator(
@@ -34,6 +32,7 @@ $interface = php_sapi_name() === 'cli' ? 'cli' : 'web';
 
 $instance = null;
 $args = [];
+
 if ($interface === 'web') {
     $instance = $container->get(\Onion\Framework\Application\Interfaces\ApplicationInterface::class);
     $args = [$container->get(ServerRequestInterface::class)];
