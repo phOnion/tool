@@ -39,10 +39,18 @@ class Command implements CommandInterface
         );
 
         $file = getcwd() . '/container.generated.php';
-        file_put_contents($file, sprintf(implode("\n", static::TEMPLATE), var_export($configs, true)));
+        file_put_contents($file, sprintf(
+            implode("\n", static::TEMPLATE),
+            var_export($configs, true)
+        ));
+
+        if ($console->getArgument('verbose')) {
+            $console->writeLine(
+                "%text:green%Done\t %text:blue%{$this->formatBytes((string) filesize($file), 3)}"
+            );
+        }
 
 
-        $console->writeLine("%text:green%Done\t %text:blue%" . $this->formatBytes((string) filesize($file), 3));
         return 0;
     }
 
