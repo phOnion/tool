@@ -3,6 +3,8 @@
 use Psr\Container\ContainerInterface;
 use Onion\Framework\Dependency\DelegateContainer;
 use Psr\Http\Message\ServerRequestInterface;
+use function Onion\Framework\Loop\scheduler;
+use Onion\Framework\Loop\Coroutine;
 
 /** @var ContainerInterface $container */
 $container = include __DIR__ . '/../config/container.php';
@@ -47,4 +49,13 @@ if (defined('ONION')) {
     return $instance;
 }
 
-exit($instance->run(...$args) ?? 0);
+$result = ($instance->run(...$args) ?? 0);
+
+if ($result instanceof Coroutine) {
+    scheduler()->add($result);
+}
+
+scheduler()->start();
+if (is_int($result)) {
+    exit($result);
+}
