@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "646519d6af1c9549d870c84e63e82efc",
+    "content-hash": "1dd45dd99ec9d9c3e4a53c784b0c7c18",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -363,12 +363,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/common.git",
-                "reference": "d51f2cda50b7f300c24cbeda663bbbc3b9f64ff8"
+                "reference": "35c674398a48a99dd9c80192560c5b25af5b3323"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/common/zipball/d51f2cda50b7f300c24cbeda663bbbc3b9f64ff8",
-                "reference": "d51f2cda50b7f300c24cbeda663bbbc3b9f64ff8",
+                "url": "https://api.github.com/repos/phOnion/common/zipball/35c674398a48a99dd9c80192560c5b25af5b3323",
+                "reference": "35c674398a48a99dd9c80192560c5b25af5b3323",
                 "shasum": ""
             },
             "require": {
@@ -391,7 +391,7 @@
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2019-07-17T18:14:20+00:00"
+            "time": "2019-07-19T06:22:18+00:00"
         },
         {
             "name": "onion/console",
@@ -399,12 +399,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/console.git",
-                "reference": "e5b914505e4396335edc700d631827b8086d3878"
+                "reference": "3630fbbc304ccb82d54026dcf1236fc728264ae2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/console/zipball/e5b914505e4396335edc700d631827b8086d3878",
-                "reference": "e5b914505e4396335edc700d631827b8086d3878",
+                "url": "https://api.github.com/repos/phOnion/console/zipball/3630fbbc304ccb82d54026dcf1236fc728264ae2",
+                "reference": "3630fbbc304ccb82d54026dcf1236fc728264ae2",
                 "shasum": ""
             },
             "require": {
@@ -423,7 +423,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "description": "Set of helper classes for developing CLI applications",
-            "time": "2019-07-18T16:33:24+00:00"
+            "time": "2019-07-19T06:22:53+00:00"
         },
         {
             "name": "onion/event-loop",
@@ -431,12 +431,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/event-loop.git",
-                "reference": "bb3538b871ea1c96eda9e5594b38e7fdf32e7531"
+                "reference": "ac47b83bc532830f0eac8ad2001fa4b56e095240"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/event-loop/zipball/bb3538b871ea1c96eda9e5594b38e7fdf32e7531",
-                "reference": "bb3538b871ea1c96eda9e5594b38e7fdf32e7531",
+                "url": "https://api.github.com/repos/phOnion/event-loop/zipball/ac47b83bc532830f0eac8ad2001fa4b56e095240",
+                "reference": "ac47b83bc532830f0eac8ad2001fa4b56e095240",
                 "shasum": ""
             },
             "require": {
@@ -456,20 +456,20 @@
             "license": [
                 "MIT"
             ],
-            "time": "2019-07-12T11:36:52+00:00"
+            "time": "2019-07-19T16:41:22+00:00"
         },
         {
             "name": "onion/framework",
-            "version": "dev-master",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/framework.git",
-                "reference": "4d21117b55cbaec236912fa356a52b6adaf92afc"
+                "reference": "1746b596417cda480ad3c23097c45ea8274c7f2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/framework/zipball/4d21117b55cbaec236912fa356a52b6adaf92afc",
-                "reference": "4d21117b55cbaec236912fa356a52b6adaf92afc",
+                "url": "https://api.github.com/repos/phOnion/framework/zipball/1746b596417cda480ad3c23097c45ea8274c7f2c",
+                "reference": "1746b596417cda480ad3c23097c45ea8274c7f2c",
                 "shasum": ""
             },
             "require": {
@@ -519,7 +519,7 @@
                 "psr-15",
                 "psr-7"
             ],
-            "time": "2019-07-16T01:31:21+00:00"
+            "time": "2019-07-18T16:25:14+00:00"
         },
         {
             "name": "onion/http",
@@ -527,12 +527,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/http.git",
-                "reference": "70f0361edd5d74466cf72dcaf95e864023578814"
+                "reference": "eba1787f8541875ce13f33833b8487a54072701e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/http/zipball/70f0361edd5d74466cf72dcaf95e864023578814",
-                "reference": "70f0361edd5d74466cf72dcaf95e864023578814",
+                "url": "https://api.github.com/repos/phOnion/http/zipball/eba1787f8541875ce13f33833b8487a54072701e",
+                "reference": "eba1787f8541875ce13f33833b8487a54072701e",
                 "shasum": ""
             },
             "require": {
@@ -551,7 +551,7 @@
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2019-07-08T01:23:40+00:00"
+            "time": "2019-07-19T06:26:08+00:00"
         },
         {
             "name": "onion/interfaces",
@@ -642,12 +642,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/server.git",
-                "reference": "0a1e24dfd2293120624a013af25f46df3bf5c15d"
+                "reference": "73959b639c0913febca6ca60498d2249114dbe72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/server/zipball/0a1e24dfd2293120624a013af25f46df3bf5c15d",
-                "reference": "0a1e24dfd2293120624a013af25f46df3bf5c15d",
+                "url": "https://api.github.com/repos/phOnion/server/zipball/73959b639c0913febca6ca60498d2249114dbe72",
+                "reference": "73959b639c0913febca6ca60498d2249114dbe72",
                 "shasum": ""
             },
             "require": {
@@ -667,7 +667,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2019-07-10T13:00:23+00:00"
+            "time": "2019-07-18T19:37:09+00:00"
         },
         {
             "name": "padraic/humbug_get_contents",

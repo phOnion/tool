@@ -18,7 +18,7 @@
         "onion/promise": "dev-master",
         "onion/http": "dev-master",
         "onion/server": "dev-master",
-        "onion/framework": "dev-master",
+        "onion/framework": "dev-develop",
         "onion/interfaces": "dev-master",
         "onion/common": "dev-master"
     },
@@ -26,6 +26,11 @@
         "psr-4": {
             "Onion\\Cli\\": "src/",
             "Onion\\Tool\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Demo\\": "demo/"
         }
     },
     "config": {
