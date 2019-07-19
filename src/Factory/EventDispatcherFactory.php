@@ -10,22 +10,11 @@ class EventDispatcherFactory implements FactoryInterface
 {
     public function build(\Psr\Container\ContainerInterface $container): EventDispatcherInterface
     {
-        $localContainerFile = getcwd() . '/container.generated.php';
-        if (file_exists($localContainerFile)) {
-            $container = include $localContainerFile;
-
-            return $container->get(EventDispatcherInterface::class);
-        }
-
-        $providers = [];
+        $providers = new AggregateProvider;
         foreach($container->get('events.providers') as $provider) {
-            
-            $providers[] = $container->get($provider);
+            $providers->addProvider($container->get($provider));
         }
 
-
-        return new Dispatcher(
-            new AggregateProvider($providers)
-        );
+        return new Dispatcher($providers);
     }
 }
