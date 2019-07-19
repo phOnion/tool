@@ -32,4 +32,5 @@ return [
         ],
     ],
     'user' => 'env(USER)',
+    'listeners' => [],
 ];
