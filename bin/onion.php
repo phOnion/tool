@@ -1,35 +1,14 @@
 <?php require_once __DIR__ . '/../vendor/autoload.php';
 
-use Psr\Container\ContainerInterface;
-use Onion\Framework\Dependency\DelegateContainer;
 use Psr\Http\Message\ServerRequestInterface;
 use function Onion\Framework\Loop\scheduler;
 use Onion\Framework\Loop\Coroutine;
+use Onion\Framework\Dependency\InflectorContainer;
 
-/** @var ContainerInterface $container */
+error_reporting(E_ALL);
+
+/** @var InflectorContainer $container */
 $container = include __DIR__ . '/../config/container.php';
-$containers = [$container];
-
-foreach ([getcwd(), __DIR__] as $dir) {
-    if (is_dir("{$dir}/modules/")) {
-        $iterator = new \RegexIterator(new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(
-                "{$dir}/modules/",
-                \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
-            )
-        ), '~\.phar$~', \RegexIterator::MATCH, \RegexIterator::USE_KEY);
-
-        foreach ($iterator as $item) {
-            if (file_exists("phar://{$item}/entrypoint.php")) {
-                $containers[] = include "phar://{$item}/entrypoint.php";
-                continue;
-            }
-
-            trigger_error("Module file '{$item}' is not a valid module", E_USER_NOTICE);
-        }
-    }
-}
-$container = new DelegateContainer($containers);
 $interface = php_sapi_name() === 'cli' ? 'cli' : 'web';
 
 $instance = null;
