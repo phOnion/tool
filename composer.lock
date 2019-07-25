@@ -464,12 +464,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/framework.git",
-                "reference": "1746b596417cda480ad3c23097c45ea8274c7f2c"
+                "reference": "522c7e0911083054ec874e43df2117bab82cc7d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/framework/zipball/1746b596417cda480ad3c23097c45ea8274c7f2c",
-                "reference": "1746b596417cda480ad3c23097c45ea8274c7f2c",
+                "url": "https://api.github.com/repos/phOnion/framework/zipball/522c7e0911083054ec874e43df2117bab82cc7d8",
+                "reference": "522c7e0911083054ec874e43df2117bab82cc7d8",
                 "shasum": ""
             },
             "require": {
@@ -484,7 +484,7 @@
             },
             "require-dev": {
                 "codacy/coverage": "^1.4",
-                "infection/infection": "^0.13 || dev-master as 0.13",
+                "infection/infection": "^0.13",
                 "phpspec/prophecy": "^1.6",
                 "phpunit/phpunit": "^8.2",
                 "roave/security-advisories": "dev-master",
@@ -519,7 +519,7 @@
                 "psr-15",
                 "psr-7"
             ],
-            "time": "2019-07-18T16:25:14+00:00"
+            "time": "2019-07-22T14:51:21+00:00"
         },
         {
             "name": "onion/http",
@@ -527,12 +527,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/http.git",
-                "reference": "eba1787f8541875ce13f33833b8487a54072701e"
+                "reference": "7be59a1ad2cb5049fda7b141770d06ac8c672459"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/http/zipball/eba1787f8541875ce13f33833b8487a54072701e",
-                "reference": "eba1787f8541875ce13f33833b8487a54072701e",
+                "url": "https://api.github.com/repos/phOnion/http/zipball/7be59a1ad2cb5049fda7b141770d06ac8c672459",
+                "reference": "7be59a1ad2cb5049fda7b141770d06ac8c672459",
                 "shasum": ""
             },
             "require": {
@@ -551,7 +551,7 @@
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2019-07-19T06:26:08+00:00"
+            "time": "2019-07-20T22:43:05+00:00"
         },
         {
             "name": "onion/interfaces",
@@ -559,12 +559,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/interfaces.git",
-                "reference": "4ff33728fcc1f1b8c8a4ca973bb0b40eeec18fff"
+                "reference": "5195c89507bcaaf71c129215af685f501eecbc14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/interfaces/zipball/4ff33728fcc1f1b8c8a4ca973bb0b40eeec18fff",
-                "reference": "4ff33728fcc1f1b8c8a4ca973bb0b40eeec18fff",
+                "url": "https://api.github.com/repos/phOnion/interfaces/zipball/5195c89507bcaaf71c129215af685f501eecbc14",
+                "reference": "5195c89507bcaaf71c129215af685f501eecbc14",
                 "shasum": ""
             },
             "require": {
@@ -598,7 +598,7 @@
                 }
             ],
             "description": "Package containing only the interfaces of 'onion' libraries, allowing to use code without installing the whole framework and using code written for the framework outside it",
-            "time": "2019-06-03T11:58:34+00:00"
+            "time": "2019-07-22T14:47:52+00:00"
         },
         {
             "name": "onion/promise",
