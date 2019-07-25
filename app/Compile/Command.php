@@ -11,15 +11,14 @@ class Command implements CommandInterface
         '<?php',
         'use \Onion\Framework\Common\Config\Container as Config;',
         'use \Onion\Framework\Dependency\Container;',
-        'use \Onion\Framework\Dependency\DelegateContainer;',
-        '$config = %s;',
-        '$configContainer = new Config($config);',
-        '$di = new Container([',
-        '    "factories" => $config["factories"] ?? [],',
-        '    "invokables" => $config["invokables"] ?? [],',
-        '    "shared" => $config["shared"] ?? [],',
+        '',
+        '$config = new Config(%s);',
+        '$container = new Container([',
+        '    "factories" => $config->has("factories") ? $config->get("factories") : [],',
+        '    "invokables" => $config->has("invokables") ? $config->get("invokables") : [],',
         ']);',
-        'return new DelegateContainer([$configContainer, $di]);',
+        '',
+        'return [$config, $container];',
         ''
     ];
     /** @var Loader $configLoader */
