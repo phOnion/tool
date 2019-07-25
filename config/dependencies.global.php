@@ -21,14 +21,13 @@ use Onion\Tool\Module\Service\Factory\ActionStrategyFactory;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Onion\Framework\Event\Dispatcher;
 use Psr\EventDispatcher\ListenerProviderInterface;
-use Onion\Framework\Event\ListenerProviders\SimpleProvider;
 use Onion\Console\Router\Router;
+use Onion\Cli\Factory\EventProviderFactory;
 
 return [
     'invokables' => [
         ArgumentParserInterface::class => ArgumentParser::class,
         ServerInterface::class => Server::class,
-        ListenerProviderInterface::class => SimpleProvider::class,
         EventDispatcherInterface::class => Dispatcher::class,
         Router::class => Router::class,
     ],
@@ -40,5 +39,6 @@ return [
         Client::class => HttpClientFactory::class,
         Manifest::class => LocalManifestFactory::class,
         ActionStrategy::class => ActionStrategyFactory::class,
+        ListenerProviderInterface::class => EventProviderFactory::class,
     ],
 ];

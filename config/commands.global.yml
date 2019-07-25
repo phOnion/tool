@@ -26,7 +26,6 @@ commands:
       - name: --filename | -f
         type: string
         description: The filename of the build artefact (excluding extension)
-        default: <vendor_package>
 
       - name: --location | --dir | -l
         type: string

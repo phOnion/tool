@@ -5,8 +5,9 @@ use Onion\Framework\Common\Config\Loader;
 use Onion\Framework\Common\Config\Reader\IniReader;
 use Onion\Framework\Common\Config\Reader\PhpReader;
 use Onion\Framework\Dependency\Container;
-use Onion\Framework\Dependency\DelegateContainer;
 use Onion\Framework\Common\Config\Reader\YamlReader;
+use Onion\Framework\Dependency\ProxyContainer;
+use Onion\Framework\Dependency\InflectorContainer;
 
 $loader = new Loader();
 $loader->registerReader(['php'], new PhpReader());
@@ -15,17 +16,21 @@ $loader->registerReader(['yml', 'yaml'], new YamlReader());
 
 $configs = $loader->loadDirectories('dist', [__DIR__]);
 
-$configuration = new Configuration($configs);
+$proxy = new ProxyContainer;
 
-$container = new Container([
+$proxy->attach(new Configuration($configs));
+$proxy->attach(new Container([
     'factories' => $configs['factories'] ?? [],
     'invokables' => $configs['invokables'] ?? [],
     'shared' => $configs['shared'] ?? [],
-]);
+]));
 
-$containers = [$container, $configuration];
+
+
 if (file_exists(getcwd() . '/container.generated.php')) {
-    array_unshift($containers, include getcwd() . '/container.generated.php');
+    foreach (include getcwd() . '/container.generated.php' as $container) {
+        $proxy->attach($container);
+    }
 }
 
 foreach ([getcwd(), __DIR__ . '/../'] as $dir) {
@@ -38,13 +43,16 @@ foreach ([getcwd(), __DIR__ . '/../'] as $dir) {
         ), '~\.phar$~', \RegexIterator::MATCH, \RegexIterator::USE_KEY);
 
         foreach ($iterator as $item) {
-            if (file_exists("phar://{$item}/entrypoint.php")) {
-                $containers[] = include "phar://{$item}/entrypoint.php";
+            if (!file_exists("phar://{$item}/entrypoint.php")) {
+                trigger_error("Module file '{$item}' is not a valid module", E_USER_NOTICE);
                 continue;
             }
 
-            trigger_error("Module file '{$item}' is not a valid module", E_USER_NOTICE);
+            $proxy->attach(include "phar://{$item}/entrypoint.php");
         }
     }
 }
-return new DelegateContainer($containers);
+$inflector = new InflectorContainer();
+$inflector->wrap($proxy);
+
+return $inflector;
