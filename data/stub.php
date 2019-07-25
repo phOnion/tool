@@ -1,6 +1,7 @@
 <?php
 use Onion\Framework\Dependency\DelegateContainer;
 use Psr\Http\Message\ServerRequestInterface;
+use Onion\Framework\Dependency\ProxyContainer;
 
 if (!in_array('phar', stream_get_wrappers()) && class_exists('Phar')) {
     fwrite(fopen('php://stderr', 'wb'), 'Phar Extension not available');
@@ -57,8 +58,11 @@ spl_autoload_register(function ($class) use ($autoload) {
     }
 }, false, true);
 set_include_path('phar://' . __FILE__ . PATH_SEPARATOR . get_include_path());
-$container = include 'phar://' . __FILE__ . '/container.generated.php';
-$containers = [$container];
+$container = new ProxyContainer();
+foreach (include 'phar://' . __FILE__ . '/container.generated.php' as $c) {
+    $container->attach($c);
+}
+
 foreach ([getcwd(), __DIR__] as $dir) {
     if (is_dir("{$dir}/modules/")) {
         $iterator = new \RegexIterator(new \RecursiveIteratorIterator(
@@ -69,11 +73,13 @@ foreach ([getcwd(), __DIR__] as $dir) {
         ), '~\.phar$~', \RegexIterator::MATCH, \RegexIterator::USE_KEY);
 
         foreach ($iterator as $item) {
-            $containers[] = include "phar://{$item}/entrypoint.php";
+            foreach(include "phar://{$item}/entrypoint.php" as $c) {
+                var_dump($c);
+                $container->attach($c);
+            }
         }
     }
 }
-$container = new DelegateContainer($containers);
 $interface = php_sapi_name() === 'cli' ? 'cli' : 'web';
 
 $instance = null;
