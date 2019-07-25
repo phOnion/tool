@@ -11,7 +11,12 @@ class ConfigLoaderFactory implements FactoryInterface
         $loader = new Loader();
 
         foreach ($container->get('config.readers') as $config) {
-            $loader->registerReader($config['extensions'], $container->get($config['reader']));
+            try {
+                $loader->registerReader($config['extensions'], $container->get($config['reader']));
+            } catch (\Throwable $ex) {
+                $extensions = '.'.implode(', .', $config['extensions']);
+                trigger_error("Unable to register reader for '{$extensions}' to loader", E_USER_NOTICE);
+            }
         }
 
         return $loader;
