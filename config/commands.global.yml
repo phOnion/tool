@@ -18,10 +18,14 @@ commands:
   - definition: init
     handler: \Onion\Tool\Initialize\Command
     summary: Initialize an empty onion project
+    parameters:
+      - name: --no-prompt
+        type: bool
+        description: Create manifest file without asking for user input
 
-  - definition: build
-    handler: \Onion\Tool\Build\Command
-    summary: Build the current project
+  - definition: package
+    handler: \Onion\Tool\Package\Command
+    summary: Package the current project
     parameters:
       - name: --filename | -f
         type: string
@@ -44,8 +48,10 @@ commands:
         default: none
 
       - name: --signature | -s
-        type: The signature algorithm to use
+        type: string
+        description: The signature algorithm to use
           Allowed one of 'sha1', 'sha256' or 'sha512'
+        default: sha256
 
       - name: --pre | --draft
         type: bool

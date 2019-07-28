@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Onion\Tool\Initialize;
 
+use function Onion\Framework\Common\merge;
 use Onion\Cli\Manifest\Entities\Manifest;
 use Onion\Cli\Manifest\Loader;
 use Onion\Cli\SemVer\Version;
@@ -17,6 +18,16 @@ class Command implements CommandInterface
         'bin/',
         '*.phar',
     ];
+
+    private const MERGE_CONFIG = [
+        'include' => [
+            'modules/*/*.json',
+        ],
+        'recurse' => true,
+        'ignore-duplicates' => false,
+        'merge-scripts' => true,
+    ];
+
     /** @var Loader $loader */
     private $loader;
 
@@ -31,36 +42,50 @@ class Command implements CommandInterface
         $overwrite = true;
         if ($this->loader->manifestExists()) {
             $overwrite = $console->confirm('%text:yellow%Manifest already exists. Overwrite?', 'n');
-            if ($overwrite) {
+            if (!$overwrite) {
                 return 0;
             }
 
             $manifest = $this->loader->getManifest();
         }
 
-        $console->writeLine('%text:cyan%Initializing default configuration');
-        $manifest = $manifest->setName(
-            $console->prompt('%text:green%Package name', $manifest->getName())
-        )->setVersion((string) new Version($console->getArgument(
-            'version',
-            $console->prompt('%text:green%Version', $manifest->getVersion())
-        )));
+        $name = $manifest->getName();
+        $version = $manifest->getVersion();
+        $license = $manifest->getLicense();
+
+        if (!$console->getArgument('no-prompt', false)) {
+            $name = $console->prompt('%text:green%Package name', $manifest->getName());
+            $version = $console->prompt('%text:green%Version', $manifest->getVersion());
+            $license = $console->prompt('%text:green%License', 'MIT');
+        }
+
+        if ($console->getArgument('debug')) {
+            $console->writeLine('%text:cyan%Initializing default configuration');
+        }
+        $manifest = $manifest->setName($name)
+            ->setVersion((string) new Version($version))
+            ->setLicense($license);
 
         $composer = [];
         if (file_exists(getcwd() . '/composer.json')) {
             $composer = json_decode(file_get_contents(getcwd() . '/composer.json'), true);
         }
-        $composer['extra']['merge-plugin']['include'][] =
-            'modules/*/*.json';
+        $composer['extra']['merge-plugin'] =
+            merge($composer['extra']['merge-plugin'] ?? [], static::MERGE_CONFIG);
+
         $composer['require']['wikimedia/composer-merge-plugin'] = '^1.4';
         file_put_contents(getcwd() . '/composer.json', json_encode(
-            $composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+            $composer,
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
         ));
 
-        $console->writeLine('%text:cyan%Generated manifest file `onion.json`');
+        if ($console->getArgument('debug')) {
+            $console->writeLine('%text:cyan%Generated manifest file `onion.json`');
+        }
         $this->loader->saveManifest(getcwd(), $manifest);
-
-        $console->writeLine('%text:cyan%Creating default .ignore files');
+        if ($console->getArgument('debug')) {
+            $console->writeLine('%text:cyan%Creating default .ignore files');
+        }
         file_put_contents(getcwd() . '/.onionignore', implode("\n", self::IGNORES));
         file_put_contents(getcwd() . '/.gitignore', '*.generated.php', FILE_APPEND);
 
