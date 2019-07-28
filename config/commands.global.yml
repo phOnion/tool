@@ -27,19 +27,10 @@ commands:
     handler: \Onion\Tool\Package\Command
     summary: Package the current project
     parameters:
-      - name: --filename | -f
-        type: string
-        description: The filename of the build artefact (excluding extension)
-
       - name: --location | --dir | -l
         type: string
         description: The directory in which to put the artefact
         default: ./build/
-
-      - name: --bump
-        type: string
-        description: What part of package version to bump.
-          Allowed one of 'major', 'minor' or 'fix'
 
       - name: --compression | -c
         type: string
@@ -53,17 +44,15 @@ commands:
           Allowed one of 'sha1', 'sha256' or 'sha512'
         default: sha256
 
-      - name: --pre | --draft
-        type: bool
-        description: Mark build as pre-release
-
       - name: --standalone
         type: bool
         description: Mark build as standalone
+        default: false
 
       - name: --debug
         type: bool
         description: Mark build as debug
+        default: false
 
   - definition: publish
     handler: \Onion\Tool\Publish\Command

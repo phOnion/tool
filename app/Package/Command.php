@@ -44,8 +44,8 @@ class Command implements CommandInterface
         if (!is_dir($location)) {
             mkdir($location, 0777, true);
         }
-        $file = $console->getArgument('filename', strtr($manifest->getName(), ['/' => '_']));
-        $filename = "{$location}/{$file}.phar";
+        $file = strtr($manifest->getName(), ['/' => '_']);
+        $filename = "{$location}/{$file}-{$version}.phar";
         if (file_exists($filename)) {
             $console->writeLine('%text:yellow%Removing existing artefact');
             unlink($filename);
@@ -127,33 +127,6 @@ class Command implements CommandInterface
 
     private function buildVersionString(ConsoleInterface $console, MutableVersion $version): string
     {
-        if ($console->hasArgument('bump')) {
-            switch (strtolower($console->getArgument('bump'))) {
-                case 'major':
-                    $version->setMajor($version->getMajor()+1);
-                    $version->setMinor(0);
-                    $version->setFix(0);
-                    break;
-                case 'minor':
-                    $version->setMinor($version->getMinor()+1);
-                    $version->setFix(0);
-                    break;
-                case 'fix':
-                    $version->setFix($version->getFix()+1);
-                    break;
-                default:
-                    $console->writeLine(
-                        "%text:red%Unknown `bump` type {$console->getArgument('bump')}"
-                    );
-                    return 1;
-                    break;
-            }
-        }
-
-        if ($console->hasArgument('pre')) {
-            $version->setPreRelease($console->getArgument('pre'));
-        }
-
         if ($version->hasBuild()) {
             $version->setBuild(str_pad(
                 (string) ($version->getBuild()+1),
