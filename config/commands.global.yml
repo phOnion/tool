@@ -92,7 +92,7 @@ commands:
         type: string
         description: Directory in which to look for configuration files
 
-  - definition: module [action] module
+  - definition: module [action] [module]
     handler: \Onion\Tool\Module\Command
     summary: Manage modules
     parameters:
