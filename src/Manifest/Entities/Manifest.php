@@ -82,6 +82,17 @@ class Manifest implements Entity
         return $this->links;
     }
 
+    public function withLinks(iterable $links)
+    {
+        $self = clone $this;
+        $self->links = [];
+        foreach ($links as $link) {
+            $self = $self->addLink($link);
+        }
+
+        return $self;
+    }
+
     public function addLink(Link $link): Manifest
     {
         $self = clone $this;
