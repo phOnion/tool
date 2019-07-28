@@ -69,6 +69,14 @@ class Manifest implements Entity
         return $this->license;
     }
 
+    public function setLicense(string $license)
+    {
+        $self = clone $this;
+        $self->license = $license;
+
+        return $self;
+    }
+
     public function getLinks(): iterable
     {
         return $this->links;
