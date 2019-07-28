@@ -59,7 +59,7 @@ class Command implements CommandInterface
             $license = $console->prompt('%text:green%License', 'MIT');
         }
 
-        if ($console->getArgument('debug')) {
+        if ($console->getArgument('verbose')) {
             $console->writeLine('%text:cyan%Initializing default configuration');
         }
         $manifest = $manifest->setName($name)
@@ -79,11 +79,11 @@ class Command implements CommandInterface
             JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
         ));
 
-        if ($console->getArgument('debug')) {
+        if ($console->getArgument('verbose')) {
             $console->writeLine('%text:cyan%Generated manifest file `onion.json`');
         }
         $this->loader->saveManifest(getcwd(), $manifest);
-        if ($console->getArgument('debug')) {
+        if ($console->getArgument('verbose')) {
             $console->writeLine('%text:cyan%Creating default .ignore files');
         }
         file_put_contents(getcwd() . '/.onionignore', implode("\n", self::IGNORES));
