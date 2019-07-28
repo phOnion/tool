@@ -1,5 +1,4 @@
 <?php
-use Onion\Framework\Dependency\DelegateContainer;
 use Psr\Http\Message\ServerRequestInterface;
 use Onion\Framework\Dependency\ProxyContainer;
 
@@ -58,9 +57,9 @@ spl_autoload_register(function ($class) use ($autoload) {
     }
 }, false, true);
 set_include_path('phar://' . __FILE__ . PATH_SEPARATOR . get_include_path());
-$container = new ProxyContainer();
+$proxy = new ProxyContainer();
 foreach (include 'phar://' . __FILE__ . '/container.generated.php' as $c) {
-    $container->attach($c);
+    $proxy->attach($c);
 }
 
 foreach ([getcwd(), __DIR__] as $dir) {
@@ -74,8 +73,7 @@ foreach ([getcwd(), __DIR__] as $dir) {
 
         foreach ($iterator as $item) {
             foreach(include "phar://{$item}/entrypoint.php" as $c) {
-                var_dump($c);
-                $container->attach($c);
+                $proxy->attach($c);
             }
         }
     }
@@ -87,13 +85,13 @@ $args = [];
 if ($interface === 'web') {
     \Phar::mungServer(['REQUEST_URI','SCRIPT_NAME','SCRIPT_FILENAME','PHP_SELF']);
     \Phar::webPhar(null, $web);
-    $instance = $container->get(\Onion\Framework\Application\Interfaces\ApplicationInterface::class);
-    $args = [$container->get(ServerRequestInterface::class)];
+    $instance = $proxy->get(\Onion\Framework\Application\Interfaces\ApplicationInterface::class);
+    $args = [$proxy->get(ServerRequestInterface::class)];
 }
 
 if ($interface === 'cli') {
-    $instance = $container->get(\Onion\Framework\Console\Interfaces\ApplicationInterface::class);
-    $args = [$argv ?? [], $container->get(\Onion\Framework\Console\Interfaces\ConsoleInterface::class)];
+    $instance = $proxy->get(\Onion\Framework\Console\Interfaces\ApplicationInterface::class);
+    $args = [$argv ?? [], $proxy->get(\Onion\Framework\Console\Interfaces\ConsoleInterface::class)];
 }
 if (defined('ONION')) {
     return $instance;

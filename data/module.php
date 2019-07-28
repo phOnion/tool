@@ -1,5 +1,4 @@
 <?php
-use Psr\Http\Message\ServerRequestInterface;
 
 $autoload = [];
 $base = __DIR__;
