@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 namespace Onion\Tool\Module\Actions;
 
-use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Onion\Cli\Manifest\Entities\Manifest;
+use Onion\Framework\Console\Interfaces\ConsoleInterface;
 
 class ListAction extends ShowAction implements ActionInterface
 {
@@ -18,7 +18,7 @@ class ListAction extends ShowAction implements ActionInterface
         $numberOfModules = count($files);
 
         if ($numberOfModules === 0) {
-            $console->writeLine('%text:cyan%No modules installed');
+            $console->writeLine('%text:yellow%No modules installed');
             return 0;
         }
 
