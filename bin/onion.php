@@ -1,11 +1,9 @@
 <?php require_once __DIR__ . '/../vendor/autoload.php';
 
-use Psr\Http\Message\ServerRequestInterface;
 use function Onion\Framework\Loop\scheduler;
-use Onion\Framework\Loop\Coroutine;
 use Onion\Framework\Dependency\InflectorContainer;
-
-error_reporting(E_ALL);
+use Onion\Framework\Loop\Coroutine;
+use Psr\Http\Message\ServerRequestInterface;
 
 /** @var InflectorContainer $container */
 $container = include __DIR__ . '/../config/container.php';
