@@ -1,15 +1,12 @@
 <?php declare(strict_types=1);
-namespace Onion\Tool\Build;
+namespace Onion\Tool\Package;
 
+use Onion\Cli\Autoload\ComposerCollector;
 use Onion\Cli\Manifest\Loader;
 use Onion\Cli\SemVer\MutableVersion;
-use Onion\Cli\SemVer\Version;
 use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
-use Onion\Framework\Console\Progress;
-use Onion\Tool\Compile\Command as Compile;
 use Phar;
-use Onion\Cli\Autoload\ComposerCollector;
 
 class Command implements CommandInterface
 {
@@ -24,14 +21,12 @@ class Command implements CommandInterface
         'sha1' => \Phar::SHA1,
     ];
 
-    /** @var Loader  */
+    /** @var Loader $loader */
     private $loader;
-    /** @var Compile */
-    private $compileCommand;
-    public function __construct(Loader $loader, Compile $command)
+
+    public function __construct(Loader $loader)
     {
         $this->loader = $loader;
-        $this->compileCommand = $command;
     }
 
     public function trigger(ConsoleInterface $console): int
@@ -43,7 +38,6 @@ class Command implements CommandInterface
             $this->buildVersionString($console, $version)
         );
         $this->loader->saveManifest(getcwd(), $manifest);
-        $this->compileCommand->trigger($console);
 
 
         $location = realpath($console->getArgument('location', getcwd() . '/build'));
