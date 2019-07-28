@@ -1,13 +1,17 @@
 <?php declare(strict_types=1);
 namespace Onion\Tool\Link;
 
+use Onion\Cli\Manifest\Entities\Link;
+use Onion\Cli\Manifest\Loader;
 use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
-use Onion\Cli\Manifest\Loader;
-use Onion\Cli\Manifest\Entities\Link;
 
 class Command implements CommandInterface
 {
+    private const ALLOWED_ACTIONS = [
+        'list',
+        'add',
+    ];
     /** @var Loader $loader */
     private $loader;
 
@@ -18,33 +22,40 @@ class Command implements CommandInterface
     public function trigger(ConsoleInterface $console): int
     {
         $manifest = $this->loader->getManifest();
-
-        if ($console->hasArgument('add')) {
-            $manifest = $manifest->addLink(
-                new Link(
-                    filter_var($console->prompt('Title'), FILTER_SANITIZE_STRING | FILTER_SANITIZE_SPECIAL_CHARS),
-                    filter_var($console->prompt('URL'), FILTER_SANITIZE_STRING),
-                    filter_var($console->prompt('Language (optional)', ''), FILTER_SANITIZE_STRING | FILTER_SANITIZE_SPECIAL_CHARS)
-                )
-            );
-        }
-
-        if ($console->hasArgument('list')) {
-            foreach ($manifest->getLinks() as $index => $link) {
-                /** @var Link $link */
-                $lang = $link->getLang();
-                if ($lang !== '') {
-                    $lang = "%text:cyan%{$lang}%text:green% -";
-                }
-
-                $index++;
+        $action = strtolower($console->getArgument('operation', 'list'));
+        switch ($action) {
+            default:
                 $console->writeLine(
-                    "{$index}) %text:green%{$link->getTitle()} - {$lang}%text:white%{$link->getHref()}"
+                    "%text:yellow%Unknown link action '{$action}'. Must be one of: " .
+                    implode(', ', static::ALLOWED_ACTIONS)
                 );
-            }
-        }
+                break;
+            case 'list':
+                foreach ($manifest->getLinks() as $index => $link) {
+                    /** @var Link $link */
+                    $lang = $link->getLang();
+                    if ($lang !== '') {
+                        $lang = "%text:cyan%{$lang}%text:green% -";
+                    }
 
-        $this->loader->saveManifest(getcwd(), $manifest);
+                    $index++;
+                    $console->writeLine(
+                        "{$index}) %text:green%{$link->getTitle()} - {$lang}%text:white%{$link->getHref()}"
+                    );
+                }
+                break;
+            case 'add':
+                $manifest = $manifest->addLink(
+                    new Link(
+                        filter_var($console->prompt('Title'), FILTER_SANITIZE_STRING | FILTER_SANITIZE_SPECIAL_CHARS),
+                        filter_var($console->prompt('URL'), FILTER_SANITIZE_STRING),
+                        filter_var($console->prompt('Language (optional)', ''), FILTER_SANITIZE_STRING | FILTER_SANITIZE_SPECIAL_CHARS)
+                    )
+                );
+
+                $this->loader->saveManifest(getcwd(), $manifest);
+                break;
+        }
 
         return 0;
     }

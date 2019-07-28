@@ -76,17 +76,9 @@ commands:
         description: mark release as pre-release
         default: false
 
-  - definition: link
+  - definition: link [operation]
     handler: \Onion\Tool\Link\Command
     summary: Manipulate manifest links
-    parameters:
-      - name: --add | -a
-        type: bool
-        description: Add new link entry
-
-      - name: --list | -l
-        type: bool
-        description: List all defined links
 
   - definition: compile
     handler: \Onion\Tool\Compile\Command
