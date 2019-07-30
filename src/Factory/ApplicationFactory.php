@@ -20,7 +20,7 @@ class ApplicationFactory implements FactoryInterface
                     $command
                 );
             } catch (ContainerExceptionInterface $ex) {
-                trigger_error("Unable to register '{$command['definition']}' command", E_USER_WARNING);
+                trigger_error("Unable to register '{$command['definition']}' command", E_USER_NOTICE);
             }
         }
 
