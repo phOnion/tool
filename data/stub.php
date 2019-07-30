@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 use Psr\Http\Message\ServerRequestInterface;
 use Onion\Framework\Dependency\ProxyContainer;
