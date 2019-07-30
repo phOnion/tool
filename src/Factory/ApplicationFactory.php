@@ -3,8 +3,8 @@ namespace Onion\Cli\Factory;
 
 use Onion\Console\Application\Application;
 use Onion\Console\Router\Router;
-use Onion\Framework\Dependency\Exception\ContainerErrorException;
 use Onion\Framework\Dependency\Interfaces\FactoryInterface;
+use Psr\Container\ContainerExceptionInterface;
 
 class ApplicationFactory implements FactoryInterface
 {
@@ -19,7 +19,7 @@ class ApplicationFactory implements FactoryInterface
                     $container->get($command['handler']),
                     $command
                 );
-            } catch (ContainerErrorException $ex) {
+            } catch (ContainerExceptionInterface $ex) {
                 trigger_error("Unable to register '{$command['definition']}' command", E_USER_WARNING);
             }
         }
