@@ -3,8 +3,8 @@ namespace Onion\Cli\Factory;
 
 use Onion\Console\Application\Application;
 use Onion\Console\Router\Router;
-use Onion\Framework\Dependency\Interfaces\FactoryInterface;
 use Onion\Framework\Dependency\Exception\ContainerErrorException;
+use Onion\Framework\Dependency\Interfaces\FactoryInterface;
 
 class ApplicationFactory implements FactoryInterface
 {
