@@ -48,7 +48,9 @@ foreach ([getcwd(), __DIR__ . '/../'] as $dir) {
                 continue;
             }
 
-            $proxy->attach(include "phar://{$item}/entrypoint.php");
+            foreach (include "phar://{$item}/entrypoint.php" as $c) {
+                $proxy->attach($c);
+            }
         }
     }
 }
