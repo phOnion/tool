@@ -4,13 +4,15 @@ namespace Onion\Tool\Compile;
 use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Onion\Framework\Common\Config\Loader;
+use Onion\Cli\Autoload\ComposerCollector;
 
 class Command implements CommandInterface
 {
     private const TEMPLATE = [
-        '<?php',
+        '%s',
         'use \Onion\Framework\Common\Config\Container as Config;',
         'use \Onion\Framework\Dependency\Container;',
+        '',
         '',
         '$config = new Config(%s);',
         '$container = new Container([',
@@ -33,30 +35,31 @@ class Command implements CommandInterface
     {
         $console->writeLine("%text:cyan%Compiling configurations ");
         $configs = $this->configLoader->loadDirectory(
-            $console->getArgument('environment', 'dist'),
-            $console->getArgument('config-dir', getcwd())
+            (string) $console->getArgument('environment', 'dist'),
+            (string) $console->getArgument('config-dir', getcwd())
         );
+
+        $autoload = $this->getAutoloadClasses(
+            getcwd(),
+            (bool) $console->getArgument('dev', false)
+        );
+        $result = var_export($autoload, true);
+
+        file_put_contents(getcwd() . '/autoload.generated.php', "<?php return {$result};");
 
         $file = getcwd() . '/container.generated.php';
         file_put_contents($file, sprintf(
             implode("\n", static::TEMPLATE),
+            file_get_contents((\Phar::running(true) ?: getcwd()) . '/data/loader.php'),
             var_export($configs, true)
         ));
-
-        if ($console->getArgument('verbose')) {
-            $console->writeLine(
-                "%text:green%Done\t %text:blue%{$this->formatBytes((string) filesize($file), 3)}"
-            );
-        }
-
 
         return 0;
     }
 
-    private function formatBytes(string $bytes, int $decimals = 2)
+    private function getAutoloadClasses(string $dir, bool $debug = false)
     {
-            $size = array('B','KB','MB','GB','TB','PB','EB','ZB','YB');
-            $factor = floor((strlen($bytes) - 1) / 3);
-            return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
+        return (new ComposerCollector($dir))
+            ->resolve(true, $debug);
     }
 }
