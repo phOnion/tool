@@ -1,10 +1,10 @@
 commands:
   - definition: version
-    handler: \Onion\Tool\Version\Command
+    handler: Onion\Tool\Version\Command
     summary: Display current version
 
   - definition: update
-    handler: \Onion\Tool\Update\Command
+    handler: Onion\Tool\Update\Command
     summary: Update tool to latest version
     parameters:
       - name: --rollback
@@ -16,7 +16,7 @@ commands:
         description: Force update to latest version
 
   - definition: init
-    handler: \Onion\Tool\Initialize\Command
+    handler: Onion\Tool\Initialize\Command
     summary: Initialize an empty onion project
     parameters:
       - name: --no-prompt
@@ -24,7 +24,7 @@ commands:
         description: Create manifest file without asking for user input
 
   - definition: package
-    handler: \Onion\Tool\Package\Command
+    handler: Onion\Tool\Package\Command
     summary: Package the current project
     parameters:
       - name: --location | --dir | -l
@@ -55,7 +55,7 @@ commands:
         default: false
 
   - definition: publish
-    handler: \Onion\Tool\Publish\Command
+    handler: Onion\Tool\Publish\Command
     summary: Publish current package
     parameters:
       - name: --auth
@@ -77,11 +77,11 @@ commands:
         default: false
 
   - definition: link [operation]
-    handler: \Onion\Tool\Link\Command
+    handler: Onion\Tool\Link\Command
     summary: Manipulate manifest links
 
   - definition: compile
-    handler: \Onion\Tool\Compile\Command
+    handler: Onion\Tool\Compile\Command
     summary: Compile project configurations
     parameters:
       - name: --environment | --env | -e
@@ -92,8 +92,13 @@ commands:
         type: string
         description: Directory in which to look for configuration files
 
+      - name: --dev
+        type: bool
+        description: Whether to include `autoload-dev` handling
+        default: false
+
   - definition: module [action] [module]
-    handler: \Onion\Tool\Module\Command
+    handler: Onion\Tool\Module\Command
     summary: Manage modules
     parameters:
       - name: --constraint | -c
