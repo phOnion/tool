@@ -16,8 +16,6 @@
         "php-http/curl-client": "^1.7",
         "onion/event-loop": "dev-master",
         "onion/promise": "dev-master",
-        "onion/http": "dev-master",
-        "onion/server": "dev-master",
         "onion/framework": "dev-develop",
         "onion/interfaces": "dev-master",
         "onion/common": "dev-master"
