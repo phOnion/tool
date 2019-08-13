@@ -14,19 +14,24 @@ class ComposerCollector
         $this->baseDir = $baseDir;
     }
 
-    public function collect(bool $includeDev = false): iterable
+    public function collect(bool $standalone, bool $includeDev = false): iterable
     {
-        return $this->collectDir($this->baseDir, $includeDev);
+        return $this->collectDir($this->baseDir, $standalone, $includeDev);
     }
 
-    private function collectDir(string $dir, bool $includeDev, string $vendorDir = 'vendor'): iterable
+    private function collectDir(string $dir, bool $standalone, bool $includeDev, string $vendorDir = 'vendor'): iterable
     {
         $collected = [];
         $result = [];
 
-        if (!is_dir($dir)) {
+        if (stripos($dir, $this->baseDir) === false) {
+            $dir = "{$this->baseDir}/{$dir}";
+        }
+
+        if (!is_dir("{$dir}/")) {
             return $result;
         }
+
         $iterator = new \DirectoryIterator("$dir/");
         foreach ($iterator as $item) {
             /** @var \SplFileInfo $item */
@@ -35,37 +40,51 @@ class ComposerCollector
             }
 
             $composer = json_decode(file_get_contents($item->getRealPath()), true);
+            foreach ($composer['autoload'] ?? [] as $type => $namespaces) {
+                foreach ($namespaces as $namespace => $path) {
+                    $temp = str_replace('//', '/', "{$dir}/{$path}");
+                    if (isset($result[$type][$namespace]) && in_array($temp, $result[$type][$namespace])) {
+                        continue;
+                    }
+
+                    $result[$type][$namespace][] = $temp;
+                }
+            }
+
             $vendorDir = $composer['config']['vendor-dir'] ?? $vendorDir ?? 'vendor';
-            $result[$dir] = merge(
-                $result[$dir] ?? [],
-                $composer['autoload'] ?? []
-            );
 
-
-
-            foreach ($composer['require'] ?? [] as $package => $version) {
-                $dir = "{$vendorDir}/{$package}";
-                $result = merge(
-                    $result ?? [],
-                    $this->collectDir($dir, $includeDev, $vendorDir)
-                );
+            if ($standalone) {
+                foreach ($composer['require'] ?? [] as $package => $version) {
+                    $dir = "{$vendorDir}/{$package}/";
+                    $result = merge(
+                        $result ?? [],
+                        $this->collectDir($dir, $standalone, $includeDev, $vendorDir)
+                    );
+                }
             }
 
             if ($includeDev) {
-                $result = merge(
-                    $result ?? [],
-                    $composer['autoload-dev'] ?? []
-                );
+                foreach ($composer['autoload-dev'] ?? [] as $type => $namespaces) {
+                    foreach ($namespaces as $namespace => $path) {
+                        $temp = str_replace('//', '/', "{$dir}/{$path}");
+                        if (isset($result[$type][$namespace]) && in_array($temp, $result[$type][$namespace])) {
+                            continue;
+                        }
+
+                        $result[$type][$namespace][] = $temp;
+                    }
+                }
 
 
+                if ($standalone) {
+                    foreach ($composer['require-dev'] ?? [] as $package => $version) {
+                        $dir = "{$vendorDir}/{$package}";
 
-                foreach ($composer['require-dev'] ?? [] as $package => $version) {
-                    $dir = "{$vendorDir}/{$package}";
-
-                    $result[$dir] = merge(
-                        $result[$dir] ?? [],
-                        $this->collectDir($dir, $includeDev, $vendorDir)
-                    );
+                        $result = merge(
+                            $result ?? [],
+                            $this->collectDir($dir, $standalone, $includeDev, $vendorDir)
+                        );
+                    }
                 }
             }
         }
@@ -73,51 +92,44 @@ class ComposerCollector
         return $result;
     }
 
-    public function resolve(bool $includeDev = false)
+    public function resolve(bool $standalone, bool $includeDev = false)
     {
         $classes = [
             'psr-4' => [],
             'psr-0' => [],
             'files' => [],
         ];
-        $resolution = $this->collect($includeDev);
-        foreach ($resolution as $folder => $autoload) {
-            foreach ($autoload as $type => $namespaces) {
+        $resolution = $this->collect($standalone, $includeDev);
+        foreach ($resolution as $type => $autoload) {
+            foreach ($autoload as $namespace => $folders) {
                 if (!isset($classes[$type])) {
                     continue;
                 }
 
                 if ($type === 'files') {
-                    $classes[$type] = array_unique(merge($classes[$type], array_map(function ($file) use ($folder) {
-                        $folder = strtr($folder, [
-                            $this->baseDir => '',
-                        ]);
-
-                        return "{$folder}/{$file}";
-                    }, $namespaces)));
+                    $classes[$type] = array_unique(merge($classes[$type], array_map(function ($file) {
+                        return str_replace("{$this->baseDir}/", '', $file);
+                    }, $folders)));
                     continue;
                 }
 
                 if ($type === 'classmap') {
-                    trigger_error(
-                        "Classmaps are not supported, the following directory will not be auto-loaded " .
-                            strtr($folder, [
-                                $this->baseDir => '',
-                            ]),
-                        E_USER_WARNING
-                    );
+                    trigger_error("Classmaps are not supported", E_USER_WARNING);
                     continue;
                 }
 
-                foreach ($namespaces as $namespace => $location) {
-                    $realPath = trim(strtr($folder,[
-                        $this->baseDir => '',
-                    ]) , "/\\") . '/' . trim($location, "/\\");
+                foreach ($folders as $location) {
+                    if (in_array($location, $classes[$type][$namespace] ?? [])) {
+                        continue;
+                    }
 
-                    $classes[$type][$namespace][] = $realPath;
+                    $classes[$type][$namespace][] = str_replace("{$this->baseDir}/", '', $location);
                 }
             }
         }
+
+        ksort($classes['psr-4']);
+        ksort($classes['psr-0']);
 
         return $classes;
     }
