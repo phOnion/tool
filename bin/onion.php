@@ -2,7 +2,6 @@
 
 use function Onion\Framework\Loop\scheduler;
 use Onion\Framework\Dependency\InflectorContainer;
-use Onion\Framework\Loop\Coroutine;
 use Psr\Http\Message\ServerRequestInterface;
 
 /** @var InflectorContainer $container */
@@ -22,17 +21,6 @@ if ($interface === 'cli') {
     $args = [$argv ?? [], $container->get(\Onion\Framework\Console\Interfaces\ConsoleInterface::class)];
 }
 
-if (defined('ONION')) {
-    return $instance;
-}
-
 $result = ($instance->run(...$args) ?? 0);
-
-if ($result instanceof Coroutine) {
-    scheduler()->add($result);
-}
-
 scheduler()->start();
-if (is_int($result)) {
-    exit($result);
-}
+exit($result);
