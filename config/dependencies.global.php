@@ -14,21 +14,13 @@ use Onion\Framework\Common\Config\Loader as ConfigLoader;
 use Onion\Framework\Console\Interfaces\ApplicationInterface;
 use Onion\Framework\Console\Interfaces\ArgumentParserInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
-use Onion\Framework\Server\Interfaces\ServerInterface;
-use Onion\Framework\Server\Server;
 use Onion\Tool\Module\Service\ActionStrategy;
 use Onion\Tool\Module\Service\Factory\ActionStrategyFactory;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Onion\Framework\Event\Dispatcher;
-use Psr\EventDispatcher\ListenerProviderInterface;
 use Onion\Console\Router\Router;
-use Onion\Cli\Factory\EventProviderFactory;
 
 return [
     'invokables' => [
         ArgumentParserInterface::class => ArgumentParser::class,
-        ServerInterface::class => Server::class,
-        EventDispatcherInterface::class => Dispatcher::class,
         Router::class => Router::class,
     ],
     'factories' => [
@@ -39,6 +31,5 @@ return [
         Client::class => HttpClientFactory::class,
         Manifest::class => LocalManifestFactory::class,
         ActionStrategy::class => ActionStrategyFactory::class,
-        ListenerProviderInterface::class => EventProviderFactory::class,
     ],
 ];
