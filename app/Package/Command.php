@@ -35,7 +35,7 @@ class Command implements CommandInterface
         $version = new MutableVersion($console->getArgument('version', $manifest->getVersion()));
 
         $manifest = $manifest->setVersion(
-            $this->buildVersionString($console, $version)
+            $this->buildVersionString($version)
         );
         $this->loader->saveManifest(getcwd(), $manifest);
 
@@ -53,7 +53,7 @@ class Command implements CommandInterface
 
         $console->writeLine('%text:cyan%Building package');
         $phar = new \Phar($filename);
-        $standalone = $console->getArgument('standalone', false);
+        $standalone = (bool) $console->getArgument('standalone', false);
 
         if ($standalone) {
             $phar->setStub($this->getStub($standalone));
@@ -65,10 +65,12 @@ class Command implements CommandInterface
         }
 
         $temp = tempnam(sys_get_temp_dir(), 'autoload');
-        $files = $this->getVendorClassMap($console->getArgument('debug', false));
+        $files = $this->getVendorClassMap($standalone, (bool) $console->getArgument('debug', false));
+
         $result = var_export($files, true);
         file_put_contents($temp, "<?php return {$result};");
-        $phar->addFile($temp, 'autoload.php');
+        $phar->addFile($temp, 'autoload.generated.php');
+
         $iterator = $this->getDirectoryIterator(getcwd(), $standalone);
 
         $phar->startBuffering();
@@ -115,17 +117,17 @@ class Command implements CommandInterface
         return 0;
     }
 
-    private function compileIgnorePattern(): iterable
+    private function compileIgnorePattern(string $base): string
     {
-        return array_map(function ($line) {
+        return filter_var(str_replace('/', DIRECTORY_SEPARATOR, "~^{$base}/(?!(" . implode('|', array_map(function ($line) {
             return trim(strtr($line, [
-                '/' => DIRECTORY_SEPARATOR,
-                '*' => '',
+                '.' => '\.',
+                '*' => '.*',
             ]));
-        }, file(getcwd() . "/.onionignore"));
+        }, file(getcwd() . "/.onionignore"))) . '))~i'), FILTER_SANITIZE_ADD_SLASHES);
     }
 
-    private function buildVersionString(ConsoleInterface $console, MutableVersion $version): string
+    private function buildVersionString(MutableVersion $version): string
     {
         if ($version->hasBuild()) {
             $version->setBuild(str_pad(
@@ -166,41 +168,24 @@ class Command implements CommandInterface
         }
 
         $temp = tempnam(sys_get_temp_dir(), 'module');
-        file_put_contents($temp, '<?php echo "No module file found";');
+        file_put_contents($temp, '<?php echo "No module file found"; __HALT_COMPILER();');
 
         return $temp;
     }
 
-    private function getDirectoryIterator($dir, bool $standalone = false): \Traversable
+    private function getDirectoryIterator(string $dir): \Traversable
     {
-        $patterns = $this->compileIgnorePattern();
-        if ($standalone) {
-            $patterns[] = 'composer.*';
-        }
-
-        return new \CallbackFilterIterator(new \RecursiveIteratorIterator(
+        return new \RegexIterator(new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(
-                "$dir/",
+                "$dir",
                 \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
             )
-        ), function ($item, $key) use ($patterns, $dir) {
-            $key = strtr($key, [
-                $dir => '',
-                '\\' => '/',
-            ]);
-            foreach ($patterns as $pattern) {
-                if (strpos($key, "{$pattern}") !== false) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
+        ), $this->compileIgnorePattern($dir));
     }
 
-    private function getVendorClassMap($file, bool $includeDev = false): iterable
+    private function getVendorClassMap(bool $standalone, bool $includeDev = false): iterable
     {
         return (new ComposerCollector(getcwd()))
-            ->resolve($includeDev);
+            ->resolve($standalone, $includeDev);
     }
 }
