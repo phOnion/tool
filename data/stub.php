@@ -1,7 +1,8 @@
 #!/usr/bin/env php
 <?php
-use Psr\Http\Message\ServerRequestInterface;
+use function Onion\Framework\Loop\scheduler;
 use Onion\Framework\Dependency\ProxyContainer;
+use Psr\Http\Message\ServerRequestInterface;
 
 if (!in_array('phar', stream_get_wrappers()) && class_exists('Phar')) {
     fwrite(fopen('php://stderr', 'wb'), 'Phar Extension not available');
@@ -9,58 +10,22 @@ if (!in_array('phar', stream_get_wrappers()) && class_exists('Phar')) {
 }
 Phar::interceptFileFuncs();
 
-$autoload = [];
-if (file_exists('phar://' . __FILE__ . '/autoload.php')) {
-    $autoload = include 'phar://' . __FILE__ . '/autoload.php';
+set_include_path('phar://' . __FILE__ . PATH_SEPARATOR . get_include_path());
+$internal = 'phar://' . __FILE__ . '/container.generated.php';
+$locals = include $internal;
 
-    if (isset($autoload['files'])) {
-        foreach ($autoload['files'] as $file) {
-            $file = 'phar://' . __FILE__ . "/{$file}";
-            if (!file_exists($file)) {
-                continue;
-            }
-
-            include $file;
-        }
-
-        unset($autoload['files']);
-    }
+$proxy = new ProxyContainer();
+foreach ($locals as $c) {
+    $proxy->attach($c);
 }
 
-spl_autoload_register(function ($class) use ($autoload) {
-    $base = 'phar://' . __FILE__;
-    $parts = explode('\\', $class);
-
-    $segment = '';
-    foreach ($parts as $part) {
-        $segment .= "{$part}\\";
-        foreach ($autoload as $type => $definitions) {
-            if (isset($definitions[$segment])) {
-                foreach ($definitions as $paths) {
-                    foreach ($paths as $path) {
-                        $relative_class = $class;
-
-                        if ($type === 'psr-4') {
-                            $len = strlen($segment);
-                            $relative_class = substr($class, $len);
-                        }
-
-                        $file = "{$base}/{$path}/" . str_replace('\\', '/', $relative_class) . '.php';
-                        if (strncmp($segment, $class, $len) !== 0 || !file_exists($file)) {
-                            continue;
-                        }
-
-                        include $file;
-                    }
-                }
-            }
+$external = getcwd() . '/container.generated.php';
+if (file_exists($external)) {
+    if (hash_file('sha256', $internal) !== hash_file('sha256', $external)) {
+        foreach (include getcwd() . '/container.generated.php' as $c) {
+            $proxy->attach($c);
         }
     }
-}, false, true);
-set_include_path('phar://' . __FILE__ . PATH_SEPARATOR . get_include_path());
-$proxy = new ProxyContainer();
-foreach (include 'phar://' . __FILE__ . '/container.generated.php' as $c) {
-    $proxy->attach($c);
 }
 
 foreach ([getcwd(), __DIR__] as $dir) {
@@ -94,9 +59,8 @@ if ($interface === 'cli') {
     $instance = $proxy->get(\Onion\Framework\Console\Interfaces\ApplicationInterface::class);
     $args = [$argv ?? [], $proxy->get(\Onion\Framework\Console\Interfaces\ConsoleInterface::class)];
 }
-if (defined('ONION')) {
-    return $instance;
-}
 
-exit($instance->run(...$args) ?? 0);
+$code = $instance->run(...$args) ?? 0;
+scheduler()->start();
+exit($code);
 __HALT_COMPILER();
