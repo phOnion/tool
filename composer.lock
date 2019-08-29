@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e5017c1c8478a55feab7ce735d794439",
+    "content-hash": "5aa5fa0b4b912f291aba617bbe0abd74",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -363,12 +363,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/common.git",
-                "reference": "1e155c36278d98d73e047826e7287667d1563983"
+                "reference": "886b04efa9caf1a04640ccd2de4713ba0918f248"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/common/zipball/1e155c36278d98d73e047826e7287667d1563983",
-                "reference": "1e155c36278d98d73e047826e7287667d1563983",
+                "url": "https://api.github.com/repos/phOnion/common/zipball/886b04efa9caf1a04640ccd2de4713ba0918f248",
+                "reference": "886b04efa9caf1a04640ccd2de4713ba0918f248",
                 "shasum": ""
             },
             "require": {
@@ -391,7 +391,7 @@
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2019-07-27T19:23:56+00:00"
+            "time": "2019-08-29T14:33:36+00:00"
         },
         {
             "name": "onion/console",
@@ -1937,55 +1937,6 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2019-08-20T14:27:59+00:00"
-        },
-        {
-            "name": "wikimedia/composer-merge-plugin",
-            "version": "v1.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/wikimedia/composer-merge-plugin.git",
-                "reference": "81c6ac72a24a67383419c7eb9aa2b3437f2ab100"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/composer-merge-plugin/zipball/81c6ac72a24a67383419c7eb9aa2b3437f2ab100",
-                "reference": "81c6ac72a24a67383419c7eb9aa2b3437f2ab100",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.0",
-                "php": ">=5.3.2"
-            },
-            "require-dev": {
-                "composer/composer": "~1.0.0",
-                "jakub-onderka/php-parallel-lint": "~0.8",
-                "phpunit/phpunit": "~4.8|~5.0",
-                "squizlabs/php_codesniffer": "~2.1.0"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.3.x-dev"
-                },
-                "class": "Wikimedia\\Composer\\MergePlugin"
-            },
-            "autoload": {
-                "psr-4": {
-                    "Wikimedia\\Composer\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bryan Davis",
-                    "email": "bd808@wikimedia.org"
-                }
-            ],
-            "description": "Composer plugin to merge multiple composer.json files",
-            "time": "2017-04-25T02:31:25+00:00"
         }
     ],
     "packages-dev": [],
