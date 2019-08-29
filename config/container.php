@@ -4,10 +4,10 @@ use Onion\Framework\Common\Config\Container as Configuration;
 use Onion\Framework\Common\Config\Loader;
 use Onion\Framework\Common\Config\Reader\IniReader;
 use Onion\Framework\Common\Config\Reader\PhpReader;
-use Onion\Framework\Dependency\Container;
 use Onion\Framework\Common\Config\Reader\YamlReader;
-use Onion\Framework\Dependency\ProxyContainer;
+use Onion\Framework\Dependency\Container;
 use Onion\Framework\Dependency\InflectorContainer;
+use Onion\Framework\Dependency\ProxyContainer;
 
 $loader = new Loader();
 $loader->registerReader(['php'], new PhpReader());
@@ -54,7 +54,5 @@ foreach ([getcwd(), __DIR__ . '/../'] as $dir) {
         }
     }
 }
-$inflector = new InflectorContainer();
-$inflector->wrap($proxy);
 
-return $inflector;
+return $proxy;
