@@ -112,3 +112,11 @@ commands:
       - name: --repository | --repo | -r
         type: string
         description: The repository name to use when installing/updating a module
+  - definition: play [stage]
+    handler: Onion\Tool\Play\Command
+    summary: Execute recipe steps
+    parameters:
+      - name: --config | -c
+        type: string
+        description: The recipe configuration file
+        default: onion.recipe.yml
