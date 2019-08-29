@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "576ee485a759977110bde505604ea66d",
+    "content-hash": "e5017c1c8478a55feab7ce735d794439",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -431,12 +431,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/event-loop.git",
-                "reference": "5c211eae3342ade1989f672ee29cc814f81d889c"
+                "reference": "1c5dad7086de6ad055f65279ca4576f36847abfc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/event-loop/zipball/5c211eae3342ade1989f672ee29cc814f81d889c",
-                "reference": "5c211eae3342ade1989f672ee29cc814f81d889c",
+                "url": "https://api.github.com/repos/phOnion/event-loop/zipball/1c5dad7086de6ad055f65279ca4576f36847abfc",
+                "reference": "1c5dad7086de6ad055f65279ca4576f36847abfc",
                 "shasum": ""
             },
             "require": {
@@ -456,7 +456,7 @@
             "license": [
                 "MIT"
             ],
-            "time": "2019-07-27T19:29:48+00:00"
+            "time": "2019-08-28T18:08:14+00:00"
         },
         {
             "name": "onion/framework",
@@ -464,12 +464,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/framework.git",
-                "reference": "e1b82e86fa7b1d614993ed5998b7a3726f0f505c"
+                "reference": "8f07dc5830ce9c716d6566d85fb7a0ac2f7d2b36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/framework/zipball/e1b82e86fa7b1d614993ed5998b7a3726f0f505c",
-                "reference": "e1b82e86fa7b1d614993ed5998b7a3726f0f505c",
+                "url": "https://api.github.com/repos/phOnion/framework/zipball/8f07dc5830ce9c716d6566d85fb7a0ac2f7d2b36",
+                "reference": "8f07dc5830ce9c716d6566d85fb7a0ac2f7d2b36",
                 "shasum": ""
             },
             "require": {
@@ -488,6 +488,7 @@
                 "phpspec/prophecy": "^1.6",
                 "phpunit/phpunit": "^8.2",
                 "roave/security-advisories": "dev-master",
+                "sabre/cache": "^1.0",
                 "squizlabs/php_codesniffer": "^3.4",
                 "vimeo/psalm": "^3.0"
             },
@@ -519,7 +520,7 @@
                 "psr-15",
                 "psr-7"
             ],
-            "time": "2019-08-13T14:45:16+00:00"
+            "time": "2019-08-26T10:04:16+00:00"
         },
         {
             "name": "onion/interfaces",
@@ -527,12 +528,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/interfaces.git",
-                "reference": "b1bc3e9c7a8280ec9d6c9223a4f53146cfa970cc"
+                "reference": "3c5cb00bc16bb90c6fcb12ba6ff4552377c337e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/interfaces/zipball/b1bc3e9c7a8280ec9d6c9223a4f53146cfa970cc",
-                "reference": "b1bc3e9c7a8280ec9d6c9223a4f53146cfa970cc",
+                "url": "https://api.github.com/repos/phOnion/interfaces/zipball/3c5cb00bc16bb90c6fcb12ba6ff4552377c337e9",
+                "reference": "3c5cb00bc16bb90c6fcb12ba6ff4552377c337e9",
                 "shasum": ""
             },
             "require": {
@@ -566,7 +567,7 @@
                 }
             ],
             "description": "Package containing only the interfaces of 'onion' libraries, allowing to use code without installing the whole framework and using code written for the framework outside it",
-            "time": "2019-07-27T19:10:05+00:00"
+            "time": "2019-08-15T16:11:30+00:00"
         },
         {
             "name": "onion/promise",
@@ -1880,16 +1881,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v4.3.3",
+            "version": "v4.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "34d29c2acd1ad65688f58452fd48a46bd996d5a6"
+                "reference": "5a0b7c32dc3ec56fd4abae8a4a71b0cf05013686"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/34d29c2acd1ad65688f58452fd48a46bd996d5a6",
-                "reference": "34d29c2acd1ad65688f58452fd48a46bd996d5a6",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/5a0b7c32dc3ec56fd4abae8a4a71b0cf05013686",
+                "reference": "5a0b7c32dc3ec56fd4abae8a4a71b0cf05013686",
                 "shasum": ""
             },
             "require": {
@@ -1935,7 +1936,56 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2019-07-24T14:47:54+00:00"
+            "time": "2019-08-20T14:27:59+00:00"
+        },
+        {
+            "name": "wikimedia/composer-merge-plugin",
+            "version": "v1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wikimedia/composer-merge-plugin.git",
+                "reference": "81c6ac72a24a67383419c7eb9aa2b3437f2ab100"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wikimedia/composer-merge-plugin/zipball/81c6ac72a24a67383419c7eb9aa2b3437f2ab100",
+                "reference": "81c6ac72a24a67383419c7eb9aa2b3437f2ab100",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "composer/composer": "~1.0.0",
+                "jakub-onderka/php-parallel-lint": "~0.8",
+                "phpunit/phpunit": "~4.8|~5.0",
+                "squizlabs/php_codesniffer": "~2.1.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3.x-dev"
+                },
+                "class": "Wikimedia\\Composer\\MergePlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Wikimedia\\Composer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bryan Davis",
+                    "email": "bd808@wikimedia.org"
+                }
+            ],
+            "description": "Composer plugin to merge multiple composer.json files",
+            "time": "2017-04-25T02:31:25+00:00"
         }
     ],
     "packages-dev": [],
