@@ -28,6 +28,14 @@ class Command implements CommandInterface
         'merge-scripts' => true,
     ];
 
+    private const RECIPE = [
+        'stages:',
+        '  greet:',
+        '    steps:',
+        '      - command: echo',
+        '        args: ["Hello, World"]',
+    ];
+
     /** @var Loader $loader */
     private $loader;
 
@@ -88,6 +96,7 @@ class Command implements CommandInterface
         }
         file_put_contents(getcwd() . '/.onionignore', implode("\n", self::IGNORES));
         file_put_contents(getcwd() . '/.gitignore', '*.generated.php', FILE_APPEND);
+        file_put_contents(getcwd() . '/onion.recipe.yml', implode("\n", self::RECIPE));
 
         return 0;
     }
