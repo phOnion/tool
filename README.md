@@ -3,135 +3,277 @@
 ```
 List of available commands
 
-COMMAND         version  [--quiet | -q] [--verbose | -v] [--no-colors] [--help | -h] [--compact-output | --minimal-output]
-SUMMARY         Display Current version
+COMMAND         version
+SUMMARY         Display current version
 ARGUMENTS
     bool        --quiet | -q
-        Suppress all command output
 
-    bool        --verbose | -v
-        Indicate that the command may output extended information
-
-    bool        --no-colors
-        Disable all color outputs
-
-    bool        --help | -h
-        Display help info
-
-    bool        --compact-output | --minimal-output
-        Indicate that only minimal output should be emitted by the command
+         Suppress all command output
 
 
+    bool        --verbose | -vvv
 
-COMMAND         init  [--quiet | -q] [--verbose | -v] [--no-colors] [--help | -h] [--compact-output | --minimal-output]
-SUMMARY         Initialize onion project
+         Indicate that the command may output extended information
+
+
+    bool        --no-colors | --no-color
+
+         Indicate that the command output should not include colors
+
+
+
+
+COMMAND         update
+SUMMARY         Update tool to latest version
 ARGUMENTS
-    bool        --quiet | -q
-        Suppress all command output
+    bool        --rollback
 
-    bool        --verbose | -v
-        Indicate that the command may output extended information
-
-    bool        --no-colors
-        Disable all color outputs
-
-    bool        --help | -h
-        Display help info
-
-    bool        --compact-output | --minimal-output
-        Indicate that only minimal output should be emitted by the command
+         Rollback to previous version
 
 
+    bool        --force
 
-COMMAND         build  [--filename | -f = <vendor_package>] [--location | --dir] [--bump] [--compression | -c = none] [--signature | -s = sha512] [--pre] [--quiet | -q] [--verbose | -v] [--no-colors] [--help | -h] [--compact-output | --minimal-output]
-SUMMARY         Build the current package
-ARGUMENTS
-    string      --filename | -f=<vendor_package>
-        The filename with with which to save the built package
+         Force update to latest version
 
-    string      --location | --dir
-        Directory in which to put the build artifact
-
-    string      --bump
-        Define which part of the package version to bump: `major`, `minor` or `fix`
-
-    string      --compression | -c=none
-        Type of compression to use, either `gz`, `bz` or `none`
-
-    string      --signature | -s=sha512
-        Signature algo to use for the generated file.
-
-    string      --pre
-        Indicate this build is pre-release
 
     bool        --quiet | -q
-        Suppress all command output
 
-    bool        --verbose | -v
-        Indicate that the command may output extended information
-
-    bool        --no-colors
-        Disable all color outputs
-
-    bool        --help | -h
-        Display help info
-
-    bool        --compact-output | --minimal-output
-        Indicate that only minimal output should be emitted by the command
+         Suppress all command output
 
 
+    bool        --verbose | -vvv
 
-COMMAND         link  [--add | -a] [--list | -l] [--quiet | -q] [--verbose | -v] [--no-colors] [--help | -h] [--compact-output | --minimal-output]
-SUMMARY         Perform actions on lists
+         Indicate that the command may output extended information
+
+
+    bool        --no-colors | --no-color
+
+         Indicate that the command output should not include colors
+
+
+
+
+COMMAND         init
+SUMMARY         Initialize an empty onion project
 ARGUMENTS
-    bool        --add | -a
-        Add a new link entry
+    bool        --no-prompt
 
-    bool        --list | -l
-        List all defined links
+         Create manifest file without asking for user input
+
 
     bool        --quiet | -q
-        Suppress all command output
 
-    bool        --verbose | -v
-        Indicate that the command may output extended information
-
-    bool        --no-colors
-        Disable all color outputs
-
-    bool        --help | -h
-        Display help info
-
-    bool        --compact-output | --minimal-output
-        Indicate that only minimal output should be emitted by the command
+         Suppress all command output
 
 
+    bool        --verbose | -vvv
 
-COMMAND         command  [--add | -a] [--delete | -d] [--list | -l] [--quiet | -q] [--verbose | -v] [--no-colors] [--help | -h] [--compact-output | --minimal-output]
-SUMMARY         Manipulate commands
+         Indicate that the command may output extended information
+
+
+    bool        --no-colors | --no-color
+
+         Indicate that the command output should not include colors
+
+
+
+
+COMMAND         package
+SUMMARY         Package the current project
 ARGUMENTS
-    bool        --add | -a
-        Add a command
+    string      --location | --dir | -l  ./build/
 
-    bool        --delete | -d
-        Delete a command
+         The directory in which to put the artefact
 
-    bool        --list | -l
-        List all commands
+
+    string      --compression | -c       none
+
+         The compression to use. Allowed one of 'gz', 'bz' or 'none'
+
+
+    string      --signature | -s         sha256
+
+         The signature algorithm to use Allowed one of 'sha1', 'sha256' or 'sha512'
+
+
+    bool        --standalone
+
+         Mark build as standalone
+
+
+    bool        --debug
+
+         Mark build as debug
+
 
     bool        --quiet | -q
-        Suppress all command output
 
-    bool        --verbose | -v
-        Indicate that the command may output extended information
+         Suppress all command output
 
-    bool        --no-colors
-        Disable all color outputs
 
-    bool        --help | -h
-        Display help info
+    bool        --verbose | -vvv
 
-    bool        --compact-output | --minimal-output
-        Indicate that only minimal output should be emitted by the command
+         Indicate that the command may output extended information
+
+
+    bool        --no-colors | --no-color
+
+         Indicate that the command output should not include colors
+
+
+
+
+COMMAND         publish
+SUMMARY         Publish current package
+ARGUMENTS
+    string      --auth   password
+
+         Authentication method to use
+
+
+    string      --secret
+
+         The secret/token to use for authentication
+
+
+    string      --credential
+
+         The credential (if any) used for authentication
+
+
+    bool        --draft | -d
+
+         mark release as pre-release
+
+
+    bool        --quiet | -q
+
+         Suppress all command output
+
+
+    bool        --verbose | -vvv
+
+         Indicate that the command may output extended information
+
+
+    bool        --no-colors | --no-color
+
+         Indicate that the command output should not include colors
+
+
+
+
+COMMAND         link <operation>
+SUMMARY         Manipulate manifest links
+ARGUMENTS
+    bool        --quiet | -q
+
+         Suppress all command output
+
+
+    bool        --verbose | -vvv
+
+         Indicate that the command may output extended information
+
+
+    bool        --no-colors | --no-color
+
+         Indicate that the command output should not include colors
+
+
+
+
+COMMAND         compile
+SUMMARY         Compile project configurations
+ARGUMENTS
+    string      --environment | --env | -e
+
+         Environment configs to load
+
+
+    string      --config-dir | --dir | -c
+
+         Directory in which to look for configuration files
+
+
+    bool        --dev
+
+         Whether to include `autoload-dev` handling
+
+
+    bool        --quiet | -q
+
+         Suppress all command output
+
+
+    bool        --verbose | -vvv
+
+         Indicate that the command may output extended information
+
+
+    bool        --no-colors | --no-color
+
+         Indicate that the command output should not include colors
+
+
+
+
+COMMAND         module <action> <module>
+SUMMARY         Manage modules
+ARGUMENTS
+    string      --constraint | -c
+
+         Constraint to use when installing/updating a module
+
+
+    string      --alias | --as | -a
+
+         Alias for when loading a module
+
+
+    string      --repository | --repo | -r
+
+         The repository name to use when installing/updating a module
+
+
+    bool        --quiet | -q
+
+         Suppress all command output
+
+
+    bool        --verbose | -vvv
+
+         Indicate that the command may output extended information
+
+
+    bool        --no-colors | --no-color
+
+         Indicate that the command output should not include colors
+
+
+
+
+COMMAND         play <stage>
+SUMMARY         Execute recipe steps
+ARGUMENTS
+    string      --config | -c    onion.recipe.yml
+
+         The recipe configuration file
+
+
+    bool        --quiet | -q
+
+         Suppress all command output
+
+
+    bool        --verbose | -vvv
+
+         Indicate that the command may output extended information
+
+
+    bool        --no-colors | --no-color
+
+         Indicate that the command output should not include colors
+
 
 ```
