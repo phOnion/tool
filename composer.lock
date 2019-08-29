@@ -363,12 +363,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/common.git",
-                "reference": "886b04efa9caf1a04640ccd2de4713ba0918f248"
+                "reference": "48d4fff728dde607b4af9e03a485483fa0a2c37b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/common/zipball/886b04efa9caf1a04640ccd2de4713ba0918f248",
-                "reference": "886b04efa9caf1a04640ccd2de4713ba0918f248",
+                "url": "https://api.github.com/repos/phOnion/common/zipball/48d4fff728dde607b4af9e03a485483fa0a2c37b",
+                "reference": "48d4fff728dde607b4af9e03a485483fa0a2c37b",
                 "shasum": ""
             },
             "require": {
@@ -391,7 +391,7 @@
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2019-08-29T14:33:36+00:00"
+            "time": "2019-08-29T14:56:31+00:00"
         },
         {
             "name": "onion/console",
@@ -399,12 +399,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/console.git",
-                "reference": "8b16ea1d748ec49815fd784c3e2c440d2632f164"
+                "reference": "170902b4459985d9fd2de639d4b2390941680e83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/console/zipball/8b16ea1d748ec49815fd784c3e2c440d2632f164",
-                "reference": "8b16ea1d748ec49815fd784c3e2c440d2632f164",
+                "url": "https://api.github.com/repos/phOnion/console/zipball/170902b4459985d9fd2de639d4b2390941680e83",
+                "reference": "170902b4459985d9fd2de639d4b2390941680e83",
                 "shasum": ""
             },
             "require": {
@@ -423,7 +423,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "description": "Set of helper classes for developing CLI applications",
-            "time": "2019-07-27T19:28:39+00:00"
+            "time": "2019-08-29T14:50:04+00:00"
         },
         {
             "name": "onion/event-loop",
