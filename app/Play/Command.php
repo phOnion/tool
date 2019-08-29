@@ -19,7 +19,7 @@ class Command implements CommandInterface
         $this->loader = $loader;
     }
 
-    public function trigger(ConsoleInterface $console)
+    public function trigger(ConsoleInterface $console): int
     {
         $config = $console->getArgument('config');
         $configLocation = getcwd() . '/' . $config;
