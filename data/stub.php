@@ -1,8 +1,8 @@
-#!/usr/bin/env php
 <?php
 use function Onion\Framework\Loop\scheduler;
+
+use GuzzleHttp\Psr7\ServerRequest;
 use Onion\Framework\Dependency\ProxyContainer;
-use Psr\Http\Message\ServerRequestInterface;
 
 if (!in_array('phar', stream_get_wrappers()) && class_exists('Phar')) {
     fwrite(fopen('php://stderr', 'wb'), 'Phar Extension not available');
@@ -50,9 +50,8 @@ $instance = null;
 $args = [];
 if ($interface === 'web') {
     \Phar::mungServer(['REQUEST_URI','SCRIPT_NAME','SCRIPT_FILENAME','PHP_SELF']);
-    \Phar::webPhar(null, $web);
     $instance = $proxy->get(\Onion\Framework\Application\Interfaces\ApplicationInterface::class);
-    $args = [$proxy->get(ServerRequestInterface::class)];
+    $args = [ServerRequest::fromGlobals()];
 }
 
 if ($interface === 'cli') {

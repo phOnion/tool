@@ -464,12 +464,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/framework.git",
-                "reference": "8f07dc5830ce9c716d6566d85fb7a0ac2f7d2b36"
+                "reference": "e1d3d3b287898d66e07405fae5d21b3532ed4d82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/framework/zipball/8f07dc5830ce9c716d6566d85fb7a0ac2f7d2b36",
-                "reference": "8f07dc5830ce9c716d6566d85fb7a0ac2f7d2b36",
+                "url": "https://api.github.com/repos/phOnion/framework/zipball/e1d3d3b287898d66e07405fae5d21b3532ed4d82",
+                "reference": "e1d3d3b287898d66e07405fae5d21b3532ed4d82",
                 "shasum": ""
             },
             "require": {
@@ -520,7 +520,7 @@
                 "psr-15",
                 "psr-7"
             ],
-            "time": "2019-08-26T10:04:16+00:00"
+            "time": "2019-08-29T17:36:22+00:00"
         },
         {
             "name": "onion/interfaces",
