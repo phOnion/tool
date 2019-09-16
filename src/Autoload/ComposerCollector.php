@@ -21,12 +21,7 @@ class ComposerCollector
 
     private function collectDir(string $dir, bool $standalone, bool $includeDev, string $vendorDir = 'vendor'): iterable
     {
-        $collected = [];
         $result = [];
-
-        if (stripos($dir, $this->baseDir) === false) {
-            $dir = "{$this->baseDir}/{$dir}";
-        }
 
         if (!is_dir("{$dir}/")) {
             return $result;
