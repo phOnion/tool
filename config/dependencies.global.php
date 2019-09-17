@@ -19,6 +19,8 @@ use Onion\Framework\Console\Interfaces\ArgumentParserInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Onion\Tool\Module\Service\ActionStrategy;
 use Onion\Tool\Module\Service\Factory\ActionStrategyFactory;
+use Onion\Tool\Repl\Command;
+use Onion\Tool\Repl\Factory\CommandFactory;
 
 return [
     'invokables' => [
@@ -34,5 +36,6 @@ return [
         Manifest::class => LocalManifestFactory::class,
         ActionStrategy::class => ActionStrategyFactory::class,
         Reader::class => AnnotationReaderFactory::class,
+        Command::class => CommandFactory::class,
     ],
 ];

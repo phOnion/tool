@@ -120,3 +120,6 @@ commands:
         type: string
         description: The recipe configuration file
         default: onion.recipe.yml
+  - definition: shell
+    handler: Onion\Tool\Repl\Command
+    summary: Interactive REPL
