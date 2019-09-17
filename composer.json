@@ -17,7 +17,7 @@
         "composer/semver": "^1.4",
         "composer/ca-bundle": "^1.1",
         "composer/spdx-licenses": "^1.5",
-        "php-http/curl-client": "^1.7",
+        "php-http/curl-client": "^2.0",
         "onion/event-loop": "dev-master",
         "onion/promise": "dev-master",
         "onion/framework": "dev-develop",
