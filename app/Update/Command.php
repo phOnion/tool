@@ -11,14 +11,22 @@ class Command implements CommandInterface
 {
     /** @var UpdateStrategy $strategy */
     private $strategy;
+    private $localFile;
+
     public function __construct(UpdateStrategy $strategy)
     {
+        $this->localFile = \Phar::running(true);
         $this->strategy = $strategy;
     }
 
     public function trigger(ConsoleInterface $console): int
     {
-        $updater = new Updater(null, false);
+        if ($this->localFile === '') {
+            $console->writeLine('%text:red%Unable to update unpacked project');
+            return 1;
+        }
+
+        $updater = new Updater($this->localFile, true);
         $updater->setStrategyObject($this->strategy);
 
         if ($console->hasArgument('rollback')) {
