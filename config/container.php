@@ -6,7 +6,6 @@ use Onion\Framework\Common\Config\Reader\IniReader;
 use Onion\Framework\Common\Config\Reader\PhpReader;
 use Onion\Framework\Common\Config\Reader\YamlReader;
 use Onion\Framework\Dependency\Container;
-use Onion\Framework\Dependency\InflectorContainer;
 use Onion\Framework\Dependency\ProxyContainer;
 
 $loader = new Loader();
