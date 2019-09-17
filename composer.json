@@ -22,7 +22,9 @@
         "onion/promise": "dev-master",
         "onion/framework": "dev-develop",
         "onion/interfaces": "dev-master",
-        "onion/common": "dev-master"
+        "onion/common": "dev-master",
+        "doctrine/annotations": "^1.7",
+        "onion/annotations": "dev-master"
     },
     "autoload": {
         "psr-4": {

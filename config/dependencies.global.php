@@ -1,5 +1,6 @@
 <?php
 
+use Doctrine\Common\Annotations\Reader;
 use Http\Client\Curl\Client;
 use Onion\Cli\Factory\ApplicationFactory;
 use Onion\Cli\Factory\ConfigLoaderFactory;
@@ -10,13 +11,14 @@ use Onion\Cli\Manifest\Factory\LocalManifestFactory;
 use Onion\Cli\Manifest\Factory\ManifestLoaderFactory;
 use Onion\Cli\Manifest\Loader;
 use Onion\Console\Router\ArgumentParser;
+use Onion\Console\Router\Router;
+use Onion\Framework\Annotations\Factory\AnnotationReaderFactory;
 use Onion\Framework\Common\Config\Loader as ConfigLoader;
 use Onion\Framework\Console\Interfaces\ApplicationInterface;
 use Onion\Framework\Console\Interfaces\ArgumentParserInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Onion\Tool\Module\Service\ActionStrategy;
 use Onion\Tool\Module\Service\Factory\ActionStrategyFactory;
-use Onion\Console\Router\Router;
 
 return [
     'invokables' => [
@@ -31,5 +33,6 @@ return [
         Client::class => HttpClientFactory::class,
         Manifest::class => LocalManifestFactory::class,
         ActionStrategy::class => ActionStrategyFactory::class,
+        Reader::class => AnnotationReaderFactory::class,
     ],
 ];

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5aa5fa0b4b912f291aba617bbe0abd74",
+    "content-hash": "879dedaeb5c0e5e694bbac2e5417e913",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -237,6 +237,136 @@
             "time": "2019-07-29T10:31:59+00:00"
         },
         {
+            "name": "doctrine/annotations",
+            "version": "v1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/annotations.git",
+                "reference": "fa4c4e861e809d6a1103bd620cce63ed91aedfeb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/fa4c4e861e809d6a1103bd620cce63ed91aedfeb",
+                "reference": "fa4c4e861e809d6a1103bd620cce63ed91aedfeb",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/lexer": "1.*",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "doctrine/cache": "1.*",
+                "phpunit/phpunit": "^7.5@dev"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.7.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Docblock Annotations Parser",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "annotations",
+                "docblock",
+                "parser"
+            ],
+            "time": "2019-08-08T18:11:40+00:00"
+        },
+        {
+            "name": "doctrine/lexer",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/lexer.git",
+                "reference": "e17f069ede36f7534b95adec71910ed1b49c74ea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/e17f069ede36f7534b95adec71910ed1b49c74ea",
+                "reference": "e17f069ede36f7534b95adec71910ed1b49c74ea",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^6.0",
+                "phpstan/phpstan": "^0.11.8",
+                "phpunit/phpunit": "^8.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\Lexer\\": "lib/Doctrine/Common/Lexer"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "PHP Doctrine Lexer parser library that can be used in Top-Down, Recursive Descent Parsers.",
+            "homepage": "https://www.doctrine-project.org/projects/lexer.html",
+            "keywords": [
+                "annotations",
+                "docblock",
+                "lexer",
+                "parser",
+                "php"
+            ],
+            "time": "2019-07-30T19:33:28+00:00"
+        },
+        {
             "name": "guzzlehttp/psr7",
             "version": "1.6.1",
             "source": {
@@ -358,17 +488,65 @@
             "time": "2014-10-12T19:18:40+00:00"
         },
         {
+            "name": "onion/annotations",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phOnion/annotations.git",
+                "reference": "f003d709ec5e2629a7bec92f4fcfcc0e56f9cba5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phOnion/annotations/zipball/f003d709ec5e2629a7bec92f4fcfcc0e56f9cba5",
+                "reference": "f003d709ec5e2629a7bec92f4fcfcc0e56f9cba5",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "^1.2",
+                "php": "^7.2",
+                "roave/security-advisories": "dev-master"
+            },
+            "require-dev": {
+                "doctrine/cache": "^1.6",
+                "onion/framework": "2.0",
+                "phpunit/phpunit": "^5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Onion\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dimitar Dimitrov",
+                    "email": "daghostman.dimitrov@gmail.com"
+                }
+            ],
+            "description": "A minimal annotation package for aspect-based decorators complementing onion/framework",
+            "keywords": [
+                "annotations",
+                "onion",
+                "phOnion"
+            ],
+            "time": "2019-05-17T09:25:28+00:00"
+        },
+        {
             "name": "onion/common",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/common.git",
-                "reference": "48d4fff728dde607b4af9e03a485483fa0a2c37b"
+                "reference": "92658adc020d992facdda002c79cceabedfabe7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/common/zipball/48d4fff728dde607b4af9e03a485483fa0a2c37b",
-                "reference": "48d4fff728dde607b4af9e03a485483fa0a2c37b",
+                "url": "https://api.github.com/repos/phOnion/common/zipball/92658adc020d992facdda002c79cceabedfabe7d",
+                "reference": "92658adc020d992facdda002c79cceabedfabe7d",
                 "shasum": ""
             },
             "require": {
@@ -391,7 +569,7 @@
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2019-08-29T14:56:31+00:00"
+            "time": "2019-09-06T18:30:49+00:00"
         },
         {
             "name": "onion/console",
@@ -528,12 +706,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phOnion/interfaces.git",
-                "reference": "3c5cb00bc16bb90c6fcb12ba6ff4552377c337e9"
+                "reference": "2f4590b5c49a0017cde99ce1936bae9ad333b3c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phOnion/interfaces/zipball/3c5cb00bc16bb90c6fcb12ba6ff4552377c337e9",
-                "reference": "3c5cb00bc16bb90c6fcb12ba6ff4552377c337e9",
+                "url": "https://api.github.com/repos/phOnion/interfaces/zipball/2f4590b5c49a0017cde99ce1936bae9ad333b3c7",
+                "reference": "2f4590b5c49a0017cde99ce1936bae9ad333b3c7",
                 "shasum": ""
             },
             "require": {
@@ -567,7 +745,7 @@
                 }
             ],
             "description": "Package containing only the interfaces of 'onion' libraries, allowing to use code without installing the whole framework and using code written for the framework outside it",
-            "time": "2019-08-15T16:11:30+00:00"
+            "time": "2019-09-16T21:15:57+00:00"
         },
         {
             "name": "onion/promise",
@@ -1718,8 +1896,8 @@
             "authors": [
                 {
                     "name": "Marco Pivetta",
-                    "role": "maintainer",
-                    "email": "ocramius@gmail.com"
+                    "email": "ocramius@gmail.com",
+                    "role": "maintainer"
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
@@ -1949,7 +2127,8 @@
         "onion/promise": 20,
         "onion/framework": 20,
         "onion/interfaces": 20,
-        "onion/common": 20
+        "onion/common": 20,
+        "onion/annotations": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
