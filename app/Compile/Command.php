@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 namespace Onion\Tool\Compile;
 
+use Onion\Cli\Autoload\ComposerCollector;
+use Onion\Cli\RouteCompiler\Compiler;
+use Onion\Framework\Common\Config\Loader;
 use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
-use Onion\Framework\Common\Config\Loader;
-use Onion\Cli\Autoload\ComposerCollector;
 
 class Command implements CommandInterface
 {
@@ -26,9 +27,13 @@ class Command implements CommandInterface
     /** @var Loader $configLoader */
     private $configLoader;
 
-    public function __construct(Loader $configLoader)
+    /** @var Compiler $compiler */
+    private $compiler;
+
+    public function __construct(Loader $configLoader, Compiler $compiler)
     {
         $this->configLoader = $configLoader;
+        $this->compiler = $compiler;
     }
 
     public function trigger(ConsoleInterface $console): int
@@ -53,6 +58,15 @@ class Command implements CommandInterface
             file_get_contents((\Phar::running(true) ?: getcwd()) . '/data/loader.php'),
             var_export($configs, true)
         ));
+
+        $routes = $this->compiler->compileDir(getcwd() . '/app/');
+
+        if (!empty($routes)) {
+            file_put_contents(
+                getcwd() . '/routes.generated.php',
+                '<?php return ' . var_export(['routes' => $routes], true) . ';'
+            );
+        }
 
         return 0;
     }
