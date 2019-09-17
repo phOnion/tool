@@ -52,3 +52,5 @@ spl_autoload_register(function ($class) use ($autoload, $base) {
         }
     }
 }, false, true);
+
+unset($base, $autoload, $file);
