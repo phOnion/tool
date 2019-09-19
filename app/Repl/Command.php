@@ -8,6 +8,9 @@ use Onion\Framework\Console\Interfaces\SignalAwareCommandInterface;
 use Psr\Container\ContainerInterface;
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
+use ReflectionObject;
+
+use function Onion\Framework\Loop\coroutine;
 
 class Command implements CommandInterface, SignalAwareCommandInterface
 {
@@ -20,6 +23,7 @@ class Command implements CommandInterface, SignalAwareCommandInterface
         'class',
         'interface',
         'trait',
+        'use',
     ];
 
     private const BALANCE_DELIMITER_PAIRS = [
@@ -41,68 +45,137 @@ class Command implements CommandInterface, SignalAwareCommandInterface
         $__vars = [];
         $__code = '';
         $__balanced = true;
-        $__history = [];
+        $__imports = [];
 
         if (function_exists('\readline_completion_function')) {
-            readline_completion_function(function ($row) use (&$__vars) {
+            readline_completion_function(function ($row, $index) use (&$__vars, $console) {
+                readline_info('completion_suppress_append', true);
+                $info = readline_info();
+                $completion = [];
                 $result = [];
 
                 if ($row === '') {
                     return $result;
                 }
-                foreach ($__vars as $name => $value) {
-                    if (strpos($name, $row) === 0) {
-                        $result[] = $name;
+                if (stripos(substr($info['line_buffer'], $index-1), '$') !== false) {
+                    foreach ($__vars as $name => $value) {
+                        if (strpos($name, $row) === 0) {
+                            $result[] = $name;
+                            $completion["%text:yellow%\${$name}%end%"] = $this->handleResult($value);
+                        }
                     }
                 }
 
-                $functions = new RecursiveIteratorIterator(
-                    new RecursiveArrayIterator(get_defined_functions())
-                );
-                foreach ($functions as $name) {
-                    if (strpos($name, $row) === 0) {
-                        $result[] = $name . '(';
+                if (stripos(substr($info['line_buffer'], $index-1), '$') === false && stripos(substr($info['line_buffer'], $index-2), '->') === false) {
+                    $functions = new RecursiveIteratorIterator(
+                        new RecursiveArrayIterator(get_defined_functions())
+                    );
+                    foreach ($functions as $real) {
+                        $name = $real;
+                        if (stripos($real, 'onion') !== false && stripos($real, '\\') !== false) {
+                            $parts = explode('\\', $real);
+                            $name = array_pop($parts);
+                        }
+
+                        if (strpos($name, $row) === 0) {
+                            $result[] = $name . '(';
+                            $reflection = new \ReflectionFunction($real);
+                            $params = [];
+                            foreach ($reflection->getParameters() as $param) {
+                                $params[] = ($param->isOptional() ? '?' : '') . ($param->hasType() ? $param->getType() . ' ' : '') .
+                                "%text:blue%\${$param->getName()}%text:blue%" . (
+                                    $param->isDefaultValueAvailable() ? "=%text:green%" . $param->getDefaultValue() : ''
+                                );
+                            }
+
+                            $completion["%text:yellow%{$real}(%text:cyan%".implode('%end%, %text:cyan%', $params)."%text:yellow%)"] =
+                                ($reflection->hasReturnType() ? ": {$reflection->getReturnType()};" : ';');
+                        }
                     }
                 }
+
+                $start = $index-2;
+                while (substr($info['line_buffer'], $start, 1) !== ' ' && $start > 0) {
+                    $start--;
+                }
+
+                try {
+                    extract($__vars, EXTR_OVERWRITE);
+                    $object = eval('return ' . substr($info['line_buffer'], $start, $index-2) . ';');
+                    $reflection = new ReflectionObject($object);
+
+                    foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                        if (stripos($method->getName(), $row) !== 0) {
+                            continue;
+                        }
+                        $result[] = "{$method->getName()}(";
+
+                        foreach ($method->getParameters() as $param) {
+                            $params[] = ($param->isOptional() ? '?' : '') . ($param->hasType() ? $param->getType() . ' ' : '') .
+                            "%text:blue%\${$param->getName()}%text:blue%" . (
+                                $param->isDefaultValueAvailable() ? "=%text:green%" . $param->getDefaultValue() : ''
+                            );
+                        }
+
+                        $completion["%text:yellow%{$reflection->getName()}@{$method->getName()}(%text:cyan%".implode('%end%, %text:cyan%', $params)."%text:yellow%)"] =
+                            ($method->hasReturnType() ? ":{$method->getReturnType()};" : ';');
+                    }
+                } catch (\Throwable $ex) {
+                    echo "{$ex->getMessage()}\n";
+                }
+
+
+                $console->writeLine("\n");
+                foreach ($completion as $index => $item) {
+                    $console->writeLine("{$index}{$item}");
+                }
+
+                $console->writeLine("\n");
+                readline_on_new_line();
+                readline_redisplay();
 
                 return $result;
             });
         }
-        while (true) {
-            try {
-                $result = (function(ConsoleInterface $__console, ContainerInterface $container) use (&$__vars, &$__code, &$__balanced) {
+
+        coroutine(function(ConsoleInterface $__console, ContainerInterface $container) use (&$__vars, &$__code, &$__balanced, &$__imports) {
+            while (true) {
+                try {
                     $__vars['container'] = $container;
-                    $__code .= $__console->prompt($__balanced ? '%text:yellow%$>' : '%text:yellow%...');
+                    yield $__code .= $__console->prompt($__balanced ? '%text:yellow%$>' : '%text:yellow%...');
                     $__balanced = $this->checkBalance($__code);
 
                     if (!$__balanced) {
-                        return;
+                        continue;
                     }
-                    readline_add_history($__code);
+
+                    yield readline_add_history($__code);
 
                     $__returns = true;
                     foreach (static::WRAPPING_KEYWORDS as $__keyword) {
                         if (stripos($__code, $__keyword) === 0) {
-                            $__returns = false;
-                        }
-                        unset($__keyword);
-                        if (!$__returns) {
+                            if (stripos($__code, 'use') === 0) {
+                                $__imports[] = $__code;
+                            }
 
+                            $__returns = false;
                             break;
                         }
-                    }
 
-                    if ($__returns) {
-                        $__code = "return {$__code};";
+                        yield;
                     }
 
                     ob_start();
                     extract($__vars, EXTR_SKIP);
-                    if ($__balanced) {
-                        $__code_b = $__code;
-                        $__code = '';
-                        $__result = eval(stripslashes("{$__code_b};"));
+                    if ($__returns) {
+                        $__code = implode(";\n", $__imports) . ";\n" . "return {$__code};";
                     }
+
+                    $__code_b = $__code;
+                    $__code = '';
+                    $__result = eval(stripslashes(strtr("{$__code_b};", [
+                        '\\' => '\\\\',
+                    ])));
 
                     $__output = ob_get_clean();
                     if ($__output !== '') {
@@ -113,18 +186,14 @@ class Command implements CommandInterface, SignalAwareCommandInterface
                         return stripos($key, '__') !== 0;
                     },  ARRAY_FILTER_USE_KEY);
 
-                    if ($__result !== null) {
-                        return $this->handleResult($__result);
+                    if ($__result !== '' && $__result !== null) {
+                        $__console->writeLine('%text:yellow%=> %end%' . $this->handleResult($__result));
                     }
-                })($console, $this->container);
-
-                if ($result !== '' && $result !== null) {
-                    $console->writeLine('%text:yellow%=> %end%' . $result);
+                } catch (\Throwable $__ex) {
+                    $__console->writeLine("\t%text:red%{$__ex->getMessage()}");
                 }
-            } catch (\Throwable $ex) {
-                $console->writeLine("\t%text:red%{$ex->getMessage()}");
             }
-        }
+        }, [$console, $this->container]);
 
         return 0;
     }
@@ -198,6 +267,6 @@ class Command implements CommandInterface, SignalAwareCommandInterface
             }
         }
 
-        return $balance === 0;
+        return $balance <= 0;
     }
 }
