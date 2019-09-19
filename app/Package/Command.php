@@ -176,8 +176,12 @@ class Command implements CommandInterface, SignalAwareCommandInterface
     {
         $autoload = $this->getVendorClassMap($executable, $debug);
         $iterator = new AppendIterator();
-        $iterator->append(new \ArrayIterator($autoload['psr-4'] ?? []));
-        $iterator->append(new \ArrayIterator($autoload['psr-0'] ?? []));
+        $iterator->append(new \RecursiveIteratorIterator(
+            new \RecursiveArrayIterator($autoload['psr-4'] ?? [])
+        ));
+        $iterator->append(new \RecursiveIteratorIterator(
+            new \RecursiveArrayIterator($autoload['psr-0'] ?? [])
+        ));
 
         return $iterator;
     }
