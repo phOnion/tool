@@ -60,7 +60,7 @@ class Command implements CommandInterface
                         coroutine(function ($console, $definition, $config, $stage) {
                             try {
                                 yield from $this->runCommands(
-                                    $console->withArgument('quiet', true),
+                                    $console,
                                     $definition,
                                     $config,
                                     $stage
@@ -68,6 +68,8 @@ class Command implements CommandInterface
                             } catch (\Throwable $ex) {
                                 //
                             }
+                            $console->writeLine("\e[H\e[J");
+                            $console->writeLine("%text:cyan%Watching for changes");
                         }, [$console, $definition, $config, $stage]);
                     };
                     $flow = new Flow('watcher', 'initial');
@@ -85,6 +87,7 @@ class Command implements CommandInterface
                             } catch (\Throwable $ex) {
                                 // Prevent crashes
                             }
+
                         }
                         usleep(250000);
                     }, $interval, [$watcher, $definition]);
@@ -148,6 +151,7 @@ class Command implements CommandInterface
 
             while ($process->isRunning()) {
                 yield $process->wait();
+                $process->read(1024);
             }
 
             if ($process->getExitCode() !== 0) {
