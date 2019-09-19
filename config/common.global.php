@@ -38,6 +38,5 @@ return [
             'update' => UpdateAction::class,
         ],
     ],
-    'user' => 'env(USER)',
     'listeners' => [],
 ];
