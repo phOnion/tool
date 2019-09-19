@@ -6,6 +6,8 @@ use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Onion\Framework\Console\Interfaces\SignalAwareCommandInterface;
 use Psr\Container\ContainerInterface;
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
 
 class Command implements CommandInterface, SignalAwareCommandInterface
 {
@@ -38,49 +40,81 @@ class Command implements CommandInterface, SignalAwareCommandInterface
         $console->writeLine("%text:cyan%Onion CLI Tool {$this->manifest->getVersion()}");
         $__vars = [];
         $__code = '';
-        $balanced = true;
+        $__balanced = true;
+        $__history = [];
+
+        if (function_exists('\readline_completion_function')) {
+            readline_completion_function(function ($row) use (&$__vars) {
+                $result = [];
+
+                if ($row === '') {
+                    return $result;
+                }
+                foreach ($__vars as $name => $value) {
+                    if (strpos($name, $row) === 0) {
+                        $result[] = $name;
+                    }
+                }
+
+                $functions = new RecursiveIteratorIterator(
+                    new RecursiveArrayIterator(get_defined_functions())
+                );
+                foreach ($functions as $name) {
+                    if (strpos($name, $row) === 0) {
+                        $result[] = $name . '(';
+                    }
+                }
+
+                return $result;
+            });
+        }
         while (true) {
             try {
-                $result = (function(ConsoleInterface $console, ContainerInterface $container) use (&$__vars, &$__code, &$balanced) {
-                    $__code .= $console->prompt($balanced ? '%text:yellow%$>' : '%text:yellow%...');
-                    $balanced = $this->checkBalance($__code);
+                $result = (function(ConsoleInterface $__console, ContainerInterface $container) use (&$__vars, &$__code, &$__balanced) {
+                    $__vars['container'] = $container;
+                    $__code .= $__console->prompt($__balanced ? '%text:yellow%$>' : '%text:yellow%...');
+                    $__balanced = $this->checkBalance($__code);
 
-                    if (!$balanced) {
+                    if (!$__balanced) {
                         return;
                     }
+                    readline_add_history($__code);
 
-                    $returns = true;
-                    foreach (static::WRAPPING_KEYWORDS as $keyword) {
-                        if (stripos($__code, $keyword) === 0) {
-                            $returns = false;
+                    $__returns = true;
+                    foreach (static::WRAPPING_KEYWORDS as $__keyword) {
+                        if (stripos($__code, $__keyword) === 0) {
+                            $__returns = false;
                         }
-                        unset($keyword);
-                        if (!$returns) {
+                        unset($__keyword);
+                        if (!$__returns) {
 
                             break;
                         }
                     }
 
-                    if ($returns) {
+                    if ($__returns) {
                         $__code = "return {$__code};";
                     }
 
                     ob_start();
                     extract($__vars, EXTR_SKIP);
-                    unset($__vars, $returns);
-                    if ($balanced) {
-                        $result = eval(stripslashes("{$__code};"));
+                    if ($__balanced) {
+                        $__code_b = $__code;
                         $__code = '';
+                        $__result = eval(stripslashes("{$__code_b};"));
                     }
 
-                    $output = ob_get_clean();
-                    if ($output !== '') {
-                        $console->writeLine("  " . $output);
+                    $__output = ob_get_clean();
+                    if ($__output !== '') {
+                        $__console->writeLine("  " . $__output);
                     }
-                    $__vars = get_defined_vars();
 
-                    if ($result !== null) {
-                        return $this->handleResult($result);
+                    $__vars = array_filter(get_defined_vars(), function ($key) {
+                        return stripos($key, '__') !== 0;
+                    },  ARRAY_FILTER_USE_KEY);
+
+                    if ($__result !== null) {
+                        return $this->handleResult($__result);
                     }
                 })($console, $this->container);
 
@@ -148,9 +182,11 @@ class Command implements CommandInterface, SignalAwareCommandInterface
 
     private function checkBalance(string $code)
     {
-
         $chars = str_split($code);
-        $balance = (preg_match_all('~(?:(\"|\')+[^\"\']*)~i', $code) % 2) === 0 ? 0 : 1;
+        $balance = (preg_match_all('~(?:(\"|\')+[^\"\']*)~im', $code) % 2) === 0 ? 0 : 1;
+        if ($balance !== 0) {
+            return false;
+        }
 
         foreach ($chars as $char) {
             if (isset(static::BALANCE_DELIMITER_PAIRS[$char])) {
