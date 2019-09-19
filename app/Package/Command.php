@@ -1,14 +1,19 @@
 <?php declare(strict_types=1);
 namespace Onion\Tool\Package;
 
+use AppendIterator;
+
 use Onion\Cli\Autoload\ComposerCollector;
 use Onion\Cli\Manifest\Loader;
 use Onion\Cli\SemVer\MutableVersion;
 use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
+use Onion\Framework\Console\Interfaces\SignalAwareCommandInterface;
+use Onion\Tool\Package\Service\Packer;
+
 use Phar;
 
-class Command implements CommandInterface
+class Command implements CommandInterface, SignalAwareCommandInterface
 {
     private const COMPRESSION_MAP = [
         'gz' => \Phar::GZ,
@@ -32,65 +37,44 @@ class Command implements CommandInterface
     public function trigger(ConsoleInterface $console): int
     {
         $manifest = $this->loader->getManifest();
-        $version = new MutableVersion($console->getArgument('version', $manifest->getVersion()));
-
+        $version = new MutableVersion($manifest->getVersion());
         $manifest = $manifest->setVersion(
             $this->buildVersionString($version)
         );
         $this->loader->saveManifest(getcwd(), $manifest);
 
+        $filename = $this->getOutputLocation(
+            (string) $console->getArgument('location'),
+            $manifest->getName(),
+            $manifest->getVersion()
+        );
+        $standalone = (bool) $console->getArgument('standalone');
+        $debug = (bool) $console->getArgument('debug');
 
-        $location = realpath($console->getArgument('location', getcwd() . '/build'));
-        if (!is_dir($location)) {
-            mkdir($location, 0777, true);
-        }
-        $file = strtr($manifest->getName(), ['/' => '_']);
-        $filename = "{$location}/{$file}-{$version}.phar";
-        if (file_exists($filename)) {
-            $console->writeLine('%text:yellow%Removing existing artefact');
-            unlink($filename);
-        }
 
+        $packer = new Packer($filename, file(getcwd() . '/.onionignore'));
+        foreach ($this->getAggregatedDirectories($standalone, $debug) as $directory) {
+            $packer->addDirectory($directory);
+        }
         $console->writeLine('%text:cyan%Building package');
-        $phar = new \Phar($filename);
-        $standalone = (bool) $console->getArgument('standalone', false);
+        $phar = $packer->pack('./', $console);
 
+        $phar->addFile($this->getModuleEntrypoint(), 'entrypoint.php');
+        $phar->setStub('<?php echo "Can\'t be used directly"; __HALT_COMPILER();"');
         if ($standalone) {
             $phar->setStub($this->getStub($standalone));
+            $phar->delete('entrypoint.php');
         }
-
-        if (!$standalone) {
-            $phar->addFile($this->getModuleEntrypoint(), 'entrypoint.php');
-            $phar->setStub('<?php echo "Can\'t be used directly"; __HALT_COMPILER();"');
-        }
-
-        $temp = tempnam(sys_get_temp_dir(), 'autoload');
-        $files = $this->getVendorClassMap($standalone, (bool) $console->getArgument('debug', false));
-
-        $result = var_export($files, true);
-        file_put_contents($temp, "<?php return {$result};");
-        $phar->addFile($temp, 'autoload.generated.php');
-
-        $iterator = $this->getDirectoryIterator(getcwd(), $standalone);
-
-        $phar->startBuffering();
-        $phar->buildFromIterator($iterator, getcwd());
 
         $compression = strtolower($console->getArgument('compression', 'none'));
         if ($compression !== 'none') {
             $console->writeLine("%text:cyan%Compressing using {$compression}");
-
-            if (!isset(self::COMPRESSION_MAP[$compression])) {
-                throw new \InvalidArgumentException(
-                    "Supplied compression algorithm '{$compression}' is invalid"
-                );
+            $mode = self::COMPRESSION_MAP[$compression] ?? null;
+            if ($mode === null || !$phar->canCompress($mode)) {
+                throw new \InvalidArgumentException("Compression using '{$compression}' not possible");
             }
 
-            if (!$phar->canCompress(self::COMPRESSION_MAP[$compression])) {
-                throw new \RuntimeException("Can't compress package using '{$compression}'");
-            }
-
-            $phar->compressFiles(self::COMPRESSION_MAP[$compression]);
+            $phar->compressFiles($mode);
         }
 
         $signature = strtolower($console->getArgument('signature', 'sha256'));
@@ -98,33 +82,42 @@ class Command implements CommandInterface
             throw new \InvalidArgumentException("Unknown signature algorithm '{$signature}'");
         }
 
-        $algo = self::SIGNATURE_MAP[$signature];
-
-        $console->writeLine(
-            "%text:cyan%Signature algorithm set to {$signature} "
-        );
-
-        $phar->setSignatureAlgorithm($algo);
+        $phar->setSignatureAlgorithm(self::SIGNATURE_MAP[$signature]);
         $phar->setMetadata([
             'version' => $version->getBaseVersion(),
             'standalone' => $standalone,
             'debug' => $console->getArgument('debug', false),
         ]);
-        $phar->stopBuffering();
+        unset($phar);
 
-        $size = number_format(filesize("{$filename}")/pow(1024, 2), 3, '.', ',');
+
+        $size = number_format(filesize($filename)/pow(1024, 2), 3, '.', ',');
         $console->writeLine("%text:bold-green%Build completed, size {$size}MB");
+
+
+
         return 0;
     }
 
-    private function compileIgnorePattern(string $base): string
+    public function exit(ConsoleInterface $console, string $signal): void
     {
-        return filter_var(str_replace('/', DIRECTORY_SEPARATOR, "~^{$base}/(?!(" . implode('|', array_map(function ($line) {
-            return trim(strtr($line, [
-                '.' => '\.',
-                '*' => '.*',
-            ]));
-        }, file(getcwd() . "/.onionignore"))) . '))~i'), FILTER_SANITIZE_ADD_SLASHES);
+        $console->writeLine('%text:yellow%Cleaning up');
+        $manifest = $this->loader->getManifest();
+        $version = new MutableVersion($manifest->getVersion());
+
+        $file = strtr($manifest->getName(), ['/' => '_']);
+        $filename = "{$console->getArgument('location', getcwd() . '/build')}/{$file}-{$version}.phar";
+        if ($version->hasBuild()) {
+            $version->setBuild((string) ($version->getBuild()-1));
+        }
+
+        $console->writeLine('%text:yellow%Rolling back version');
+        $this->loader->saveManifest(getcwd(), $manifest->setVersion($this->buildVersionString($version)));
+
+        if (file_exists($filename)) {
+            $console->writeLine('%text:yellow%Removing incomplete artifact');
+            unlink($filename);
+        }
     }
 
     private function buildVersionString(MutableVersion $version): string
@@ -173,19 +166,36 @@ class Command implements CommandInterface
         return $temp;
     }
 
-    private function getDirectoryIterator(string $dir): \Traversable
-    {
-        return new \RegexIterator(new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(
-                "$dir",
-                \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
-            )
-        ), $this->compileIgnorePattern($dir));
-    }
-
     private function getVendorClassMap(bool $standalone, bool $includeDev = false): iterable
     {
         return (new ComposerCollector(getcwd()))
             ->resolve($standalone, $includeDev);
+    }
+
+    private function getAggregatedDirectories(bool $executable, bool $debug): iterable
+    {
+        $autoload = $this->getVendorClassMap($executable, $debug);
+        $iterator = new AppendIterator();
+        $iterator->append(new \ArrayIterator($autoload['psr-4'] ?? []));
+        $iterator->append(new \ArrayIterator($autoload['psr-0'] ?? []));
+
+        return $iterator;
+    }
+
+    private function getOutputLocation(string $location, string $name, string $version): string
+    {
+        $dir = realpath($location);
+        if (!$dir || !is_dir($location)) {
+            mkdir($location, 0777, true);
+        }
+        $location = $dir;
+
+        $file = strtr($name, ['/' => '_']);
+        $filename = "{$location}/{$file}-{$version}.phar";
+        if (file_exists($filename)) {
+            unlink($filename);
+        }
+
+        return $filename;
     }
 }
