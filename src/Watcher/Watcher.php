@@ -1,11 +1,5 @@
 <?php
 namespace Onion\Cli\Watcher;
-
-use function Onion\Framework\Loop\coroutine;
-use function Onion\Framework\Loop\read;
-
-use Onion\Framework\Loop\Descriptor as Stream;
-use Onion\Framework\Loop\Interfaces\ResourceInterface as StreamInterface;
 use Onion\Framework\State\Interfaces\FlowInterface;
 
 class Watcher
