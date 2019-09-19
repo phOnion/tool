@@ -2,8 +2,6 @@
 namespace Onion\Cli\SemVer;
 
 use Composer\Semver\Comparator;
-use Composer\Semver\Semver;
-use Onion\Cli\SemVer\Version;
 
 class Version
 {
