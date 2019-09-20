@@ -86,7 +86,7 @@ class Command implements CommandInterface
             /** @var Link $link */
             $lang = $link->getLang();
             if ($lang !== '') {
-                $lang = "%text:cyan%{$lang}%text:green% -";
+                $lang = "%text:cyan%{$lang}%text:green% - ";
             }
 
             $index++;
