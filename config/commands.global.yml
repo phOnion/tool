@@ -120,6 +120,10 @@ commands:
         type: string
         description: The recipe configuration file
         default: onion.recipe.yml
+      - name: --no-watch
+        type: bool
+        description: Do not execute tasks in watch mode
+        default: false
   - definition: shell
     handler: Onion\Tool\Repl\Command
     summary: Interactive REPL
