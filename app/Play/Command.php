@@ -5,14 +5,12 @@ use function Onion\Framework\Loop\coroutine;
 
 use Onion\Cli\Watcher\Watcher;
 use Onion\Framework\Common\Config\Loader;
-use Onion\Framework\Console\Components\Progress;
 use Onion\Framework\Console\Interfaces\CommandInterface;
 
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
 use Onion\Framework\Loop\Coroutine;
 use Onion\Framework\Loop\Timer;
 use Onion\Framework\Process\Process;
-use Onion\Framework\Promise\FulfilledPromise;
 use Onion\Framework\State\Flow;
 use Onion\Framework\State\Transition;
 use Phar;
@@ -37,7 +35,7 @@ class Command implements CommandInterface
         }
 
         coroutine(function (array $config, ConsoleInterface $console) {
-            $stage = $console->getArgument('stage', 'build');
+            $stage = $console->getArgument('stage', 'all');
             if (!isset($config['stages'][$stage])) {
                 throw new \RuntimeException("Stage '{$stage}' does not exist");
             }
@@ -109,8 +107,9 @@ class Command implements CommandInterface
             foreach ($deps as $dep) {
                 $console->write("%text:cyan%Executing dependency task %text:blue%{$dep}");
 
+                $phar = Phar::running(false);
                 $process = $this->execProcess(
-                    Phar::running(false) ?: "php {$_SERVER['PHP_SELF']}",
+                    $phar ? "php {$phar}": "php {$_SERVER['PHP_SELF']}",
                     ['play', $dep, '--no-watch']
                 );
 
