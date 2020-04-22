@@ -14,7 +14,7 @@
         "onion/console": "dev-master",
         "padraic/phar-updater": "^1.0",
         "symfony/yaml": "^4.1",
-        "composer/semver": "^1.4",
+        "composer/semver": "^2.0",
         "composer/ca-bundle": "^1.1",
         "composer/spdx-licenses": "^1.5",
         "php-http/curl-client": "^1.7",
