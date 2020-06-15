@@ -13,7 +13,7 @@
         "roave/security-advisories": "dev-master",
         "onion/console": "dev-master",
         "padraic/phar-updater": "^1.0",
-        "symfony/yaml": "^4.1",
+        "symfony/yaml": "^5.1",
         "composer/semver": "^1.4",
         "composer/ca-bundle": "^1.1",
         "composer/spdx-licenses": "^1.5",
