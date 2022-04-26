@@ -4,6 +4,7 @@ use Onion\Tool\Initialize\Command as InitCommand;
 use Onion\Tool\Version\Command as VersionCommand;
 use Onion\Tool\Package\Command as PackageCommand;
 use Onion\Tool\Compile\Command as CompileCommand;
+use Onion\Tool\Watch\Command as WatchCommand;
 
 return [
     'commands' => [
@@ -72,6 +73,26 @@ return [
                     'type' => 'bool',
                     'description' => 'Indicate that autoload-dev files should be used',
                     'default' => false,
+                ]
+            ],
+        ], [
+            'definition' => 'watch [directory] [command]',
+            'handler' => WatchCommand::class,
+            'summary' => 'Watch directory for file changes',
+            'parameters' => [
+                [
+                    'name' => '--interval | -n',
+                    'type' => 'integer',
+                    'description' => 'Interval to check for new files',
+                    'default' => 2,
+                ], [
+                    'name' => 'directory',
+                    'type' => 'string',
+                    'description' => 'The directory to watch'
+                ], [
+                    'name' => 'command',
+                    'type' => 'string',
+                    'description' => 'Command to run when a file is changed',
                 ]
             ],
         ]
