@@ -1,10 +1,10 @@
 <?php require_once __DIR__ . '/../vendor/autoload.php';
 
-use function Onion\Framework\Loop\scheduler;
-use Onion\Framework\Dependency\InflectorContainer;
+use function Onion\Framework\Loop\coroutine;
+use Onion\Framework\Dependency\ProxyContainer;
 use Psr\Http\Message\ServerRequestInterface;
 
-/** @var InflectorContainer $container */
+/** @var ProxyContainer $container */
 $container = include __DIR__ . '/../config/container.php';
 $interface = php_sapi_name() === 'cli' ? 'cli' : 'web';
 
@@ -21,6 +21,6 @@ if ($interface === 'cli') {
     $args = [$argv ?? [], $container->get(\Onion\Framework\Console\Interfaces\ConsoleInterface::class)];
 }
 
-$result = ($instance->run(...$args) ?? 0);
-scheduler()->start();
-exit($result);
+coroutine(static function () use ($instance, $args) {
+    exit($instance->run(...$args) ?? 0);
+});

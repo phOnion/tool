@@ -1,8 +1,9 @@
 <?php
+
 namespace Onion\Cli\Factory;
 
 use Onion\Framework\Dependency\Interfaces\FactoryInterface;
-use Onion\Framework\Common\Config\Loader;
+use Onion\Framework\Config\Loader;
 
 class ConfigLoaderFactory implements FactoryInterface
 {
@@ -14,7 +15,7 @@ class ConfigLoaderFactory implements FactoryInterface
             try {
                 $loader->registerReader($config['extensions'], $container->get($config['reader']));
             } catch (\Throwable $ex) {
-                $extensions = '.'.implode(', .', $config['extensions']);
+                $extensions = '.' . implode(', .', $config['extensions']);
                 trigger_error("Unable to register reader for '{$extensions}' to loader", E_USER_NOTICE);
             }
         }

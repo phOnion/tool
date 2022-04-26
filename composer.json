@@ -1,54 +1,29 @@
 {
-    "name": "onion/tool",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Dimitar Dimitrv",
-            "email": "daghostman.dd@gmail.com",
-            "role": "dev"
-        }
-    ],
-    "bin": "bin/onion.php",
-    "require": {
-        "roave/security-advisories": "dev-master",
-        "onion/console": "dev-master",
-        "padraic/phar-updater": "^1.0",
-        "symfony/yaml": "^4.1",
-        "composer/semver": "^1.4",
-        "composer/ca-bundle": "^1.1",
-        "composer/spdx-licenses": "^1.5",
-        "php-http/curl-client": "^1.7",
-        "onion/event-loop": "dev-master",
-        "onion/promise": "dev-master",
-        "onion/framework": "dev-develop",
-        "onion/interfaces": "dev-master",
-        "onion/common": "dev-master",
-        "doctrine/annotations": "^1.7",
-        "onion/annotations": "dev-master"
-    },
-    "autoload": {
-        "psr-4": {
-            "Onion\\Cli\\": "src/",
-            "Onion\\Tool\\": "app/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Demo\\": "demo/"
-        }
-    },
-    "config": {
-        "bin-dir": "bin/"
-    },
-    "extra": {
-        "merge-plugin": {
-            "include": [
-                "modules/*/*.phar.composer.json",
-                "modules/*/*.json"
-            ],
-            "recurse": true,
-            "ignore-duplicates": false,
-            "merge-scripts": true
-        }
+  "name": "onion/tool",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dimitar Dimitrv",
+      "email": "daghostman.dd@gmail.com",
+      "role": "dev"
     }
+  ],
+  "bin": "bin/onion.php",
+  "require": {
+    "roave/security-advisories": "@dev",
+    "onion/common": "@dev",
+    "onion/framework": "@dev",
+    "onion/interfaces": "@dev",
+    "onion/console": "@dev",
+    "onion/event-loop": "@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "Onion\\Cli\\": "src/",
+      "Onion\\Tool\\": "app/"
+    }
+  },
+  "config": {
+    "bin-dir": "bin/"
+  }
 }

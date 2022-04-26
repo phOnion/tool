@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace Onion\Cli\Manifest\Entities;
 
 use Onion\Cli\Manifest\Entity;
@@ -31,7 +34,7 @@ class Dependency implements Entity
         return $this->repository;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return array_filter([
             'name' => $this->getName(),

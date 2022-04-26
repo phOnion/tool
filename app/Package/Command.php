@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace Onion\Tool\Package;
 
 use AppendIterator;
@@ -12,6 +15,7 @@ use Onion\Framework\Console\Interfaces\SignalAwareCommandInterface;
 use Onion\Tool\Package\Service\Packer;
 
 use Phar;
+use PharData;
 
 class Command implements CommandInterface, SignalAwareCommandInterface
 {
@@ -51,24 +55,23 @@ class Command implements CommandInterface, SignalAwareCommandInterface
         $standalone = (bool) $console->getArgument('standalone');
         $debug = (bool) $console->getArgument('debug');
 
-
         $packer = new Packer($filename, file(getcwd() . '/.onionignore'));
         foreach ($this->getAggregatedDirectories($standalone, $debug) as $directory) {
             $packer->addDirectory($directory);
         }
-        $console->writeLine('%text:cyan%Building package');
+        $console->writeLine('<color text="cyan">Building package</color>');
         $phar = $packer->pack('./', $console);
 
         $phar->addFile($this->getModuleEntrypoint(), 'entrypoint.php');
         $phar->setStub('<?php echo "Can\'t be used directly"; __HALT_COMPILER();"');
         if ($standalone) {
-            $phar->setStub($this->getStub($standalone));
+            $phar->setStub($this->getStub());
             $phar->delete('entrypoint.php');
         }
 
         $compression = strtolower($console->getArgument('compression', 'none'));
         if ($compression !== 'none') {
-            $console->writeLine("%text:cyan%Compressing using {$compression}");
+            $console->writeLine("<color text=\"cyan\">Compressing using {$compression}</color>");
             $mode = self::COMPRESSION_MAP[$compression] ?? null;
             if ($mode === null || !$phar->canCompress($mode)) {
                 throw new \InvalidArgumentException("Compression using '{$compression}' not possible");
@@ -91,31 +94,29 @@ class Command implements CommandInterface, SignalAwareCommandInterface
         unset($phar);
 
 
-        $size = number_format(filesize($filename)/pow(1024, 2), 3, '.', ',');
-        $console->writeLine("%text:bold-green%Build completed, size {$size}MB");
-
-
+        $size = number_format(filesize($filename) / pow(1024, 2), 3, '.', ',');
+        $console->overwrite("<color text='green' decoration='bold'>Build completed, size {$size}MB</color>");
 
         return 0;
     }
 
     public function exit(ConsoleInterface $console, string $signal): void
     {
-        $console->writeLine('%text:yellow%Cleaning up');
+        $console->writeLine('<color text="yellow">Cleaning up</color>');
         $manifest = $this->loader->getManifest();
         $version = new MutableVersion($manifest->getVersion());
 
         $file = strtr($manifest->getName(), ['/' => '_']);
         $filename = "{$console->getArgument('location', getcwd() . '/build')}/{$file}-{$version}.phar";
         if ($version->hasBuild()) {
-            $version->setBuild((string) ($version->getBuild()-1));
+            $version->setBuild((string) ($version->getBuild() - 1));
         }
 
-        $console->writeLine('%text:yellow%Rolling back version');
+        $console->writeLine('<color text="yellow">Rolling back version</color>');
         $this->loader->saveManifest(getcwd(), $manifest->setVersion($this->buildVersionString($version)));
 
         if (file_exists($filename)) {
-            $console->writeLine('%text:yellow%Removing incomplete artifact');
+            $console->writeLine('<color text="yellow">Removing incomplete artifact</color>');
             unlink($filename);
         }
     }
@@ -124,7 +125,7 @@ class Command implements CommandInterface, SignalAwareCommandInterface
     {
         if ($version->hasBuild()) {
             $version->setBuild(str_pad(
-                (string) ($version->getBuild()+1),
+                (string) ($version->getBuild() + 1),
                 strlen($version->getBuild()),
                 '0',
                 STR_PAD_LEFT

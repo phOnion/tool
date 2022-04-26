@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace Onion\Cli\SemVer;
 
 use Composer\Semver\Comparator;
@@ -18,7 +21,7 @@ class Version
     {
         if (!preg_match('~^(?P<constraint>\~|\^)?(?P<major>\d+).(?P<minor>\d+)(?:.(?P<fix>\d+))?(?:\-(?P<pre>[0-9A-Za-z-.]+))?(?:\+(?P<build>[0-9A-Za-z-]+))?$~i', $constraint, $matches)) {
             throw new \InvalidArgumentException(
-                "Provided constraint '$version' does not appear to be a valid semver string"
+                "Provided constraint '$constraint' does not appear to be a valid semver string"
             );
         }
 

@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace Onion\Cli\Manifest\Entities;
 
 use Onion\Cli\Manifest\Entity;
@@ -36,7 +39,7 @@ class Link implements Entity
         return $this->lang !== null;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $link = [
             'title' => $this->getTitle(),

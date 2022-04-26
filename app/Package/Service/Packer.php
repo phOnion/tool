@@ -1,23 +1,23 @@
 <?php
+
 namespace Onion\Tool\Package\Service;
 
+use CallbackFilterIterator;
+use Onion\Framework\Console\Components\Animation;
 use Onion\Framework\Console\Components\Progress;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
 
+use function Onion\Framework\generator;
 
 class Packer
 {
-    private $filename;
-    private $ignores = [];
     private $directories = [];
-
-    public function __construct(string $filename, array $rawIgnores = [])
+    public function __construct(private readonly string $filename, private readonly array $ignores = [])
     {
-        $this->filename = $filename;
-        $this->ignores = $rawIgnores;
     }
 
-    public function addDirectory(string $directory): void {
+    public function addDirectory(string $directory): void
+    {
         if (!in_array($directory, $this->directories)) {
             $this->directories[] = $directory;
         }
@@ -26,13 +26,36 @@ class Packer
     public function pack($directory, ?ConsoleInterface $console): \Phar
     {
         $excludePattern = $this->compileIgnorePattern();
-        $files = preg_grep($excludePattern, array_map(function (string $item) {
-            return stripos($item, './') === 0 ?
-                substr($item, 2) : $item;
-        }, iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(
+
+
+        $progress = new Progress(64, PHP_INT_MAX / 2, cursor: new Animation([
+            "\u{2846}",
+            "\u{2807}",
+            "\u{280B}",
+            "\u{2819}",
+            "\u{2838}",
+            "\u{28b0}",
+            "\u{28e0}",
+            "\u{28c4}",
+        ], fn (string $frame) => "<color text='green'>{$frame}</color>"));
+        $progress->setFormat(
+            '{cursor} <color text="cyan">Loading files</color>'
+        );
+        $progress->flush($console);
+        $phar = new \Phar($this->filename);
+
+        $files = new CallbackFilterIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(
             $directory,
             \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
-        )))), PREG_GREP_INVERT);
+        )), fn ($item) => preg_match($excludePattern, substr($item, strlen($directory))) !== 1);
+
+        foreach ($files as $file) {
+            var_dump(substr($file, strlen($directory)));
+            $phar->addFile(substr($file, strlen($directory)));
+            $progress->advance();
+            $progress->flush($console);
+        }
+
         foreach ($this->directories as $directory) {
             if (!is_dir($directory)) {
                 continue;
@@ -44,39 +67,29 @@ class Packer
             ));
 
             foreach ($iterator as $item) {
-                if (is_dir($item) || stripos($item, '.git/') === 0) {
+                if (is_dir($item)) {
                     continue;
                 }
 
-                $files[] = $item;
-            }
-        }
+                if (isset($phar[$item])) {
+                    continue;
+                }
 
-        $progress = new Progress(64, count($files), [' ', "#"]);
-        $progress->setFormat(
-            '%text:cyan%Processing %text:yellow%{progress}%text:cyan%/{steps}'
-        );
-        $progress->display($console);
-
-        $phar = new \Phar($this->filename);
-        foreach ($files as $file) {
-            $phar->addFile($file);
-            if ($console instanceof ConsoleInterface) {
-                $progress->increment(1);
-                $progress->display($console);
+                $phar->addFile($item);
+                $progress->advance();
+                $progress->flush($console);
             }
         }
 
         return $phar;
     }
 
-    private function compileIgnorePattern(string $base = '.*'): string
+    private function compileIgnorePattern(): string
     {
-        return str_replace('/', DIRECTORY_SEPARATOR, "~^(" . implode('|', array_map(function ($line) {
-            return trim(strtr($line, [
-                '.' => '\.',
-                '*' => '.*',
-            ]));
-        }, $this->ignores)) . ')~i');
+        return strtr(str_replace('/', DIRECTORY_SEPARATOR, "~^(" . implode('|', array_map(trim(...), $this->ignores)) . ')~i'), [
+            '.' => '\.',
+            '*' => '.*',
+            '\\' => '\\\\',
+        ]);
     }
 }

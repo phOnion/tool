@@ -1,4 +1,5 @@
 <?php
+
 namespace Onion\Cli\Manifest\Factory;
 
 use Onion\Cli\Manifest\Loader;

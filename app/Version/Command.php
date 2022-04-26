@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace Onion\Tool\Version;
 
 use Onion\Cli\Manifest\Entities\Manifest;
@@ -16,7 +19,7 @@ class Command implements CommandInterface
 
     public function trigger(ConsoleInterface $console): int
     {
-        $console->writeLine("%text:cyan%Version %text:green%{$this->manifest->getVersion()}");
+        $console->writeLine("<color text='cyan'>Version <color text='green'>{$this->manifest->getVersion()}</color></color>");
 
         return 0;
     }

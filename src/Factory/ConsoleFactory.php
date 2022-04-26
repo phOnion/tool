@@ -1,4 +1,5 @@
 <?php
+
 namespace Onion\Cli\Factory;
 
 use Onion\Framework\Dependency\Interfaces\FactoryInterface;
@@ -8,6 +9,6 @@ class ConsoleFactory implements FactoryInterface
 {
     public function build(\Psr\Container\ContainerInterface $container)
     {
-        return new Console(fopen('php://stdout', 'rb+'));
+        return new Console(STDOUT);
     }
 }

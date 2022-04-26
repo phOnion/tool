@@ -3,6 +3,7 @@ build/
 tests/
 config/
 modules/
+vendor/
 bin/
 *.phar
 .vscode/

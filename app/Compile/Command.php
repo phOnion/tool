@@ -1,9 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace Onion\Tool\Compile;
 
 use Onion\Cli\Autoload\ComposerCollector;
-use Onion\Cli\RouteCompiler\Compiler;
-use Onion\Framework\Common\Config\Loader;
+use Onion\Framework\Config\Loader;
 use Onion\Framework\Console\Interfaces\CommandInterface;
 use Onion\Framework\Console\Interfaces\ConsoleInterface;
 
@@ -11,9 +13,8 @@ class Command implements CommandInterface
 {
     private const TEMPLATE = [
         '%s',
-        'use \Onion\Framework\Common\Config\Container as Config;',
+        'use \Onion\Framework\Config\Container as Config;',
         'use \Onion\Framework\Dependency\Container;',
-        '',
         '',
         '$config = new Config(%s);',
         '$container = new Container([',
@@ -24,24 +25,18 @@ class Command implements CommandInterface
         'return [$config, $container];',
         ''
     ];
-    /** @var Loader $configLoader */
-    private $configLoader;
 
-    /** @var Compiler $compiler */
-    private $compiler;
-
-    public function __construct(Loader $configLoader, Compiler $compiler)
-    {
-        $this->configLoader = $configLoader;
-        $this->compiler = $compiler;
+    public function __construct(
+        private readonly Loader $configLoader
+    ) {
     }
 
     public function trigger(ConsoleInterface $console): int
     {
-        $console->writeLine("%text:cyan%Compiling configurations ");
+        $console->writeLine("<color text='cyan'>Compiling configurations </color>");
         $configs = $this->configLoader->loadDirectory(
             (string) $console->getArgument('environment', 'dist'),
-            (string) $console->getArgument('config-dir', getcwd())
+            (string) $console->getArgument('config-dir', './config')
         );
 
         $autoload = $this->getAutoloadClasses(
@@ -58,15 +53,6 @@ class Command implements CommandInterface
             file_get_contents((\Phar::running(true) ?: getcwd()) . '/data/loader.php'),
             var_export($configs, true)
         ));
-
-        $routes = $this->compiler->compileDir(getcwd() . '/app/');
-
-        if (!empty($routes)) {
-            file_put_contents(
-                getcwd() . '/routes.generated.php',
-                '<?php return ' . var_export(['routes' => $routes], true) . ';'
-            );
-        }
 
         return 0;
     }

@@ -1,7 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace Onion\Tool\Initialize;
 
-use function Onion\Framework\Common\merge;
+use function Onion\Framework\merge;
+
 use Onion\Cli\Manifest\Entities\Manifest;
 use Onion\Cli\Manifest\Loader;
 use Onion\Cli\SemVer\Version;

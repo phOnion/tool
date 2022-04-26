@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 namespace Onion\Cli\Manifest\Entities;
 
 use Onion\Cli\Manifest\Entities\Link;
@@ -158,7 +161,7 @@ class Manifest implements Entity
         return $this->dependencies;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $result = [
             'name' => $this->getName(),

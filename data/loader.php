@@ -51,6 +51,6 @@ spl_autoload_register(function ($class) use ($autoload, $base) {
             }
         }
     }
-}, false, true);
+}, prepend: true);
 
 unset($base, $autoload, $file);

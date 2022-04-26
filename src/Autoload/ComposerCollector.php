@@ -1,8 +1,8 @@
 <?php
+
 namespace Onion\Cli\Autoload;
 
-use function Onion\Framework\Common\merge;
-
+use function Onion\Framework\merge;
 
 class ComposerCollector
 {

@@ -1,4 +1,5 @@
 <?php
+
 use function Onion\Framework\Loop\scheduler;
 
 use GuzzleHttp\Psr7\ServerRequest;
@@ -9,6 +10,7 @@ if (!in_array('phar', stream_get_wrappers()) && class_exists('Phar')) {
     exit(1);
 }
 Phar::interceptFileFuncs();
+Phar::mapPhar();
 
 set_include_path('phar://' . __FILE__ . PATH_SEPARATOR . get_include_path());
 $internal = 'phar://' . __FILE__ . '/container.generated.php';
@@ -38,7 +40,7 @@ foreach ([getcwd(), __DIR__] as $dir) {
         ), '~\.phar$~', \RegexIterator::MATCH, \RegexIterator::USE_KEY);
 
         foreach ($iterator as $item) {
-            foreach(include "phar://{$item}/entrypoint.php" as $c) {
+            foreach (include "phar://{$item}/entrypoint.php" as $c) {
                 $proxy->attach($c);
             }
         }
@@ -49,7 +51,7 @@ $interface = php_sapi_name() === 'cli' ? 'cli' : 'web';
 $instance = null;
 $args = [];
 if ($interface === 'web') {
-    \Phar::mungServer(['REQUEST_URI','SCRIPT_NAME','SCRIPT_FILENAME','PHP_SELF']);
+    \Phar::mungServer(['REQUEST_URI', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PHP_SELF']);
     $instance = $proxy->get(\Onion\Framework\Application\Interfaces\ApplicationInterface::class);
     $args = [ServerRequest::fromGlobals()];
 }

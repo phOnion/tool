@@ -1,29 +1,44 @@
 <?php
 
-use Onion\Framework\Common\Config\Container as Configuration;
-use Onion\Framework\Common\Config\Loader;
-use Onion\Framework\Common\Config\Reader\IniReader;
-use Onion\Framework\Common\Config\Reader\PhpReader;
-use Onion\Framework\Common\Config\Reader\YamlReader;
+use Onion\Framework\Config\Container as Configuration;
+use Onion\Framework\Config\Reader\IniReader;
+use Onion\Framework\Config\Reader\PhpReader;
+use Onion\Framework\Config\Loader;
 use Onion\Framework\Dependency\Container;
-use Onion\Framework\Dependency\ProxyContainer;
+use Onion\Framework\Dependency\Interfaces\DelegateContainerInterface;
+use Onion\Framework\Dependency\Traits\DelegateContainerTrait;
+use Psr\Container\ContainerInterface;
 
 $loader = new Loader();
 $loader->registerReader(['php'], new PhpReader());
 $loader->registerReader(['env', 'ini'], new IniReader());
-$loader->registerReader(['yml', 'yaml'], new YamlReader());
 
 $configs = $loader->loadDirectories('dist', [__DIR__]);
 
-$proxy = new ProxyContainer;
+$proxy = new class implements ContainerInterface, DelegateContainerInterface
+{
+    use DelegateContainerTrait;
 
-$proxy->attach(new Configuration($configs));
+    public function get(string $id)
+    {
+        foreach ($this->getAttachedContainers() as $i => $container) {
+            if ($container->has($id)) {
+                return $container->get($id);
+            }
+        }
+
+        throw new \Onion\Framework\Dependency\Exception\UnknownDependencyException(
+            "Unable to resolve '{$id}'"
+        );
+    }
+};
+
+$cfg = new Configuration($configs);
+$proxy->attach($cfg);
 $proxy->attach(new Container([
     'factories' => $configs['factories'] ?? [],
     'invokables' => $configs['invokables'] ?? [],
-    'shared' => $configs['shared'] ?? [],
 ]));
-
 
 
 if (file_exists(getcwd() . '/container.generated.php')) {
