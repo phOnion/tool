@@ -41,6 +41,7 @@ class Packer
         $progress->setFormat(
             '{cursor} <color text="cyan">Loading files</color>'
         );
+        $console->hideCursor();
         $progress->flush($console);
         $phar = new \Phar($this->filename);
 
@@ -79,6 +80,7 @@ class Packer
                 $progress->flush($console);
             }
         }
+        $console->showCursor();
 
         return $phar;
     }
