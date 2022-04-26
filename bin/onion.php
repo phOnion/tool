@@ -1,6 +1,8 @@
 <?php require_once __DIR__ . '/../vendor/autoload.php';
 
 use function Onion\Framework\Loop\coroutine;
+use function Onion\Framework\Loop\scheduler;
+
 use Onion\Framework\Dependency\ProxyContainer;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -21,6 +23,9 @@ if ($interface === 'cli') {
     $args = [$argv ?? [], $container->get(\Onion\Framework\Console\Interfaces\ConsoleInterface::class)];
 }
 
-coroutine(static function () use ($instance, $args) {
-    exit($instance->run(...$args) ?? 0);
+$exitCode = 0;
+coroutine(static function () use ($instance, $args, &$exitCode) {
+    $exitCode = ($instance->run(...$args) ?? 0);
 });
+scheduler()->start();
+exit($exitCode);
