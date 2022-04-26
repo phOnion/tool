@@ -8,6 +8,7 @@ class ComposerCollector
 {
     /** @var string $baseDir */
     private $baseDir;
+    private array $loaded = [];
 
     public function __construct(string $baseDir)
     {
@@ -21,6 +22,11 @@ class ComposerCollector
 
     private function collectDir(string $dir, bool $standalone, bool $includeDev, string $vendorDir = 'vendor'): iterable
     {
+        if (isset($this->loaded[$dir])) {
+            return [];
+        }
+
+        $this->loaded[$dir] = true;
         $result = [];
 
         if (!is_dir("{$dir}/")) {
@@ -35,6 +41,7 @@ class ComposerCollector
             }
 
             $composer = json_decode(file_get_contents($item->getRealPath()), true);
+
             foreach ($composer['autoload'] ?? [] as $type => $namespaces) {
                 foreach ($namespaces as $namespace => $path) {
                     $temp = str_replace('//', '/', "{$dir}/{$path}");
