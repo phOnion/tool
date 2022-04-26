@@ -50,7 +50,6 @@ class Packer
         )), fn ($item) => preg_match($excludePattern, substr($item, strlen($directory))) !== 1);
 
         foreach ($files as $file) {
-            var_dump(substr($file, strlen($directory)));
             $phar->addFile(substr($file, strlen($directory)));
             $progress->advance();
             $progress->flush($console);
