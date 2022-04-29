@@ -12,9 +12,10 @@ use Onion\Framework\Console\Interfaces\ConsoleInterface;
 class Command implements CommandInterface
 {
     private const TEMPLATE = [
-        '%s',
         'use \Onion\Framework\Config\Container as Config;',
         'use \Onion\Framework\Dependency\Container;',
+        '',
+        '%s',
         '',
         '$config = new Config(%s);',
         '$container = new Container([',
@@ -36,7 +37,7 @@ class Command implements CommandInterface
         $console->writeLine("<color text='cyan'>Compiling configurations </color>");
         $configs = $this->configLoader->loadDirectory(
             (string) $console->getArgument('environment', 'dist'),
-            (string) $console->getArgument('config-dir', './config')
+            (string) $console->getArgument('config-dir', getcwd() . '/config')
         );
 
         $autoload = $this->getAutoloadClasses(
