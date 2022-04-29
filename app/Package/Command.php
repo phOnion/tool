@@ -15,7 +15,6 @@ use Onion\Framework\Console\Interfaces\SignalAwareCommandInterface;
 use Onion\Tool\Package\Service\Packer;
 
 use Phar;
-use PharData;
 
 class Command implements CommandInterface, SignalAwareCommandInterface
 {
@@ -48,7 +47,7 @@ class Command implements CommandInterface, SignalAwareCommandInterface
         $this->loader->saveManifest(getcwd(), $manifest);
 
         $filename = $this->getOutputLocation(
-            (string) $console->getArgument('location'),
+            (string) $console->getArgument('location', getcwd() . '/build'),
             $manifest->getName(),
             $manifest->getVersion()
         );
@@ -57,10 +56,11 @@ class Command implements CommandInterface, SignalAwareCommandInterface
 
         $packer = new Packer($filename, file(getcwd() . '/.onionignore'));
         foreach ($this->getAggregatedDirectories($standalone, $debug) as $directory) {
-            $packer->addDirectory($directory);
+            $packer->addDirectory(getcwd() . DIRECTORY_SEPARATOR . $directory);
         }
-        $console->writeLine('<color text="cyan">Building package</color>');
-        $phar = $packer->pack('./', $console);
+        $console->write('<color text="cyan">Building package</color>');
+        $console->overwrite();
+        $phar = $packer->pack(getcwd(), $console);
 
         $phar->addFile($this->getModuleEntrypoint(), 'entrypoint.php');
         $phar->setStub('<?php echo "Can\'t be used directly"; __HALT_COMPILER();"');
@@ -71,7 +71,7 @@ class Command implements CommandInterface, SignalAwareCommandInterface
 
         $compression = strtolower($console->getArgument('compression', 'none'));
         if ($compression !== 'none') {
-            $console->writeLine("<color text=\"cyan\">Compressing using {$compression}</color>");
+            $console->overwrite("<color text=\"cyan\">Compressing using {$compression}</color>");
             $mode = self::COMPRESSION_MAP[$compression] ?? null;
             if ($mode === null || !$phar->canCompress($mode)) {
                 throw new \InvalidArgumentException("Compression using '{$compression}' not possible");
