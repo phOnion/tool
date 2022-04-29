@@ -23,15 +23,6 @@ class Command implements CommandInterface
         '*.phar',
     ];
 
-    private const MERGE_CONFIG = [
-        'include' => [
-            'modules/*/*.json',
-        ],
-        'recurse' => true,
-        'ignore-duplicates' => false,
-        'merge-scripts' => true,
-    ];
-
     private const RECIPE = [
         'stages:',
         '  greet:',
@@ -77,19 +68,6 @@ class Command implements CommandInterface
         $manifest = $manifest->setName($name)
             ->setVersion((string) new Version($version))
             ->setLicense($license);
-
-        $composer = [];
-        if (file_exists(getcwd() . '/composer.json')) {
-            $composer = json_decode(file_get_contents(getcwd() . '/composer.json'), true);
-        }
-        $composer['extra']['merge-plugin'] =
-            merge($composer['extra']['merge-plugin'] ?? [], static::MERGE_CONFIG);
-
-        $composer['require']['wikimedia/composer-merge-plugin'] = '^1.4';
-        file_put_contents(getcwd() . '/composer.json', json_encode(
-            $composer,
-            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-        ));
 
         if ($console->getArgument('verbose')) {
             $console->writeLine('%text:cyan%Generated manifest file `onion.json`');
